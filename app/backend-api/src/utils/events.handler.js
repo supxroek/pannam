@@ -1,47 +1,177 @@
 // src/utils/events.handler.js
 
-// Import providers
 import lineProvider from "../providers/line.provider.js";
-
-// Import flex message templates
+import intentMatcher from "./intent-matcher.js";
 
 // ============================================================
-// Intents Configuration
+// ลงทะเบียน Intents ด้วยรูปแบบที่ยืดหยุ่น
 // ============================================================
-const INTENT_HANDLERS = {
-  GREETING: {
-    keywords: ["hello", "hi", "hey", "สวัสดี", "หวัดดี", "ดีจ้า", "ดีครับ"],
-    execute: async (event) =>
-      lineProvider.replyOrPush(event, {
-        type: "text",
-        text: "Testing message!",
-      }),
+
+// 1. GREETING - ทักทาย (รองรับหลายรูปแบบ)
+intentMatcher.register("GREETING", {
+  description: "ทักทายผู้ใช้",
+  keywords: [
+    "สวัสดี",
+    "หวัดดี",
+    "ดีจ้า",
+    "ดีครับ",
+    "ดีค่ะ",
+    "hello",
+    "hi",
+    "hey",
+  ],
+  optionalKeywords: [
+    "วันนี้",
+    "ตอนเช้า",
+    "ตอนบ่าย",
+    "ตอนเย็น",
+    "สบายดี",
+    "เป็นไง",
+    "ยังไง",
+  ],
+  negativeKeywords: ["ไม่สวัสดี", "ไม่ดี"], // ถ้ามีคำนี้จะไม่ match
+  weight: 1.0,
+  execute: async (event) => {
+    const responses = [
+      "สวัสดีครับ/ค่ะ! ยินดีที่ได้รู้จักคุณ 😊",
+      "สวัสดี! มีอะไรให้ PANNAM ช่วยเหลือไหมครับ/ค่ะ?",
+      "หวัดดีครับ/ค่ะ! วันนี้เป็นยังไงบ้าง?",
+    ];
+    const randomResponse =
+      responses[Math.floor(Math.random() * responses.length)];
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: randomResponse,
+    });
   },
-};
+});
+
+// 2. WATER_BILL_CHECK - ตรวจสอบค่าน้ำ
+intentMatcher.register("WATER_BILL_CHECK", {
+  description: "ตรวจสอบค่าน้ำ",
+  keywords: ["ค่าน้ำ", "บิลน้ำ", "น้ำประปา", "water bill"],
+  optionalKeywords: [
+    "ตรวจสอบ",
+    "เช็ค",
+    "ดู",
+    "ถาม",
+    "เท่าไร",
+    "ยอด",
+    "ค้าง",
+    "จ่าย",
+    "ชำระ",
+  ],
+  patterns: ["เช็ค.*น้ำ", "ดู.*บิล", "ค่า.*น้ำ.*เท่าไร", "ยอด.*น้ำ.*ค้าง"],
+  requireQuestion: null, // ไม่สนใจว่าเป็นคำถามหรือไม่
+  weight: 1.2, // น้ำหนักสูงกว่าปกติ
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "คุณต้องการตรวจสอบค่าน้ำของบัญชีไหนครับ/ค่ะ? กรุณาระบุหมายเลขผู้ใช้น้ำหรือสแกน QR Code ค่ะ",
+    });
+  },
+});
+
+// 3. HELP - ขอความช่วยเหลือ
+intentMatcher.register("HELP", {
+  description: "ขอความช่วยเหลือ",
+  keywords: ["ช่วย", "help", "สอน", "วิธี", "ใช้ยังไง", "ทำยังไง"],
+  optionalKeywords: ["ด้วย", "หน่อย", "ที", "ได้ไหม", "ยังไง"],
+  patterns: ["ช่วย.*ด้วย", "สอน.*หน่อย", "ใช้งาน.*ยังไง"],
+  weight: 1.0,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: `คุณสามารถใช้งาน PANNAM ได้ดังนี้:
+1. พิมพ์ "เช็คค่าน้ำ" เพื่อตรวจสอบยอดค่าน้ำ
+2. พิมพ์ "ประวัติ" เพื่อดูประวัติการใช้น้ำ
+3. พิมพ์ "ติดต่อ" เพื่อติดต่อเจ้าหน้าที่
+4. พิมพ์ "วิธีใช้" เพื่อดูคู่มือการใช้งาน`,
+    });
+  },
+});
+
+// 4. COMPLAINT - ร้องเรียน/แจ้งปัญหา
+intentMatcher.register("COMPLAINT", {
+  description: "ร้องเรียนหรือแจ้งปัญหา",
+  keywords: [
+    "ร้องเรียน",
+    "แจ้งปัญหา",
+    "เสีย",
+    "พัง",
+    "น้ำไม่ไหล",
+    "น้ำรั่ว",
+    "ท่อแตก",
+  ],
+  optionalKeywords: ["ครับ", "ค่ะ", "ที่บ้าน", "ในหมู่บ้าน", "ตรงนี้"],
+  negativeKeywords: ["ไม่ร้องเรียน", "ไม่มีปัญหา"],
+  weight: 1.1,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "ขออภัยในความไม่สะดวกครับ/ค่ะ กรุณาอธิบายปัญหาที่พบเพื่อให้เจ้าหน้าที่ติดต่อกลับค่ะ",
+    });
+  },
+});
+
+// 5. THANKS - ขอบคุณ
+intentMatcher.register("THANKS", {
+  description: "ขอบคุณ",
+  keywords: ["ขอบคุณ", "thank", "thanks", "ขอบใจ", "เก่งมาก", "ดีมาก"],
+  optionalKeywords: ["มาก", "นะ", "ครับ", "ค่ะ", "จ้า"],
+  weight: 0.8,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "ยินดีที่ได้ช่วยเหลือครับ/ค่ะ! หากมีข้อสงสัยเพิ่มเติมสามารถสอบถามได้ตลอดเวลานะคะ 🙏",
+    });
+  },
+});
+
+// 6. GOODBYE - ลาก่อน
+intentMatcher.register("GOODBYE", {
+  description: "ลาก่อน",
+  keywords: ["ลาก่อน", "บาย", "bye", "goodbye", "ไปก่อน", "พักผ่อน"],
+  optionalKeywords: ["นะ", "ครับ", "ค่ะ", "จ้า", "เจอกัน", "พรุ่งนี้"],
+  weight: 0.8,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "ลาก่อนครับ/ค่ะ! ขอให้มีความสุขและสดชื่นตลอดวันนะคะ 👋",
+    });
+  },
+});
+
+// 7. UNKNOWN_FALLBACK - กรณีไม่เข้าใจ (ใช้เป็น fallback)
+intentMatcher.register("UNKNOWN_FALLBACK", {
+  description: "Fallback เมื่อไม่ match intent ใดเลย",
+  keywords: [], // ไม่มี required keywords
+  optionalKeywords: [],
+  weight: 0.1, // น้ำหนักต่ำสุด
+  execute: async (event, matchResult) => {
+    const text = event.message.text;
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: `"${text}" ขออภัยครับ/ค่ะ ฉันไม่แน่ใจว่าคุณหมายถึงอะไร
+
+ลองพิมพ์ "ช่วยเหลือ" เพื่อดูคำสั่งที่ใช้งานได้ หรือถามได้โดยตรงเลยค่ะ`,
+    });
+  },
+});
 
 // ============================================================
-// EventsHandler Class
+// EventsHandler Class (ปรับปรุงแล้ว)
 // ============================================================
 class EventsHandler {
-  /**
-   * Main entry point for message events
-   * @param {Object} event
-   */
-  // ===========================================================
-  // ฟังก์ชันสำหรับจัดการข้อความประเภทข้อความ
   async handleMessage(event) {
     const { message, source } = event;
 
-    // การเตรียมข้อมูลล่วงหน้า: แสดงการโหลดและตรวจสอบสถานะสมาชิก
     if (source?.userId) {
       await lineProvider.showLoadingAnimation(source.userId);
-      // await lineProvider.checkMemberStatus(source);
     }
 
-    // ตัวจัดการตามประเภทข้อความ
     switch (message.type) {
       case "text":
-        // จัดการข้อความประเภทข้อความ
         console.log("message", message);
         await this._handleTextMessage(event);
         break;
@@ -59,62 +189,45 @@ class EventsHandler {
     }
   }
 
-  /**
-   * Handle Follow event (Block/Unblock)
-   * @param {Object} event
-   */
-  // ===========================================================
-  // ฟังก์ชันสำหรับจัดการเหตุการณ์ติดตาม (Follow)
   async handleFollow(event) {
     const { source } = event;
     try {
-      // ส่งข้อความต้อนรับผู้ใช้ใหม่
       await lineProvider.replyOrPush(event, welcomeNewUserFlex());
     } catch (error) {
       console.error("Failed to send flex message:", error.message);
       await lineProvider.replyOrPush(event, {
         type: "text",
-        text: `สวัสดี คุณ ${source.userId}!
-        นี่คือบัญชีทางการของ PANNAM (ปันน้ำ)
-
-        คุณสามารถใช้งานเพ่ื่อตรวจสอบค่าน้ำและบริการอื่นๆ ของ PANNAM (ปันน้ำ)ได้แล้ว!
-        เราจะแจ้งเตือนข่าวสารหรือมีการเปลี่ยนแปลงอื่นๆ ให้ทราบเมื่อมีการอัพเดท
-        ขอบคุณที่ใช้บริการ PANNAM (ปันน้ำ)`,
+        text: `สวัสดี คุณ ${source.userId}!\nนี่คือบัญชีทางการของ PANNAM (ปันน้ำ)\n\nคุณสามารถใช้งานเพื่อตรวจสอบค่าน้ำและบริการอื่นๆ ของ PANNAM (ปันน้ำ)ได้แล้ว!\nเราจะแจ้งเตือนข่าวสารหรือมีการเปลี่ยนแปลงอื่นๆ ให้ทราบเมื่อมีการอัพเดท\nขอบคุณที่ใช้บริการ PANNAM (ปันน้ำ)`,
       });
     }
   }
 
-  // ----------------------------------------------------------------
-  // Private Helper Methods
-  // ----------------------------------------------------------------
-
-  // ฟังก์ชันสำหรับจัดการข้อความประเภทข้อความ
+  // ===========================================================
+  // ฟังก์ชันหลัก: จัดการข้อความประเภทข้อความ (ปรับปรุงแล้ว)
+  // ===========================================================
   async _handleTextMessage(event) {
     const text = event.message.text;
-    const handler = this._matchIntent(text);
 
-    if (handler) {
-      await handler.execute(event);
+    // ใช้ Smart Intent Matcher แทนการ match แบบเดิม
+    const matchResult = intentMatcher.match(text);
+
+    console.log("Intent Match Result:", JSON.stringify(matchResult, null, 2));
+
+    if (matchResult && matchResult.score >= 10) {
+      // มี intent ที่ตรงและคะแนนผ่านเกณฑ์
+      await matchResult.intent.execute(event, matchResult);
     } else {
-      // กรณีไม่พบเจตนา (intent) ที่ตรงกัน
-      await lineProvider.replyOrPush(event, {
-        type: "text",
-        text: `"${text}" ขออภัย! ไม่สามารถเข้าใจคำสั่งของคุณได้`,
-      });
-    }
-  }
-
-  // ฟังก์ชันสำหรับจับคู่ข้อความกับเจตนา (intent) ที่กำหนดไว้
-  _matchIntent(text) {
-    const lowerText = text.toLowerCase();
-    // วนลูปผ่านเจตนา (intent) ทั้งหมดเพื่อหาคำที่ตรงกัน
-    for (const key in INTENT_HANDLERS) {
-      const intent = INTENT_HANDLERS[key];
-      if (intent.keywords.some((keyword) => lowerText.includes(keyword))) {
-        return intent;
+      // ไม่มี intent ที่ตรง หรือคะแนนต่ำเกินไป → ใช้ fallback
+      const fallbackIntent = intentMatcher.intents.get("UNKNOWN_FALLBACK");
+      if (fallbackIntent) {
+        await fallbackIntent.execute(event, matchResult);
+      } else {
+        await lineProvider.replyOrPush(event, {
+          type: "text",
+          text: `"${text}" ขออภัย! ไม่สามารถเข้าใจคำสั่งของคุณได้`,
+        });
       }
     }
-    return null;
   }
 }
 

@@ -1,10 +1,9 @@
 // src/utils/intent-matcher.js
 
 // ============================================================
-// คำช่วยที่ไม่มีความหมาย (Stop Words) สำหรับภาษาไทยและอังกฤษ
+// Stop Words
 // ============================================================
 const STOP_WORDS = new Set([
-  // ภาษาไทย
   "ค่ะ",
   "ครับ",
   "นะ",
@@ -20,7 +19,6 @@ const STOP_WORDS = new Set([
   "จร้า",
   "เจ้า",
   "เนอะ",
-  // ภาษาอังกฤษ
   "a",
   "an",
   "the",
@@ -109,7 +107,7 @@ const STOP_WORDS = new Set([
 ]);
 
 // ============================================================
-// คำที่บ่งบอกว่าเป็นคำถาม (Question Indicators)
+// คำบ่งบอกคำถาม
 // ============================================================
 const QUESTION_INDICATORS = new Set([
   "ถาม",
@@ -137,67 +135,175 @@ const QUESTION_INDICATORS = new Set([
 ]);
 
 // ============================================================
-// Utility: แยกคำจากข้อความ (Simple Tokenizer)
+// 🔧 คลังคำหลักสำหรับภาษาไทย (ใช้แยกคำจากประโยคติดกัน)
+// ============================================================
+const THAI_KEYWORD_DICTIONARY = [
+  // ทักทาย
+  "สวัสดี",
+  "หวัดดี",
+  "ดีจ้า",
+  "ดีครับ",
+  "ดีค่ะ",
+  "สบายดี",
+  "เป็นไง",
+  "ยังไง",
+  "hello",
+  "hi",
+  "hey",
+  "morning",
+  "afternoon",
+  "evening",
+  // ค่าน้ำ
+  "ค่าน้ำ",
+  "บิลน้ำ",
+  "น้ำประปา",
+  "water bill",
+  "ค้างชำระ",
+  "ยอดค้าง",
+  // ช่วยเหลือ
+  "ช่วยเหลือ",
+  "ช่วย",
+  "help",
+  "สอน",
+  "วิธี",
+  "ใช้ยังไง",
+  "ทำยังไง",
+  "คู่มือ",
+  "guide",
+  "tutorial",
+  // ร้องเรียน
+  "ร้องเรียน",
+  "แจ้งปัญหา",
+  "เสีย",
+  "พัง",
+  "น้ำไม่ไหล",
+  "น้ำรั่ว",
+  "ท่อแตก",
+  "ปัญหา",
+  "problem",
+  "issue",
+  "complaint",
+  // ขอบคุณ
+  "ขอบคุณ",
+  "thank",
+  "thanks",
+  "ขอบใจ",
+  "เก่งมาก",
+  "ดีมาก",
+  // ลาก่อน
+  "ลาก่อน",
+  "บาย",
+  "bye",
+  "goodbye",
+  "ไปก่อน",
+  "พักผ่อน",
+  "see you",
+  // ทั่วไป
+  "ตรวจสอบ",
+  "เช็ค",
+  "ดู",
+  "ถาม",
+  "เท่าไร",
+  "ยอด",
+  "ค้าง",
+  "จ่าย",
+  "ชำระ",
+  "ประวัติ",
+  "ติดต่อ",
+  "เจ้าหน้าที่",
+  "วันนี้",
+  "ตอนนี้",
+  "เดือนนี้",
+  "บ้าน",
+  "ที่อยู่",
+  "หมายเลข",
+  "ผู้ใช้น้ำ",
+  "รหัส",
+];
+
+// ============================================================
+// 🔧 แยกคำจากข้อความ (ปรับปรุงให้รองรับภาษาไทยที่ติดกัน)
 // ============================================================
 function tokenize(text) {
   if (!text) return [];
 
-  // แปลงเป็นพิมพ์เล็กและลบอักขระพิเศษ
-  let cleaned = text
-    .toLowerCase()
-    .replace(/[^\u0E00-\u0E7Fa-zA-Z0-9\s]/g, " ") // เก็บไทย+อังกฤษ+ตัวเลข
-    .replace(/\s+/g, " ")
-    .trim();
+  // แปลงเป็นพิมพ์เล็ก
+  let cleaned = text.toLowerCase().trim();
 
-  // แยกคำ (รองรับทั้งภาษาไทยที่ไม่มีช่องว่างและภาษาอังกฤษ)
-  // สำหรับภาษาไทย: ใช้ pattern ที่แยกคำไทยออกจากกัน
+  // เก็บข้อความต้นฉบับไว้ใช้ตรวจหลัง
+  const original = cleaned;
+
+  // ลบอักขระพิเศษ แต่เก็บช่องว่างและอักษรไทย/อังกฤษ/ตัวเลข
+  cleaned = cleaned.replace(/[^\u0E00-\u0E7Fa-zA-Z0-9\s]/g, " ");
+  cleaned = cleaned.replace(/\s+/g, " ").trim();
+
   const tokens = [];
-  const words = cleaned.split(" ");
 
-  for (const word of words) {
-    if (!word) continue;
+  // ----- วิธีที่ 1: แยกตามช่องว่าง (สำหรับภาษาอังกฤษ) -----
+  const spaceWords = cleaned.split(" ").filter((w) => w.length > 0);
+  tokens.push(...spaceWords);
 
-    // ถ้าเป็นคำไทยยาวๆ อาจต้องแยกเพิ่ม (simplified)
-    // ใน production ควรใช้ library ตัดคำไทย เช่น wordcut หรือ newmm
-    tokens.push(word);
+  // ----- วิธีที่ 2: แยกคำไทยจากพจนานุกรม (สำคัญมาก!) -----
+  // ใช้ dictionary สแกนหาคำในข้อความต้นฉบับ
+  const foundKeywords = new Set();
 
-    // แยกคำไทยที่ติดกันโดยใช้ heuristic (เช่น สวัสดีวันนี้ → สวัสดี, วันนี้)
-    // ตัวอย่างง่าย: ถ้าพบ keyword ย่อยในคำยาว ให้แยกออกมา
-    if (/[\u0E00-\u0E7F]/.test(word) && word.length > 3) {
-      // ตรวจหาคำย่อยที่อาจเป็น keyword (เช่น สวัสดี, ดีจ้า)
-      const subKeywords = [
-        "สวัสดี",
-        "หวัดดี",
-        "ดีจ้า",
-        "ดีครับ",
-        "ดีค่ะ",
-        "สบาย",
-        "เป็นไง",
-      ];
-      for (const kw of subKeywords) {
-        if (word.includes(kw) && !tokens.includes(kw)) {
-          tokens.push(kw);
+  for (const keyword of THAI_KEYWORD_DICTIONARY) {
+    const kwLower = keyword.toLowerCase();
+
+    // Exact match ในข้อความทั้งหมด
+    if (original.includes(kwLower)) {
+      foundKeywords.add(kwLower);
+      continue;
+    }
+
+    // Fuzzy match แบบง่าย (สำหรับคำที่พิมพ์ผิดเล็กน้อย)
+    // ตรวจสอบว่ามี substring ที่คล้ายกันหรือไม่
+    if (original.length >= kwLower.length) {
+      for (let i = 0; i <= original.length - kwLower.length; i++) {
+        const substr = original.substring(i, i + kwLower.length);
+        if (similarity(substr, kwLower) > 0.85) {
+          foundKeywords.add(kwLower);
+          break;
         }
       }
     }
   }
 
-  return tokens;
+  // เพิ่มคำที่พบจาก dictionary เข้า tokens
+  tokens.push(...foundKeywords);
+
+  // ----- วิธีที่ 3: แยกคำไทยด้วย heuristic (สำหรับคำที่ไม่อยู่ใน dictionary) -----
+  // แยกคำไทยที่ติดกันโดยใช้การสแกนหน้าต่าง (sliding window)
+  const thaiText = original.replace(/[^ก-๙]/g, "");
+  if (thaiText.length > 0) {
+    // สแกนหาคำยาว 2-8 ตัวอักษร
+    for (let len = 8; len >= 2; len--) {
+      for (let i = 0; i <= thaiText.length - len; i++) {
+        const substr = thaiText.substring(i, i + len);
+        tokens.push(substr);
+      }
+    }
+  }
+
+  // กรองคำซ้ำและคำสั้นเกินไป
+  const uniqueTokens = [...new Set(tokens)].filter((t) => t.length >= 2);
+
+  return uniqueTokens;
 }
 
-// ============================================================
-// Utility: ลบคำที่ไม่มีความหมายออก
-// ============================================================
 function removeStopWords(tokens) {
   return tokens.filter((token) => !STOP_WORDS.has(token));
 }
 
 // ============================================================
-// Utility: คำนวณคะแนนความใกล้เคียง (Levenshtein Distance)
+// Levenshtein Distance
 // ============================================================
 function levenshteinDistance(str1, str2) {
   const m = str1.length;
   const n = str2.length;
+  if (m === 0) return n;
+  if (n === 0) return m;
+
   const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
 
   for (let i = 0; i <= m; i++) dp[i][0] = i;
@@ -209,9 +315,9 @@ function levenshteinDistance(str1, str2) {
         dp[i][j] = dp[i - 1][j - 1];
       } else {
         dp[i][j] = Math.min(
-          dp[i - 1][j - 1] + 1, // แทนที่
-          dp[i][j - 1] + 1, // เพิ่ม
-          dp[i - 1][j] + 1, // ลบ
+          dp[i - 1][j - 1] + 1,
+          dp[i][j - 1] + 1,
+          dp[i - 1][j] + 1,
         );
       }
     }
@@ -219,7 +325,6 @@ function levenshteinDistance(str1, str2) {
   return dp[m][n];
 }
 
-// คำนวณความคล้ายคลึง (0-1) โดยที่ 1 = ตรงกันเป๊ะ
 function similarity(str1, str2) {
   const maxLen = Math.max(str1.length, str2.length);
   if (maxLen === 0) return 1;
@@ -228,49 +333,30 @@ function similarity(str1, str2) {
 }
 
 // ============================================================
-// Smart Intent Matcher Class
+// Smart Intent Matcher (ปรับปรุงแล้ว)
 // ============================================================
 class SmartIntentMatcher {
   constructor() {
     this.intents = new Map();
-    this.fuzzyThreshold = 0.7; // เกณฑ์ความคล้ายคลึงขั้นต่ำ (70%)
-    this.minTokenMatch = 1; // จำนวน token ที่ต้องตรงกันขั้นต่ำ
+    this.fuzzyThreshold = 0.75;
+    this.minScoreThreshold = 5; // 🔧 ลดจาก 10 → 5
   }
 
-  /**
-   * ลงทะเบียน Intent พร้อมรูปแบบที่หลากหลาย
-   * @param {string} name - ชื่อ Intent
-   * @param {Object} config - การตั้งค่า
-   */
   register(name, config) {
     this.intents.set(name, {
       name,
-      // คำหลักที่ต้องมี (required keywords)
       keywords: config.keywords || [],
-      // คำที่อาจมีเพิ่มเติม (optional keywords) - ช่วยเพิ่มคะแนน
       optionalKeywords: config.optionalKeywords || [],
-      // คำที่ห้ามมี (negative keywords) - ถ้ามีจะลดคะแนนหรือ reject
       negativeKeywords: config.negativeKeywords || [],
-      // รูปแบบ regex ที่ซับซ้อน (ถ้ามี)
       patterns: config.patterns || [],
-      // น้ำหนักของ intent (priority)
       weight: config.weight || 1,
-      // ฟังก์ชันที่จะ execute เมื่อตรง
       execute: config.execute,
-      // ต้องการให้เป็นคำถามหรือไม่ (null = ไม่สนใจ, true = ต้องเป็นคำถาม, false = ต้องไม่เป็นคำถาม)
-      requireQuestion: config.requireQuestion ?? null,
-      // ข้อความตอบกลับ (ถ้าไม่มี execute)
       response: config.response || null,
-      // คำอธิบายสำหรับ debug
       description: config.description || "",
+      requireQuestion: config.requireQuestion ?? null,
     });
   }
 
-  /**
-   * วิเคราะห์ข้อความและหา Intent ที่ตรงที่สุด
-   * @param {string} text - ข้อความจากผู้ใช้
-   * @returns {Object|null} - ผลลัพธ์ที่ดีที่สุด
-   */
   match(text) {
     if (!text || typeof text !== "string") return null;
 
@@ -300,52 +386,55 @@ class SmartIntentMatcher {
       }
     }
 
-    // เรียงลำดับตามคะแนน
     allResults.sort((a, b) => b.score - a.score);
 
-    return bestMatch
-      ? {
-          intent: bestMatch.intent,
-          score: bestMatch.score,
-          matchedKeywords: bestMatch.matchedKeywords,
+    // 🔧 ถ้าไม่มีอะไร match เลย แต่มี fallback intent ให้ return fallback
+    if (!bestMatch || bestScore < this.minScoreThreshold) {
+      const fallback = this.intents.get("UNKNOWN_FALLBACK");
+      if (fallback) {
+        return {
+          intent: fallback,
+          score: 1,
+          matchedKeywords: [],
           isQuestion,
-          allMatches: allResults.slice(0, 3), // ส่ง top 3 กลับไปด้วย
+          allMatches: allResults.slice(0, 3),
           originalText: text,
-        }
-      : null;
+          isFallback: true,
+        };
+      }
+      return null;
+    }
+
+    return {
+      intent: bestMatch.intent,
+      score: bestMatch.score,
+      matchedKeywords: bestMatch.matchedKeywords,
+      isQuestion,
+      allMatches: allResults.slice(0, 3),
+      originalText: text,
+      isFallback: false,
+    };
   }
 
-  /**
-   * ตรวจสอบว่าเป็นคำถามหรือไม่
-   */
   _detectQuestion(text, tokens) {
-    // เช็คเครื่องหมายคำถาม
     if (text.includes("?") || text.includes("？")) return true;
-
-    // เช็คคำบ่งบอกคำถาม
     return tokens.some((token) => QUESTION_INDICATORS.has(token));
   }
 
-  /**
-   * คำนวณคะแนนสำหรับแต่ละ Intent
-   */
   _calculateScore(intent, originalText, tokens, filteredTokens, isQuestion) {
     let score = 0;
     const matchedKeywords = [];
-    const matchedDetails = [];
 
-    // 1. ตรวจสอบ negative keywords (ถ้ามี = reject ทันที)
+    // 1. ตรวจสอบ negative keywords
     for (const neg of intent.negativeKeywords) {
-      const negTokens = tokenize(neg);
-      for (const nt of negTokens) {
-        if (tokens.some((t) => t.includes(nt) || similarity(t, nt) > 0.85)) {
-          return {
-            intent,
-            score: 0,
-            matchedKeywords: [],
-            reason: "negative_keyword_match",
-          };
-        }
+      const negLower = neg.toLowerCase();
+      if (originalText.toLowerCase().includes(negLower)) {
+        return {
+          intent,
+          score: 0,
+          matchedKeywords: [],
+          reason: "negative_keyword_match",
+        };
       }
     }
 
@@ -357,56 +446,65 @@ class SmartIntentMatcher {
       return { intent, score: 0, matchedKeywords: [], reason: "is_question" };
     }
 
-    // 3. ตรวจสอบ required keywords (exact + fuzzy matching)
+    // 3. ตรวจสอบ required keywords
     let requiredMatches = 0;
+
     for (const keyword of intent.keywords) {
-      const keywordTokens = tokenize(keyword);
+      const kwLower = keyword.toLowerCase();
+      let bestTokenScore = 0;
+      let bestMatchToken = null;
 
-      for (const kt of keywordTokens) {
-        let bestTokenScore = 0;
-        let bestMatchToken = null;
+      // 3.1 Exact match ในข้อความดิบ (สำคัญมากสำหรับภาษาไทย!)
+      const textLower = originalText.toLowerCase();
+      if (textLower.includes(kwLower)) {
+        bestTokenScore = 1.0;
+        bestMatchToken = kwLower;
+      }
 
+      // 3.2 ตรวจใน tokens
+      if (bestTokenScore < 1.0) {
         for (const token of tokens) {
-          // Exact match
-          if (token === kt) {
-            bestTokenScore = 1;
+          if (token === kwLower) {
+            bestTokenScore = 1.0;
             bestMatchToken = token;
             break;
           }
 
           // Partial match (substring)
-          if (token.includes(kt) || kt.includes(token)) {
+          if (token.includes(kwLower) || kwLower.includes(token)) {
             const ratio =
-              Math.min(token.length, kt.length) /
-              Math.max(token.length, kt.length);
+              Math.min(token.length, kwLower.length) /
+              Math.max(token.length, kwLower.length);
             if (ratio > bestTokenScore) {
               bestTokenScore = ratio;
               bestMatchToken = token;
             }
           }
 
-          // Fuzzy match (Levenshtein)
-          const sim = similarity(token, kt);
+          // Fuzzy match
+          const sim = similarity(token, kwLower);
           if (sim > this.fuzzyThreshold && sim > bestTokenScore) {
             bestTokenScore = sim;
             bestMatchToken = token;
           }
         }
+      }
 
-        if (bestTokenScore > 0) {
-          requiredMatches++;
-          score += bestTokenScore * 10; // น้ำหนักสูงสำหรับ required
-          matchedKeywords.push({
-            keyword: kt,
-            matched: bestMatchToken,
-            score: bestTokenScore,
-            type: "required",
-          });
-        }
+      if (bestTokenScore > 0) {
+        requiredMatches++;
+        // 🔧 เพิ่มน้ำหนักให้ exact match
+        const weightMultiplier = bestTokenScore >= 1.0 ? 15 : 10;
+        score += bestTokenScore * weightMultiplier;
+        matchedKeywords.push({
+          keyword: kwLower,
+          matched: bestMatchToken,
+          score: bestTokenScore,
+          type: "required",
+        });
       }
     }
 
-    // ถ้า required keywords ไม่ตรงเลย = reject
+    // ถ้าไม่มี required match เลย → reject (ยกเว้น fallback ที่ไม่มี keywords)
     if (intent.keywords.length > 0 && requiredMatches === 0) {
       return {
         intent,
@@ -416,70 +514,82 @@ class SmartIntentMatcher {
       };
     }
 
-    // 4. ตรวจสอบ optional keywords (เพิ่มคะแนน)
+    // 4. ตรวจสอบ optional keywords
     for (const keyword of intent.optionalKeywords) {
-      const keywordTokens = tokenize(keyword);
+      const kwLower = keyword.toLowerCase();
 
-      for (const kt of keywordTokens) {
-        for (const token of tokens) {
-          let matchScore = 0;
-          if (token === kt) matchScore = 1;
-          else if (token.includes(kt) || kt.includes(token)) {
-            matchScore =
-              Math.min(token.length, kt.length) /
-              Math.max(token.length, kt.length);
-          } else {
-            const sim = similarity(token, kt);
-            if (sim > this.fuzzyThreshold) matchScore = sim;
-          }
+      // Exact match ในข้อความดิบก่อน
+      if (originalText.toLowerCase().includes(kwLower)) {
+        score += 4;
+        matchedKeywords.push({
+          keyword: kwLower,
+          matched: kwLower,
+          score: 1,
+          type: "optional",
+        });
+        continue;
+      }
 
-          if (matchScore > 0) {
-            score += matchScore * 3; // น้ำหนักน้อยกว่า required
-            matchedKeywords.push({
-              keyword: kt,
-              matched: token,
-              score: matchScore,
-              type: "optional",
-            });
-          }
+      for (const token of tokens) {
+        let matchScore = 0;
+        if (token === kwLower) matchScore = 1;
+        else if (token.includes(kwLower) || kwLower.includes(token)) {
+          matchScore =
+            Math.min(token.length, kwLower.length) /
+            Math.max(token.length, kwLower.length);
+        } else {
+          const sim = similarity(token, kwLower);
+          if (sim > this.fuzzyThreshold) matchScore = sim;
+        }
+
+        if (matchScore > 0) {
+          score += matchScore * 4;
+          matchedKeywords.push({
+            keyword: kwLower,
+            matched: token,
+            score: matchScore,
+            type: "optional",
+          });
         }
       }
     }
 
     // 5. ตรวจสอบ regex patterns
     for (const pattern of intent.patterns) {
-      const regex = new RegExp(pattern, "i");
-      if (regex.test(originalText)) {
-        score += 8; // น้ำหนักสูงสำหรับ pattern match
-        matchedKeywords.push({ pattern, type: "regex" });
+      try {
+        const regex = new RegExp(pattern, "i");
+        if (regex.test(originalText)) {
+          score += 10;
+          matchedKeywords.push({ pattern, type: "regex" });
+        }
+      } catch (e) {
+        console.error("Invalid regex pattern:", pattern, e.message);
       }
     }
 
-    // 6. โบนัสถ้าเป็นคำถามและ intent ต้องการคำถาม
+    // 6. โบนัสคำถาม
     if (intent.requireQuestion === true && isQuestion) {
-      score += 2;
+      score += 3;
     }
 
-    // 7. ปรับคะแนนตามน้ำหนัก intent
+    // 7. คูณน้ำหนัก intent
     score *= intent.weight;
 
-    // 8. ปกติคะแนน (normalize) ตามจำนวน token
-    const normalizationFactor = Math.log(tokens.length + 1) + 1;
+    // 8. 🔧 ปรับ normalization (ลดผลกระทบ)
+    const tokenCount = tokens.filter((t) => t.length >= 3).length || 1;
+    const normalizationFactor = Math.log(tokenCount + 1) * 0.5 + 0.8;
     score = score / normalizationFactor;
 
     return {
       intent,
-      score: Math.min(score, 100), // cap ที่ 100
+      score: Math.min(score, 100),
       matchedKeywords,
       requiredMatches,
       totalRequired: intent.keywords.length,
     };
   }
 
-  /**
-   * หา multiple intents ในประโยคเดียว
-   */
-  matchMultiple(text, threshold = 15) {
+  matchMultiple(text, threshold = 5) {
     const tokens = tokenize(text);
     const filteredTokens = removeStopWords(tokens);
     const isQuestion = this._detectQuestion(text, tokens);
@@ -503,7 +613,4 @@ class SmartIntentMatcher {
   }
 }
 
-// ============================================================
-// Export Singleton
-// ============================================================
 export default new SmartIntentMatcher();
