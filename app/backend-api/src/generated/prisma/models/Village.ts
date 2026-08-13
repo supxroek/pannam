@@ -39,11 +39,15 @@ export type VillageSumAggregateOutputType = {
 export type VillageMinAggregateOutputType = {
   id: number | null
   villageCode: string | null
-  villageName: string | null
   address: string | null
+  subDistrict: string | null
+  district: string | null
+  province: string | null
+  postalCode: string | null
   defaultServiceFee: runtime.Decimal | null
   promptpayNo: string | null
   promptpayName: string | null
+  promptpayImage: string | null
   enablePromptpay: boolean | null
   isActive: boolean | null
   createdAt: Date | null
@@ -53,11 +57,15 @@ export type VillageMinAggregateOutputType = {
 export type VillageMaxAggregateOutputType = {
   id: number | null
   villageCode: string | null
-  villageName: string | null
   address: string | null
+  subDistrict: string | null
+  district: string | null
+  province: string | null
+  postalCode: string | null
   defaultServiceFee: runtime.Decimal | null
   promptpayNo: string | null
   promptpayName: string | null
+  promptpayImage: string | null
   enablePromptpay: boolean | null
   isActive: boolean | null
   createdAt: Date | null
@@ -67,11 +75,15 @@ export type VillageMaxAggregateOutputType = {
 export type VillageCountAggregateOutputType = {
   id: number
   villageCode: number
-  villageName: number
   address: number
+  subDistrict: number
+  district: number
+  province: number
+  postalCode: number
   defaultServiceFee: number
   promptpayNo: number
   promptpayName: number
+  promptpayImage: number
   enablePromptpay: number
   isActive: number
   createdAt: number
@@ -93,11 +105,15 @@ export type VillageSumAggregateInputType = {
 export type VillageMinAggregateInputType = {
   id?: true
   villageCode?: true
-  villageName?: true
   address?: true
+  subDistrict?: true
+  district?: true
+  province?: true
+  postalCode?: true
   defaultServiceFee?: true
   promptpayNo?: true
   promptpayName?: true
+  promptpayImage?: true
   enablePromptpay?: true
   isActive?: true
   createdAt?: true
@@ -107,11 +123,15 @@ export type VillageMinAggregateInputType = {
 export type VillageMaxAggregateInputType = {
   id?: true
   villageCode?: true
-  villageName?: true
   address?: true
+  subDistrict?: true
+  district?: true
+  province?: true
+  postalCode?: true
   defaultServiceFee?: true
   promptpayNo?: true
   promptpayName?: true
+  promptpayImage?: true
   enablePromptpay?: true
   isActive?: true
   createdAt?: true
@@ -121,11 +141,15 @@ export type VillageMaxAggregateInputType = {
 export type VillageCountAggregateInputType = {
   id?: true
   villageCode?: true
-  villageName?: true
   address?: true
+  subDistrict?: true
+  district?: true
+  province?: true
+  postalCode?: true
   defaultServiceFee?: true
   promptpayNo?: true
   promptpayName?: true
+  promptpayImage?: true
   enablePromptpay?: true
   isActive?: true
   createdAt?: true
@@ -222,11 +246,15 @@ export type VillageGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 export type VillageGroupByOutputType = {
   id: number
   villageCode: string
-  villageName: string
   address: string | null
+  subDistrict: string | null
+  district: string | null
+  province: string | null
+  postalCode: string | null
   defaultServiceFee: runtime.Decimal
   promptpayNo: string | null
   promptpayName: string | null
+  promptpayImage: string | null
   enablePromptpay: boolean
   isActive: boolean
   createdAt: Date
@@ -259,11 +287,15 @@ export type VillageWhereInput = {
   NOT?: Prisma.VillageWhereInput | Prisma.VillageWhereInput[]
   id?: Prisma.IntFilter<"Village"> | number
   villageCode?: Prisma.StringFilter<"Village"> | string
-  villageName?: Prisma.StringFilter<"Village"> | string
   address?: Prisma.StringNullableFilter<"Village"> | string | null
+  subDistrict?: Prisma.StringNullableFilter<"Village"> | string | null
+  district?: Prisma.StringNullableFilter<"Village"> | string | null
+  province?: Prisma.StringNullableFilter<"Village"> | string | null
+  postalCode?: Prisma.StringNullableFilter<"Village"> | string | null
   defaultServiceFee?: Prisma.DecimalFilter<"Village"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.StringNullableFilter<"Village"> | string | null
   promptpayName?: Prisma.StringNullableFilter<"Village"> | string | null
+  promptpayImage?: Prisma.StringNullableFilter<"Village"> | string | null
   enablePromptpay?: Prisma.BoolFilter<"Village"> | boolean
   isActive?: Prisma.BoolFilter<"Village"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Village"> | Date | string
@@ -279,11 +311,15 @@ export type VillageWhereInput = {
 export type VillageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   villageCode?: Prisma.SortOrder
-  villageName?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
+  subDistrict?: Prisma.SortOrderInput | Prisma.SortOrder
+  district?: Prisma.SortOrderInput | Prisma.SortOrder
+  province?: Prisma.SortOrderInput | Prisma.SortOrder
+  postalCode?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultServiceFee?: Prisma.SortOrder
   promptpayNo?: Prisma.SortOrderInput | Prisma.SortOrder
   promptpayName?: Prisma.SortOrderInput | Prisma.SortOrder
+  promptpayImage?: Prisma.SortOrderInput | Prisma.SortOrder
   enablePromptpay?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -302,11 +338,15 @@ export type VillageWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.VillageWhereInput | Prisma.VillageWhereInput[]
   OR?: Prisma.VillageWhereInput[]
   NOT?: Prisma.VillageWhereInput | Prisma.VillageWhereInput[]
-  villageName?: Prisma.StringFilter<"Village"> | string
   address?: Prisma.StringNullableFilter<"Village"> | string | null
+  subDistrict?: Prisma.StringNullableFilter<"Village"> | string | null
+  district?: Prisma.StringNullableFilter<"Village"> | string | null
+  province?: Prisma.StringNullableFilter<"Village"> | string | null
+  postalCode?: Prisma.StringNullableFilter<"Village"> | string | null
   defaultServiceFee?: Prisma.DecimalFilter<"Village"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.StringNullableFilter<"Village"> | string | null
   promptpayName?: Prisma.StringNullableFilter<"Village"> | string | null
+  promptpayImage?: Prisma.StringNullableFilter<"Village"> | string | null
   enablePromptpay?: Prisma.BoolFilter<"Village"> | boolean
   isActive?: Prisma.BoolFilter<"Village"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Village"> | Date | string
@@ -322,11 +362,15 @@ export type VillageWhereUniqueInput = Prisma.AtLeast<{
 export type VillageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   villageCode?: Prisma.SortOrder
-  villageName?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
+  subDistrict?: Prisma.SortOrderInput | Prisma.SortOrder
+  district?: Prisma.SortOrderInput | Prisma.SortOrder
+  province?: Prisma.SortOrderInput | Prisma.SortOrder
+  postalCode?: Prisma.SortOrderInput | Prisma.SortOrder
   defaultServiceFee?: Prisma.SortOrder
   promptpayNo?: Prisma.SortOrderInput | Prisma.SortOrder
   promptpayName?: Prisma.SortOrderInput | Prisma.SortOrder
+  promptpayImage?: Prisma.SortOrderInput | Prisma.SortOrder
   enablePromptpay?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -344,11 +388,15 @@ export type VillageScalarWhereWithAggregatesInput = {
   NOT?: Prisma.VillageScalarWhereWithAggregatesInput | Prisma.VillageScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Village"> | number
   villageCode?: Prisma.StringWithAggregatesFilter<"Village"> | string
-  villageName?: Prisma.StringWithAggregatesFilter<"Village"> | string
   address?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
+  subDistrict?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
+  district?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
+  province?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
+  postalCode?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   defaultServiceFee?: Prisma.DecimalWithAggregatesFilter<"Village"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   promptpayName?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
+  promptpayImage?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   enablePromptpay?: Prisma.BoolWithAggregatesFilter<"Village"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"Village"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Village"> | Date | string
@@ -357,11 +405,15 @@ export type VillageScalarWhereWithAggregatesInput = {
 
 export type VillageCreateInput = {
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -377,11 +429,15 @@ export type VillageCreateInput = {
 export type VillageUncheckedCreateInput = {
   id?: number
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -396,11 +452,15 @@ export type VillageUncheckedCreateInput = {
 
 export type VillageUpdateInput = {
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -416,11 +476,15 @@ export type VillageUpdateInput = {
 export type VillageUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -436,11 +500,15 @@ export type VillageUncheckedUpdateInput = {
 export type VillageCreateManyInput = {
   id?: number
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -449,11 +517,15 @@ export type VillageCreateManyInput = {
 
 export type VillageUpdateManyMutationInput = {
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -463,11 +535,15 @@ export type VillageUpdateManyMutationInput = {
 export type VillageUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -477,11 +553,15 @@ export type VillageUncheckedUpdateManyInput = {
 export type VillageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   villageCode?: Prisma.SortOrder
-  villageName?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  subDistrict?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  province?: Prisma.SortOrder
+  postalCode?: Prisma.SortOrder
   defaultServiceFee?: Prisma.SortOrder
   promptpayNo?: Prisma.SortOrder
   promptpayName?: Prisma.SortOrder
+  promptpayImage?: Prisma.SortOrder
   enablePromptpay?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -496,11 +576,15 @@ export type VillageAvgOrderByAggregateInput = {
 export type VillageMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   villageCode?: Prisma.SortOrder
-  villageName?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  subDistrict?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  province?: Prisma.SortOrder
+  postalCode?: Prisma.SortOrder
   defaultServiceFee?: Prisma.SortOrder
   promptpayNo?: Prisma.SortOrder
   promptpayName?: Prisma.SortOrder
+  promptpayImage?: Prisma.SortOrder
   enablePromptpay?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -510,11 +594,15 @@ export type VillageMaxOrderByAggregateInput = {
 export type VillageMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   villageCode?: Prisma.SortOrder
-  villageName?: Prisma.SortOrder
   address?: Prisma.SortOrder
+  subDistrict?: Prisma.SortOrder
+  district?: Prisma.SortOrder
+  province?: Prisma.SortOrder
+  postalCode?: Prisma.SortOrder
   defaultServiceFee?: Prisma.SortOrder
   promptpayNo?: Prisma.SortOrder
   promptpayName?: Prisma.SortOrder
+  promptpayImage?: Prisma.SortOrder
   enablePromptpay?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -656,11 +744,15 @@ export type VillageUpdateOneWithoutAuditLogsNestedInput = {
 
 export type VillageCreateWithoutUserVillagesInput = {
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -675,11 +767,15 @@ export type VillageCreateWithoutUserVillagesInput = {
 export type VillageUncheckedCreateWithoutUserVillagesInput = {
   id?: number
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -709,11 +805,15 @@ export type VillageUpdateToOneWithWhereWithoutUserVillagesInput = {
 
 export type VillageUpdateWithoutUserVillagesInput = {
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -728,11 +828,15 @@ export type VillageUpdateWithoutUserVillagesInput = {
 export type VillageUncheckedUpdateWithoutUserVillagesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -746,11 +850,15 @@ export type VillageUncheckedUpdateWithoutUserVillagesInput = {
 
 export type VillageCreateWithoutWaterRatesInput = {
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -765,11 +873,15 @@ export type VillageCreateWithoutWaterRatesInput = {
 export type VillageUncheckedCreateWithoutWaterRatesInput = {
   id?: number
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -799,11 +911,15 @@ export type VillageUpdateToOneWithWhereWithoutWaterRatesInput = {
 
 export type VillageUpdateWithoutWaterRatesInput = {
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -818,11 +934,15 @@ export type VillageUpdateWithoutWaterRatesInput = {
 export type VillageUncheckedUpdateWithoutWaterRatesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -836,11 +956,15 @@ export type VillageUncheckedUpdateWithoutWaterRatesInput = {
 
 export type VillageCreateWithoutPropertiesInput = {
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -855,11 +979,15 @@ export type VillageCreateWithoutPropertiesInput = {
 export type VillageUncheckedCreateWithoutPropertiesInput = {
   id?: number
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -889,11 +1017,15 @@ export type VillageUpdateToOneWithWhereWithoutPropertiesInput = {
 
 export type VillageUpdateWithoutPropertiesInput = {
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -908,11 +1040,15 @@ export type VillageUpdateWithoutPropertiesInput = {
 export type VillageUncheckedUpdateWithoutPropertiesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -926,11 +1062,15 @@ export type VillageUncheckedUpdateWithoutPropertiesInput = {
 
 export type VillageCreateWithoutMeterReadingsInput = {
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -945,11 +1085,15 @@ export type VillageCreateWithoutMeterReadingsInput = {
 export type VillageUncheckedCreateWithoutMeterReadingsInput = {
   id?: number
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -979,11 +1123,15 @@ export type VillageUpdateToOneWithWhereWithoutMeterReadingsInput = {
 
 export type VillageUpdateWithoutMeterReadingsInput = {
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -998,11 +1146,15 @@ export type VillageUpdateWithoutMeterReadingsInput = {
 export type VillageUncheckedUpdateWithoutMeterReadingsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1016,11 +1168,15 @@ export type VillageUncheckedUpdateWithoutMeterReadingsInput = {
 
 export type VillageCreateWithoutInvoicesInput = {
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1035,11 +1191,15 @@ export type VillageCreateWithoutInvoicesInput = {
 export type VillageUncheckedCreateWithoutInvoicesInput = {
   id?: number
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1069,11 +1229,15 @@ export type VillageUpdateToOneWithWhereWithoutInvoicesInput = {
 
 export type VillageUpdateWithoutInvoicesInput = {
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1088,11 +1252,15 @@ export type VillageUpdateWithoutInvoicesInput = {
 export type VillageUncheckedUpdateWithoutInvoicesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1106,11 +1274,15 @@ export type VillageUncheckedUpdateWithoutInvoicesInput = {
 
 export type VillageCreateWithoutAuditLogsInput = {
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1125,11 +1297,15 @@ export type VillageCreateWithoutAuditLogsInput = {
 export type VillageUncheckedCreateWithoutAuditLogsInput = {
   id?: number
   villageCode: string
-  villageName: string
   address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
   defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: string | null
   promptpayName?: string | null
+  promptpayImage?: string | null
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: Date | string
@@ -1159,11 +1335,15 @@ export type VillageUpdateToOneWithWhereWithoutAuditLogsInput = {
 
 export type VillageUpdateWithoutAuditLogsInput = {
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1178,11 +1358,15 @@ export type VillageUpdateWithoutAuditLogsInput = {
 export type VillageUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  villageName?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1273,11 +1457,15 @@ export type VillageCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Typ
 export type VillageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   villageCode?: boolean
-  villageName?: boolean
   address?: boolean
+  subDistrict?: boolean
+  district?: boolean
+  province?: boolean
+  postalCode?: boolean
   defaultServiceFee?: boolean
   promptpayNo?: boolean
   promptpayName?: boolean
+  promptpayImage?: boolean
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -1294,11 +1482,15 @@ export type VillageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
 export type VillageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   villageCode?: boolean
-  villageName?: boolean
   address?: boolean
+  subDistrict?: boolean
+  district?: boolean
+  province?: boolean
+  postalCode?: boolean
   defaultServiceFee?: boolean
   promptpayNo?: boolean
   promptpayName?: boolean
+  promptpayImage?: boolean
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -1308,11 +1500,15 @@ export type VillageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type VillageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   villageCode?: boolean
-  villageName?: boolean
   address?: boolean
+  subDistrict?: boolean
+  district?: boolean
+  province?: boolean
+  postalCode?: boolean
   defaultServiceFee?: boolean
   promptpayNo?: boolean
   promptpayName?: boolean
+  promptpayImage?: boolean
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: boolean
@@ -1322,18 +1518,22 @@ export type VillageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 export type VillageSelectScalar = {
   id?: boolean
   villageCode?: boolean
-  villageName?: boolean
   address?: boolean
+  subDistrict?: boolean
+  district?: boolean
+  province?: boolean
+  postalCode?: boolean
   defaultServiceFee?: boolean
   promptpayNo?: boolean
   promptpayName?: boolean
+  promptpayImage?: boolean
   enablePromptpay?: boolean
   isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type VillageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageCode" | "villageName" | "address" | "defaultServiceFee" | "promptpayNo" | "promptpayName" | "enablePromptpay" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["village"]>
+export type VillageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageCode" | "address" | "subDistrict" | "district" | "province" | "postalCode" | "defaultServiceFee" | "promptpayNo" | "promptpayName" | "promptpayImage" | "enablePromptpay" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["village"]>
 export type VillageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   userVillages?: boolean | Prisma.Village$userVillagesArgs<ExtArgs>
   waterRates?: boolean | Prisma.Village$waterRatesArgs<ExtArgs>
@@ -1359,11 +1559,15 @@ export type $VillagePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     villageCode: string
-    villageName: string
     address: string | null
+    subDistrict: string | null
+    district: string | null
+    province: string | null
+    postalCode: string | null
     defaultServiceFee: runtime.Decimal
     promptpayNo: string | null
     promptpayName: string | null
+    promptpayImage: string | null
     enablePromptpay: boolean
     isActive: boolean
     createdAt: Date
@@ -1799,11 +2003,15 @@ export interface Prisma__VillageClient<T, Null = never, ExtArgs extends runtime.
 export interface VillageFieldRefs {
   readonly id: Prisma.FieldRef<"Village", 'Int'>
   readonly villageCode: Prisma.FieldRef<"Village", 'String'>
-  readonly villageName: Prisma.FieldRef<"Village", 'String'>
   readonly address: Prisma.FieldRef<"Village", 'String'>
+  readonly subDistrict: Prisma.FieldRef<"Village", 'String'>
+  readonly district: Prisma.FieldRef<"Village", 'String'>
+  readonly province: Prisma.FieldRef<"Village", 'String'>
+  readonly postalCode: Prisma.FieldRef<"Village", 'String'>
   readonly defaultServiceFee: Prisma.FieldRef<"Village", 'Decimal'>
   readonly promptpayNo: Prisma.FieldRef<"Village", 'String'>
   readonly promptpayName: Prisma.FieldRef<"Village", 'String'>
+  readonly promptpayImage: Prisma.FieldRef<"Village", 'String'>
   readonly enablePromptpay: Prisma.FieldRef<"Village", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"Village", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Village", 'DateTime'>

@@ -42,24 +42,24 @@ export type UserPropertyMinAggregateOutputType = {
   id: number | null
   userId: number | null
   propertyId: number | null
-  isPrimaryOwner: boolean | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type UserPropertyMaxAggregateOutputType = {
   id: number | null
   userId: number | null
   propertyId: number | null
-  isPrimaryOwner: boolean | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type UserPropertyCountAggregateOutputType = {
   id: number
   userId: number
   propertyId: number
-  isPrimaryOwner: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -80,24 +80,24 @@ export type UserPropertyMinAggregateInputType = {
   id?: true
   userId?: true
   propertyId?: true
-  isPrimaryOwner?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type UserPropertyMaxAggregateInputType = {
   id?: true
   userId?: true
   propertyId?: true
-  isPrimaryOwner?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type UserPropertyCountAggregateInputType = {
   id?: true
   userId?: true
   propertyId?: true
-  isPrimaryOwner?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -191,8 +191,8 @@ export type UserPropertyGroupByOutputType = {
   id: number
   userId: number
   propertyId: number
-  isPrimaryOwner: boolean
   createdAt: Date
+  updatedAt: Date
   _count: UserPropertyCountAggregateOutputType | null
   _avg: UserPropertyAvgAggregateOutputType | null
   _sum: UserPropertySumAggregateOutputType | null
@@ -222,8 +222,8 @@ export type UserPropertyWhereInput = {
   id?: Prisma.IntFilter<"UserProperty"> | number
   userId?: Prisma.IntFilter<"UserProperty"> | number
   propertyId?: Prisma.IntFilter<"UserProperty"> | number
-  isPrimaryOwner?: Prisma.BoolFilter<"UserProperty"> | boolean
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   property?: Prisma.XOR<Prisma.PropertyScalarRelationFilter, Prisma.PropertyWhereInput>
 }
@@ -232,8 +232,8 @@ export type UserPropertyOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
-  isPrimaryOwner?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   property?: Prisma.PropertyOrderByWithRelationInput
 }
@@ -246,8 +246,8 @@ export type UserPropertyWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserPropertyWhereInput | Prisma.UserPropertyWhereInput[]
   userId?: Prisma.IntFilter<"UserProperty"> | number
   propertyId?: Prisma.IntFilter<"UserProperty"> | number
-  isPrimaryOwner?: Prisma.BoolFilter<"UserProperty"> | boolean
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   property?: Prisma.XOR<Prisma.PropertyScalarRelationFilter, Prisma.PropertyWhereInput>
 }, "id" | "userId_propertyId">
@@ -256,8 +256,8 @@ export type UserPropertyOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
-  isPrimaryOwner?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserPropertyCountOrderByAggregateInput
   _avg?: Prisma.UserPropertyAvgOrderByAggregateInput
   _max?: Prisma.UserPropertyMaxOrderByAggregateInput
@@ -272,13 +272,13 @@ export type UserPropertyScalarWhereWithAggregatesInput = {
   id?: Prisma.IntWithAggregatesFilter<"UserProperty"> | number
   userId?: Prisma.IntWithAggregatesFilter<"UserProperty"> | number
   propertyId?: Prisma.IntWithAggregatesFilter<"UserProperty"> | number
-  isPrimaryOwner?: Prisma.BoolWithAggregatesFilter<"UserProperty"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"UserProperty"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"UserProperty"> | Date | string
 }
 
 export type UserPropertyCreateInput = {
-  isPrimaryOwner?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutUserPropertiesInput
   property: Prisma.PropertyCreateNestedOneWithoutUserPropertiesInput
 }
@@ -287,13 +287,13 @@ export type UserPropertyUncheckedCreateInput = {
   id?: number
   userId: number
   propertyId: number
-  isPrimaryOwner?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserPropertyUpdateInput = {
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutUserPropertiesNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutUserPropertiesNestedInput
 }
@@ -302,29 +302,29 @@ export type UserPropertyUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserPropertyCreateManyInput = {
   id?: number
   userId: number
   propertyId: number
-  isPrimaryOwner?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserPropertyUpdateManyMutationInput = {
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserPropertyUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserPropertyListRelationFilter = {
@@ -346,8 +346,8 @@ export type UserPropertyCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
-  isPrimaryOwner?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserPropertyAvgOrderByAggregateInput = {
@@ -360,16 +360,16 @@ export type UserPropertyMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
-  isPrimaryOwner?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserPropertyMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
-  isPrimaryOwner?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type UserPropertySumOrderByAggregateInput = {
@@ -463,16 +463,16 @@ export type UserPropertyUncheckedUpdateManyWithoutPropertyNestedInput = {
 }
 
 export type UserPropertyCreateWithoutUserInput = {
-  isPrimaryOwner?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
   property: Prisma.PropertyCreateNestedOneWithoutUserPropertiesInput
 }
 
 export type UserPropertyUncheckedCreateWithoutUserInput = {
   id?: number
   propertyId: number
-  isPrimaryOwner?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserPropertyCreateOrConnectWithoutUserInput = {
@@ -508,21 +508,21 @@ export type UserPropertyScalarWhereInput = {
   id?: Prisma.IntFilter<"UserProperty"> | number
   userId?: Prisma.IntFilter<"UserProperty"> | number
   propertyId?: Prisma.IntFilter<"UserProperty"> | number
-  isPrimaryOwner?: Prisma.BoolFilter<"UserProperty"> | boolean
   createdAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"UserProperty"> | Date | string
 }
 
 export type UserPropertyCreateWithoutPropertyInput = {
-  isPrimaryOwner?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutUserPropertiesInput
 }
 
 export type UserPropertyUncheckedCreateWithoutPropertyInput = {
   id?: number
   userId: number
-  isPrimaryOwner?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserPropertyCreateOrConnectWithoutPropertyInput = {
@@ -554,55 +554,55 @@ export type UserPropertyUpdateManyWithWhereWithoutPropertyInput = {
 export type UserPropertyCreateManyUserInput = {
   id?: number
   propertyId: number
-  isPrimaryOwner?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserPropertyUpdateWithoutUserInput = {
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   property?: Prisma.PropertyUpdateOneRequiredWithoutUserPropertiesNestedInput
 }
 
 export type UserPropertyUncheckedUpdateWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserPropertyUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserPropertyCreateManyPropertyInput = {
   id?: number
   userId: number
-  isPrimaryOwner?: boolean
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type UserPropertyUpdateWithoutPropertyInput = {
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutUserPropertiesNestedInput
 }
 
 export type UserPropertyUncheckedUpdateWithoutPropertyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type UserPropertyUncheckedUpdateManyWithoutPropertyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   userId?: Prisma.IntFieldUpdateOperationsInput | number
-  isPrimaryOwner?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -611,8 +611,8 @@ export type UserPropertySelect<ExtArgs extends runtime.Types.Extensions.Internal
   id?: boolean
   userId?: boolean
   propertyId?: boolean
-  isPrimaryOwner?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userProperty"]>
@@ -621,8 +621,8 @@ export type UserPropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   userId?: boolean
   propertyId?: boolean
-  isPrimaryOwner?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userProperty"]>
@@ -631,8 +631,8 @@ export type UserPropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   id?: boolean
   userId?: boolean
   propertyId?: boolean
-  isPrimaryOwner?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["userProperty"]>
@@ -641,11 +641,11 @@ export type UserPropertySelectScalar = {
   id?: boolean
   userId?: boolean
   propertyId?: boolean
-  isPrimaryOwner?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "propertyId" | "isPrimaryOwner" | "createdAt", ExtArgs["result"]["userProperty"]>
+export type UserPropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "propertyId" | "createdAt" | "updatedAt", ExtArgs["result"]["userProperty"]>
 export type UserPropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
@@ -669,8 +669,8 @@ export type $UserPropertyPayload<ExtArgs extends runtime.Types.Extensions.Intern
     id: number
     userId: number
     propertyId: number
-    isPrimaryOwner: boolean
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["userProperty"]>
   composites: {}
 }
@@ -1099,8 +1099,8 @@ export interface UserPropertyFieldRefs {
   readonly id: Prisma.FieldRef<"UserProperty", 'Int'>
   readonly userId: Prisma.FieldRef<"UserProperty", 'Int'>
   readonly propertyId: Prisma.FieldRef<"UserProperty", 'Int'>
-  readonly isPrimaryOwner: Prisma.FieldRef<"UserProperty", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"UserProperty", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"UserProperty", 'DateTime'>
 }
     
 

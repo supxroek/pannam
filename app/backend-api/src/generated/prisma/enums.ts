@@ -19,7 +19,6 @@ export type Role = (typeof Role)[keyof typeof Role]
 
 
 export const UserVillageStatus = {
-  PENDING_APPROVAL: 'PENDING_APPROVAL',
   ACTIVE: 'ACTIVE',
   SUSPENDED: 'SUSPENDED'
 } as const

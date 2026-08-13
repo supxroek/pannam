@@ -44,6 +44,7 @@ export type PropertyMinAggregateOutputType = {
   meterCode: string | null
   status: $Enums.PropertyStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PropertyMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type PropertyMaxAggregateOutputType = {
   meterCode: string | null
   status: $Enums.PropertyStatus | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type PropertyCountAggregateOutputType = {
@@ -64,6 +66,7 @@ export type PropertyCountAggregateOutputType = {
   meterCode: number
   status: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -86,6 +89,7 @@ export type PropertyMinAggregateInputType = {
   meterCode?: true
   status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type PropertyMaxAggregateInputType = {
@@ -96,6 +100,7 @@ export type PropertyMaxAggregateInputType = {
   meterCode?: true
   status?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type PropertyCountAggregateInputType = {
@@ -106,6 +111,7 @@ export type PropertyCountAggregateInputType = {
   meterCode?: true
   status?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -203,6 +209,7 @@ export type PropertyGroupByOutputType = {
   meterCode: string | null
   status: $Enums.PropertyStatus
   createdAt: Date
+  updatedAt: Date
   _count: PropertyCountAggregateOutputType | null
   _avg: PropertyAvgAggregateOutputType | null
   _sum: PropertySumAggregateOutputType | null
@@ -236,6 +243,7 @@ export type PropertyWhereInput = {
   meterCode?: Prisma.StringNullableFilter<"Property"> | string | null
   status?: Prisma.EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFilter<"Property"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Property"> | Date | string
   village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
   userProperties?: Prisma.UserPropertyListRelationFilter
   meterReadings?: Prisma.MeterReadingListRelationFilter
@@ -250,6 +258,7 @@ export type PropertyOrderByWithRelationInput = {
   meterCode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   village?: Prisma.VillageOrderByWithRelationInput
   userProperties?: Prisma.UserPropertyOrderByRelationAggregateInput
   meterReadings?: Prisma.MeterReadingOrderByRelationAggregateInput
@@ -268,6 +277,7 @@ export type PropertyWhereUniqueInput = Prisma.AtLeast<{
   meterCode?: Prisma.StringNullableFilter<"Property"> | string | null
   status?: Prisma.EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFilter<"Property"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Property"> | Date | string
   village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
   userProperties?: Prisma.UserPropertyListRelationFilter
   meterReadings?: Prisma.MeterReadingListRelationFilter
@@ -282,6 +292,7 @@ export type PropertyOrderByWithAggregationInput = {
   meterCode?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.PropertyCountOrderByAggregateInput
   _avg?: Prisma.PropertyAvgOrderByAggregateInput
   _max?: Prisma.PropertyMaxOrderByAggregateInput
@@ -300,6 +311,7 @@ export type PropertyScalarWhereWithAggregatesInput = {
   meterCode?: Prisma.StringNullableWithAggregatesFilter<"Property"> | string | null
   status?: Prisma.EnumPropertyStatusWithAggregatesFilter<"Property"> | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Property"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Property"> | Date | string
 }
 
 export type PropertyCreateInput = {
@@ -308,6 +320,7 @@ export type PropertyCreateInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutPropertiesInput
   userProperties?: Prisma.UserPropertyCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutPropertyInput
@@ -322,6 +335,7 @@ export type PropertyUncheckedCreateInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   userProperties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutPropertyInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPropertyInput
@@ -333,6 +347,7 @@ export type PropertyUpdateInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutPropertiesNestedInput
   userProperties?: Prisma.UserPropertyUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutPropertyNestedInput
@@ -347,6 +362,7 @@ export type PropertyUncheckedUpdateInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userProperties?: Prisma.UserPropertyUncheckedUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutPropertyNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPropertyNestedInput
@@ -360,6 +376,7 @@ export type PropertyCreateManyInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PropertyUpdateManyMutationInput = {
@@ -368,6 +385,7 @@ export type PropertyUpdateManyMutationInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PropertyUncheckedUpdateManyInput = {
@@ -378,6 +396,7 @@ export type PropertyUncheckedUpdateManyInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type PropertyListRelationFilter = {
@@ -403,6 +422,7 @@ export type PropertyCountOrderByAggregateInput = {
   meterCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PropertyAvgOrderByAggregateInput = {
@@ -418,6 +438,7 @@ export type PropertyMaxOrderByAggregateInput = {
   meterCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PropertyMinOrderByAggregateInput = {
@@ -428,6 +449,7 @@ export type PropertyMinOrderByAggregateInput = {
   meterCode?: Prisma.SortOrder
   status?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type PropertySumOrderByAggregateInput = {
@@ -534,6 +556,7 @@ export type PropertyCreateWithoutVillageInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   userProperties?: Prisma.UserPropertyCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutPropertyInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPropertyInput
@@ -546,6 +569,7 @@ export type PropertyUncheckedCreateWithoutVillageInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   userProperties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutPropertyInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPropertyInput
@@ -588,6 +612,7 @@ export type PropertyScalarWhereInput = {
   meterCode?: Prisma.StringNullableFilter<"Property"> | string | null
   status?: Prisma.EnumPropertyStatusFilter<"Property"> | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFilter<"Property"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Property"> | Date | string
 }
 
 export type PropertyCreateWithoutUserPropertiesInput = {
@@ -596,6 +621,7 @@ export type PropertyCreateWithoutUserPropertiesInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutPropertiesInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutPropertyInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPropertyInput
@@ -609,6 +635,7 @@ export type PropertyUncheckedCreateWithoutUserPropertiesInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutPropertyInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPropertyInput
 }
@@ -635,6 +662,7 @@ export type PropertyUpdateWithoutUserPropertiesInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutPropertiesNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutPropertyNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPropertyNestedInput
@@ -648,6 +676,7 @@ export type PropertyUncheckedUpdateWithoutUserPropertiesInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutPropertyNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPropertyNestedInput
 }
@@ -658,6 +687,7 @@ export type PropertyCreateWithoutMeterReadingsInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutPropertiesInput
   userProperties?: Prisma.UserPropertyCreateNestedManyWithoutPropertyInput
   invoices?: Prisma.InvoiceCreateNestedManyWithoutPropertyInput
@@ -671,6 +701,7 @@ export type PropertyUncheckedCreateWithoutMeterReadingsInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   userProperties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutPropertyInput
   invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPropertyInput
 }
@@ -697,6 +728,7 @@ export type PropertyUpdateWithoutMeterReadingsInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutPropertiesNestedInput
   userProperties?: Prisma.UserPropertyUpdateManyWithoutPropertyNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPropertyNestedInput
@@ -710,6 +742,7 @@ export type PropertyUncheckedUpdateWithoutMeterReadingsInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userProperties?: Prisma.UserPropertyUncheckedUpdateManyWithoutPropertyNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPropertyNestedInput
 }
@@ -720,6 +753,7 @@ export type PropertyCreateWithoutInvoicesInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutPropertiesInput
   userProperties?: Prisma.UserPropertyCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutPropertyInput
@@ -733,6 +767,7 @@ export type PropertyUncheckedCreateWithoutInvoicesInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
   userProperties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutPropertyInput
 }
@@ -759,6 +794,7 @@ export type PropertyUpdateWithoutInvoicesInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutPropertiesNestedInput
   userProperties?: Prisma.UserPropertyUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutPropertyNestedInput
@@ -772,6 +808,7 @@ export type PropertyUncheckedUpdateWithoutInvoicesInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userProperties?: Prisma.UserPropertyUncheckedUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutPropertyNestedInput
 }
@@ -783,6 +820,7 @@ export type PropertyCreateManyVillageInput = {
   meterCode?: string | null
   status?: $Enums.PropertyStatus
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type PropertyUpdateWithoutVillageInput = {
@@ -791,6 +829,7 @@ export type PropertyUpdateWithoutVillageInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userProperties?: Prisma.UserPropertyUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutPropertyNestedInput
   invoices?: Prisma.InvoiceUpdateManyWithoutPropertyNestedInput
@@ -803,6 +842,7 @@ export type PropertyUncheckedUpdateWithoutVillageInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userProperties?: Prisma.UserPropertyUncheckedUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutPropertyNestedInput
   invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPropertyNestedInput
@@ -815,6 +855,7 @@ export type PropertyUncheckedUpdateManyWithoutVillageInput = {
   meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -874,6 +915,7 @@ export type PropertySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   meterCode?: boolean
   status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
   userProperties?: boolean | Prisma.Property$userPropertiesArgs<ExtArgs>
   meterReadings?: boolean | Prisma.Property$meterReadingsArgs<ExtArgs>
@@ -889,6 +931,7 @@ export type PropertySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   meterCode?: boolean
   status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["property"]>
 
@@ -900,6 +943,7 @@ export type PropertySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   meterCode?: boolean
   status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["property"]>
 
@@ -911,9 +955,10 @@ export type PropertySelectScalar = {
   meterCode?: boolean
   status?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type PropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageId" | "houseNumber" | "zone" | "meterCode" | "status" | "createdAt", ExtArgs["result"]["property"]>
+export type PropertyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageId" | "houseNumber" | "zone" | "meterCode" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["property"]>
 export type PropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
   userProperties?: boolean | Prisma.Property$userPropertiesArgs<ExtArgs>
@@ -944,6 +989,7 @@ export type $PropertyPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     meterCode: string | null
     status: $Enums.PropertyStatus
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["property"]>
   composites: {}
 }
@@ -1378,6 +1424,7 @@ export interface PropertyFieldRefs {
   readonly meterCode: Prisma.FieldRef<"Property", 'String'>
   readonly status: Prisma.FieldRef<"Property", 'PropertyStatus'>
   readonly createdAt: Prisma.FieldRef<"Property", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"Property", 'DateTime'>
 }
     
 

@@ -82,11 +82,15 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const VillageScalarFieldEnum = {
   id: 'id',
   villageCode: 'villageCode',
-  villageName: 'villageName',
   address: 'address',
+  subDistrict: 'subDistrict',
+  district: 'district',
+  province: 'province',
+  postalCode: 'postalCode',
   defaultServiceFee: 'defaultServiceFee',
   promptpayNo: 'promptpayNo',
   promptpayName: 'promptpayName',
+  promptpayImage: 'promptpayImage',
   enablePromptpay: 'enablePromptpay',
   isActive: 'isActive',
   createdAt: 'createdAt',
@@ -140,7 +144,8 @@ export const PropertyScalarFieldEnum = {
   zone: 'zone',
   meterCode: 'meterCode',
   status: 'status',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type PropertyScalarFieldEnum = (typeof PropertyScalarFieldEnum)[keyof typeof PropertyScalarFieldEnum]
@@ -150,8 +155,8 @@ export const UserPropertyScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   propertyId: 'propertyId',
-  isPrimaryOwner: 'isPrimaryOwner',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type UserPropertyScalarFieldEnum = (typeof UserPropertyScalarFieldEnum)[keyof typeof UserPropertyScalarFieldEnum]
