@@ -2,9 +2,10 @@
   "name": "backend-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +17,22 @@
       "onFail": "download"
     }
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "@line/bot-sdk": "^11.2.0",
+    "axios": "^1.19.0",
+    "cors": "^2.8.6",
+    "cowsay": "^1.6.0",
+    "dayjs": "^1.11.21",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.6.2",
+    "helmet": "^8.3.0",
+    "http-errors": "^2.0.1",
+    "jsonwebtoken": "^9.0.3",
+    "winston": "^3.19.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
 }
