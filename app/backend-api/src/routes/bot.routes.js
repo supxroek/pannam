@@ -1,7 +1,13 @@
 // src/routes/bot.routes.js
 
-import catchAsync from "../utils/catchAsync.js";
 import eventHandlers from "../utils/events-handler.js";
+
+// ฟังก์ชันสำหรับจับข้อผิดพลาดในฟังก์ชันแบบอะซิงโครนัส (Asynchronous Function Error Catcher)
+function catchAsync(fn) {
+  return (req, res, next) => {
+    fn(req, res, next).catch(next);
+  };
+}
 
 class Webhook {
   // ฟังก์ชันสำหรับจัดการ webhook events จาก LINE
