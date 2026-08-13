@@ -1,7 +1,7 @@
 // src/routes/bot.routes.js
 
 import catchAsync from "../utils/catchAsync.js";
-import eventHandlers from "../utils/events.handler.js";
+import eventHandlers from "../utils/events-handler.js";
 
 class Webhook {
   // ฟังก์ชันสำหรับจัดการ webhook events จาก LINE

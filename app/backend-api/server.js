@@ -92,7 +92,39 @@ app
 // =================================================================================
 // เรียกใช้ routes ทั้งหมดจาก src/app.js
 import routes from "./src/app.js";
+import { prisma } from "./src/lib/prisma.js";
+
 app.use(routes);
+
+// Health check endpoint
+app.get('/health', async (req, res) => {
+  const startedAt = Date.now()
+
+  try {
+    await prisma.$queryRaw`SELECT 1`
+
+    return res.status(200).json({
+      status: 'ok',
+      database: 'connected',
+      uptime: process.uptime(),
+      responseTimeMs: Date.now() - startedAt,
+      timestamp: new Date().toISOString(),
+    })
+  } catch (error) {
+    logger.error('Database health check failed', {
+      message: error?.message,
+      code: error?.code,
+      meta: error?.meta,
+    })
+
+    return res.status(503).json({
+      status: 'error',
+      database: 'disconnected',
+      responseTimeMs: Date.now() - startedAt,
+      timestamp: new Date().toISOString(),
+    })
+  }
+})
 
 // Use error middleware
 app.use(errorMiddleware);
@@ -118,7 +150,9 @@ if (import.meta.main) {
   const server = app.listen(config.port);
 
   // กำหนด base URL
-  const baseUrl = isProduction ? `https://fitting-allegedly-chicken.ngrok-free.app` : `http://localhost:${config.port}`;
+  const baseUrl = isProduction
+    ? `https://fitting-allegedly-chicken.ngrok-free.app`
+    : `http://localhost:${config.port}`;
   // แสดงข้อความเมื่อเซิร์ฟเวอร์เริ่มทำงาน
   server.on("listening", () => {
     console.log(`🚀 Server running in ${NODE_ENV} mode`);

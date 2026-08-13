@@ -2,9 +2,9 @@
   "name": "pan-nam",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "frontend": "cd ./app/frontend-liff && dotenvx run -- pnpm run dev",
+    "backend": "cd ./app/backend-api && dotenvx run -- pnpm run dev"
   },
   "keywords": [],
   "author": "",

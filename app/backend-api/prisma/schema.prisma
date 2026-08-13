@@ -1,0 +1,262 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum Role {
+  VILLAGE_ADMIN @map("village_admin")
+  METER_READER  @map("meter_reader")
+  RESIDENT      @map("resident")
+}
+
+enum UserVillageStatus {
+  PENDING_APPROVAL @map("pending_approval")
+  ACTIVE           @map("active")
+  SUSPENDED        @map("suspended")
+}
+
+enum PropertyStatus {
+  ACTIVE    @map("active")
+  SUSPENDED @map("suspended")
+}
+
+enum InvoiceStatus {
+  PENDING     @map("pending")
+  VERIFYING   @map("verifying")
+  PAID_CASH   @map("paid_cash")
+  PAID_ONLINE @map("paid_online")
+  OVERDUE     @map("overdue")
+}
+
+enum PaymentSlipStatus {
+  SUBMITTED @map("submitted")
+  APPROVED  @map("approved")
+  REJECTED  @map("rejected")
+}
+
+// ==========================================
+// MODELS
+// ==========================================
+
+/// 1. ข้อมูลหมู่บ้าน (Tenants)
+model Village {
+  id                Int      @id @default(autoincrement()) @map("village_id")
+  villageCode       String   @unique @map("village_code") @db.VarChar(20)
+  villageName       String   @map("village_name") @db.VarChar(150)
+  address           String?  @db.Text
+  defaultServiceFee Decimal  @default(0.00) @map("default_service_fee") @db.Decimal(8, 2)
+  promptpayNo       String?  @map("promptpay_no") @db.VarChar(20)
+  promptpayName     String?  @map("promptpay_name") @db.VarChar(100)
+
+  // Feature Flag: เปิด-ปิด ระบบโอนเงิน PromptPay ( default: false จ่ายเงินสดก่อน )
+  enablePromptpay   Boolean  @default(false) @map("enable_promptpay")
+
+  isActive          Boolean  @default(true) @map("is_active")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  userVillages  UserVillage[]
+  waterRates    WaterRate[]
+  properties    Property[]
+  meterReadings MeterReading[]
+  invoices      Invoice[]
+  auditLogs     AuditLog[]
+
+  @@map("villages")
+}
+
+/// 2. ข้อมูลผู้ใช้งานกลาง
+model User {
+  id            Int      @id @default(autoincrement()) @map("user_id")
+  lineUserId    String   @unique @map("line_user_id") @db.VarChar(255)
+  fullName      String   @map("full_name") @db.VarChar(100)
+  phoneNumber   String?  @map("phone_number") @db.VarChar(15)
+  isGlobalAdmin Boolean  @default(false) @map("is_global_admin")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at")
+
+  // Relations
+  userVillages     UserVillage[]
+  userProperties   UserProperty[]
+  readingsTaken    MeterReading[] @relation("ReaderReadings")
+  paymentsMade     Payment[]      @relation("PaidBy")
+  paymentsVerified Payment[]      @relation("VerifiedBy")
+  auditLogs        AuditLog[]
+
+  @@map("users")
+}
+
+/// 3. ตารางผูกสิทธิ์ผู้ใช้กับหมู่บ้าน
+model UserVillage {
+  id        Int               @id @default(autoincrement()) @map("user_village_id")
+  userId    Int               @map("user_id")
+  villageId Int               @map("village_id")
+  role      Role              @default(RESIDENT)
+  status    UserVillageStatus @default(ACTIVE)
+  createdAt DateTime          @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  village Village @relation(fields: [villageId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, villageId])
+  @@index([villageId])
+  @@map("user_villages")
+}
+
+/// 4. ตารางอัตราค่าน้ำแบบก้าวหน้า (Tiered Water Rate)
+model WaterRate {
+  id           Int      @id @default(autoincrement()) @map("rate_id")
+  villageId    Int      @map("village_id")
+  minUnit      Decimal  @default(0.00) @map("min_unit") @db.Decimal(10, 2)
+  maxUnit      Decimal? @map("max_unit") @db.Decimal(10, 2)
+  pricePerUnit Decimal  @map("price_per_unit") @db.Decimal(8, 2)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  village Village @relation(fields: [villageId], references: [id], onDelete: Cascade)
+
+  @@index([villageId])
+  @@map("water_rates")
+}
+
+/// 5. ตารางแปลง/บ้านเลขที่
+model Property {
+  id          Int            @id @default(autoincrement()) @map("property_id")
+  villageId   Int            @map("village_id")
+  houseNumber String         @map("house_number") @db.VarChar(50)
+  zone        String?        @db.VarChar(50)
+  meterCode   String?        @map("meter_code") @db.VarChar(50)
+  status      PropertyStatus @default(ACTIVE)
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  village        Village        @relation(fields: [villageId], references: [id], onDelete: Cascade)
+  userProperties UserProperty[]
+  meterReadings  MeterReading[]
+  invoices       Invoice[]
+
+  @@unique([villageId, houseNumber])
+  @@index([villageId])
+  @@map("properties")
+}
+
+/// 6. ตารางผูกสิทธิ์คนเข้ากับบ้าน
+model UserProperty {
+  id             Int      @id @default(autoincrement()) @map("user_property_id")
+  userId         Int      @map("user_id")
+  propertyId     Int      @map("property_id")
+  isPrimaryOwner Boolean  @default(false) @map("is_primary_owner")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, propertyId])
+  @@index([propertyId])
+  @@index([userId])
+  @@map("user_properties")
+}
+
+/// 7. ตารางบันทึกการอ่านมิเตอร์น้ำ
+model MeterReading {
+  id              Int      @id @default(autoincrement()) @map("reading_id")
+  villageId       Int      @map("village_id")
+  propertyId      Int      @map("property_id")
+  readerId        Int?     @map("reader_id")
+  billingMonth    DateTime @map("billing_month") @db.Date
+  previousReading Decimal  @map("previous_reading") @db.Decimal(10, 2)
+  currentReading  Decimal  @map("current_reading") @db.Decimal(10, 2)
+  consumption     Decimal  @map("consumption") @db.Decimal(10, 2)
+  imageUrl        String?  @map("image_url") @db.Text
+  readingDate     DateTime @default(now()) @map("reading_date")
+
+  village  Village  @relation(fields: [villageId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  reader   User?    @relation("ReaderReadings", fields: [readerId], references: [id], onDelete: SetNull)
+  invoice  Invoice?
+
+  @@unique([propertyId, billingMonth])
+  @@index([villageId, billingMonth])
+  @@index([propertyId])
+  @@map("meter_readings")
+}
+
+/// 8. ตารางใบแจ้งหนี้ / บิล
+model Invoice {
+  id            Int           @id @default(autoincrement()) @map("invoice_id")
+  villageId     Int           @map("village_id")
+  propertyId    Int           @map("property_id")
+  readingId     Int           @unique @map("reading_id")
+  billingMonth  DateTime      @map("billing_month") @db.Date
+  waterAmount   Decimal       @map("water_amount") @db.Decimal(10, 2)
+  serviceFee    Decimal       @default(0.00) @map("service_fee") @db.Decimal(10, 2)
+  fineAmount    Decimal       @default(0.00) @map("fine_amount") @db.Decimal(10, 2)
+  totalAmount   Decimal       @map("total_amount") @db.Decimal(10, 2)
+  paymentStatus InvoiceStatus @default(PENDING) @map("payment_status")
+  dueDate       DateTime      @map("due_date") @db.Date
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @default(now()) @updatedAt @map("updated_at")
+
+  village  Village      @relation(fields: [villageId], references: [id], onDelete: Cascade)
+  property Property     @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  reading  MeterReading @relation(fields: [readingId], references: [id], onDelete: Restrict)
+  payments Payment[]
+
+  @@index([villageId, billingMonth])
+  @@index([propertyId])
+  @@index([paymentStatus])
+  @@map("invoices")
+}
+
+/// 9. ตารางประวัติการชำระเงินสลิป
+model Payment {
+  id               Int               @id @default(autoincrement()) @map("payment_id")
+  invoiceId        Int               @map("invoice_id")
+  paidByUserId     Int?              @map("paid_by_user_id")
+  amountPaid       Decimal           @map("amount_paid") @db.Decimal(10, 2)
+  slipUrl          String            @map("slip_url") @db.Text
+  verifiedByUserId Int?              @map("verified_by_user_id")
+  paymentStatus    PaymentSlipStatus @default(SUBMITTED) @map("payment_status")
+  rejectReason     String?           @map("reject_reason") @db.Text
+  verifiedAt       DateTime?         @map("verified_at")
+  createdAt        DateTime          @default(now()) @map("created_at")
+
+  invoice    Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  paidBy     User?   @relation("PaidBy", fields: [paidByUserId], references: [id], onDelete: SetNull)
+  verifiedBy User?   @relation("VerifiedBy", fields: [verifiedByUserId], references: [id], onDelete: SetNull)
+
+  @@index([invoiceId])
+  @@map("payments")
+}
+
+/// 10. ตารางบันทึกประวัติการแก้ไขข้อมูล (Audit Logs)
+model AuditLog {
+  id        Int      @id @default(autoincrement()) @map("log_id")
+  villageId Int?     @map("village_id")
+  userId    Int?     @map("user_id")
+  action    String   @db.VarChar(50)
+  tableName String   @map("table_name") @db.VarChar(50)
+  recordId  Int      @map("record_id")
+  oldData   Json?    @map("old_data")
+  newData   Json?    @map("new_data")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  village Village? @relation(fields: [villageId], references: [id], onDelete: SetNull)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([villageId])
+  @@index([userId])
+  @@map("audit_logs")
+}
