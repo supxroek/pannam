@@ -2,11 +2,14 @@
 
 import lineProvider from "../providers/line.provider.js";
 import intentMatcher from "./intent-matcher.js";
+import followmeFlex from "../packages/templates/flex/follow.flex.js";
+import registerFlex from "../packages/templates/flex/register.flex.js";
 
 // ============================================================
 // ลงทะเบียน Intents
 // ============================================================
 
+// ทักทายผู้ใช้
 intentMatcher.register("GREETING", {
   description: "ทักทายผู้ใช้",
   keywords: [
@@ -36,6 +39,7 @@ intentMatcher.register("GREETING", {
       "สวัสดีครับ/ค่ะ! ยินดีที่ได้รู้จักคุณ 😊",
       "สวัสดี! มีอะไรให้ PANNAM ช่วยเหลือไหมครับ/ค่ะ?",
       "หวัดดีครับ/ค่ะ! วันนี้เป็นยังไงบ้าง?",
+      "สวัสดีครับ/ค่ะ! มีอะไรให้ช่วยเหลือไหมครับ/ค่ะ?",
     ];
     const randomResponse =
       responses[Math.floor(Math.random() * responses.length)];
@@ -46,7 +50,8 @@ intentMatcher.register("GREETING", {
   },
 });
 
-intentMatcher.register("WATER_BILL_CHECK", {
+// ตรวจสอบค่าน้ำ
+intentMatcher.register("WATER_CHECK", {
   description: "ตรวจสอบค่าน้ำ",
   keywords: ["ค่าน้ำ", "บิลน้ำ", "น้ำประปา", "water bill"],
   optionalKeywords: [
@@ -65,11 +70,59 @@ intentMatcher.register("WATER_BILL_CHECK", {
   execute: async (event) => {
     await lineProvider.replyOrPush(event, {
       type: "text",
-      text: "คุณต้องการตรวจสอบค่าน้ำของบัญชีไหนครับ/ค่ะ? กรุณาระบุหมายเลขผู้ใช้น้ำค่ะ",
+      text: "คุณต้องการตรวจสอบค่าน้ำของบัญชีไหนครับ/ค่ะ? กรุณาระบุหมายเลขผู้ใช้น้ำค่ะ", // แก้ไขเป็น flex เพื่อแสดงผลการใช้น้ำเดือนนั้นๆ
     });
   },
 });
 
+// ประวัติการใช้น้ำ
+intentMatcher.register("HISTORY", {
+  description: "ประวัติการใช้น้ำ 6 เดือนย้อนหลัง",
+  keywords: ["ประวัติ", "การใช้น้ำ", "history", "ประวัติการใช้น้ำ"],
+  optionalKeywords: ["ตรวจสอบ", "เช็ค", "ดู", "ย้อนหลัง", "สอบถาม"],
+  patterns: [
+    "ตรวจสอบ.*ประวัติ",
+    "เช็ค.*ประวัติ",
+    "ดู.*ประวัติ",
+    "ประวัติ.*ย้อนหลัง",
+    "สอบถาม.*ประวัติ",
+    "ประวัติ.*การใช้น้ำ",
+    "ยอด.*การใช้น้ำ",
+  ],
+  weight: 1.0,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "ประวัติการใช้น้ำ 6 เดือนย้อนหลัง", // เปลี่ยนเป็น flex เพื่อแสดงผลการใช้น้ำ 6 เดือนย้อนหลัง
+    });
+  },
+});
+
+// จดค่าน้ำ
+intentMatcher.register("RECORD_WATER", {
+  description: "จดค่าน้ำ",
+  keywords: ["จดค่าน้ำ", "บันทึก", "บันทึกการใช้น้ำ", "จดน้ำ",],
+  optionalKeywords: ["บันทึก", "จด", "เพิ่ม", "เขียน"],
+  patterns: [
+    "บันทึก.*การใช้น้ำ",
+    "จด.*การใช้น้ำ",
+    "เพิ่ม.*การใช้น้ำ",
+    "เขียน.*การใช้น้ำ",
+    "จด.*น้ำ",
+    "บันทึก.*น้ำ",
+    "เพิ่ม.*น้ำ",
+    "เขียน.*น้ำ",
+  ],
+  weight: 1.0,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "บันทึกการใช้น้ำสำเร็จ",
+    });
+  },
+});
+
+// ขอความช่วยเหลือ
 intentMatcher.register("HELP", {
   description: "ขอความช่วยเหลือ",
   keywords: ["ช่วยเหลือ", "ช่วย", "help", "สอน", "วิธี", "ใช้ยังไง", "ทำยังไง"],
@@ -80,7 +133,7 @@ intentMatcher.register("HELP", {
     await lineProvider.replyOrPush(event, {
       type: "text",
       text: `คุณสามารถใช้งาน PANNAM ได้ดังนี้:
-1. พิมพ์ "เช็คค่าน้ำ" เพื่อตรวจสอบยอดค่าน้ำ
+1. พิมพ์ "เช็คค่าน้ำ" เพื่อตรวจสอบค่าน้ำ
 2. พิมพ์ "ประวัติ" เพื่อดูประวัติการใช้น้ำ
 3. พิมพ์ "ติดต่อ" เพื่อติดต่อเจ้าหน้าที่
 4. พิมพ์ "วิธีใช้" เพื่อดูคู่มือการใช้งาน`,
@@ -88,6 +141,7 @@ intentMatcher.register("HELP", {
   },
 });
 
+// ร้องเรียนหรือแจ้งปัญหา
 intentMatcher.register("COMPLAINT", {
   description: "ร้องเรียนหรือแจ้งปัญหา",
   keywords: [
@@ -110,6 +164,7 @@ intentMatcher.register("COMPLAINT", {
   },
 });
 
+// ขอบคุณ
 intentMatcher.register("THANKS", {
   description: "ขอบคุณ",
   keywords: ["ขอบคุณ", "thank", "thanks", "ขอบใจ", "เก่งมาก", "ดีมาก"],
@@ -123,6 +178,7 @@ intentMatcher.register("THANKS", {
   },
 });
 
+// ลาก่อน
 intentMatcher.register("GOODBYE", {
   description: "ลาก่อน",
   keywords: ["ลาก่อน", "บาย", "bye", "goodbye", "ไปก่อน", "พักผ่อน"],
@@ -146,7 +202,7 @@ intentMatcher.register("UNKNOWN_FALLBACK", {
     const text = event.message.text;
     await lineProvider.replyOrPush(event, {
       type: "text",
-      text: `"${text}" ขออภัยครับ/ค่ะ ฉันไม่แน่ใจว่าคุณหมายถึงอะไร\n\nลองพิมพ์ "ช่วยเหลือ" เพื่อดูคำสั่งที่ใช้งานได้ หรือถามได้โดยตรงเลยค่ะ`,
+      text: `"${text}" ขออภัยครับ/ค่ะ ฉันไม่แน่ใจว่าคุณหมายถึงอะไร\n\nลองพิมพ์ "ช่วยเหลือ" เพื่อดูคำสั่งที่ใช้งานได้ หรือถามได้โดยตรงเลยค่ะ🙏`,
     });
   },
 });
@@ -160,6 +216,13 @@ class EventsHandler {
 
     if (source?.userId) {
       await lineProvider.showLoadingAnimation(source.userId);
+
+      // ตรวจสอบสมาชิก -> หากไม่ใช่สมาชิก ให้ส่งข้อความแจ้งเตือนเสมอ
+      const isMember = await lineProvider.isMember(source.userId);
+      if (!isMember) {
+        await lineProvider.replyOrPush(event, registerFlex());
+        return; // จบการทำงาน
+      }
     }
 
     switch (message.type) {
@@ -182,14 +245,15 @@ class EventsHandler {
   }
 
   async handleFollow(event) {
-    const { source } = event;
     try {
-      await lineProvider.replyOrPush(event, welcomeNewUserFlex());
+      // ส่ง flex message เมื่อผู้ใช้ทำการ follow หลังจากสติกเกอร์
+      await lineProvider.replyOrPush(event, followmeFlex());
     } catch (error) {
       console.error("Failed to send flex message:", error.message);
       await lineProvider.replyOrPush(event, {
-        type: "text",
-        text: `สวัสดี คุณ ${source.userId}!\nนี่คือบัญชีทางการของ PANNAM (ปันน้ำ)\n\nคุณสามารถใช้งานเพื่อตรวจสอบค่าน้ำและบริการอื่นๆ ของ PANNAM (ปันน้ำ)ได้แล้ว!\nเราจะแจ้งเตือนข่าวสารหรือมีการเปลี่ยนแปลงอื่นๆ ให้ทราบเมื่อมีการอัพเดท\nขอบคุณที่ใช้บริการ PANNAM (ปันน้ำ)`,
+        type: "sticker",
+        packageId: "789",
+        stickerId: "10876",
       });
     }
   }

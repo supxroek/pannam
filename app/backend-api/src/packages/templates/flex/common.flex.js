@@ -1,4 +1,4 @@
-// src/templates/flex/components/common.flex.js
+// src/packages/templates/flex/components/common.flex.js
 
 /**
  * Remove undefined/null values.
@@ -229,9 +229,9 @@ function separator(margin = "sm") {
  * Logo
  */
 function logo({
-  url = "https://liff-timesnow-2024.web.app/assets/images/logo_timenow_bottom.png",
+  url = "https://profile.line-scdn.net/0h-n9lwDPCckEEFW5dL0INFjhQfCxzO3QJfHNpInZHfyIoJDdAaCY7dCdFK3d9JmIXayc6JiAcJXko",
   size = "full",
-  aspectRatio = "20:5",
+  aspectRatio = "20:8",
   paddingBottom = "sm",
 } = {}) {
   return box({
@@ -298,7 +298,10 @@ function note(value, options = {}) {
 /**
  * Info row แบบ label/value
  *
- * ใช้แทน infoRow และ infoRowsBetween
+ * ตัวอย่างการแสดงผล:
+ * บริการ1  ตัวอย่าง1.1
+ * บริการ2  ตัวอย่าง2.1
+ *        ตัวอย่าง2.2
  */
 function infoRow({
   label = {},
@@ -339,6 +342,10 @@ function infoRow({
 
 /**
  * Bullet row
+ *
+ * ตัวอย่างการแสดงผล:
+ * • ตัวอย่าง1
+ * • ตัวอย่าง2
  */
 function bullet(value, options = {}) {
   return box({
@@ -365,6 +372,10 @@ function bullet(value, options = {}) {
 
 /**
  * Numbered row
+ *
+ * ตัวอย่างการแสดงผล:
+ * 1. ตัวอย่าง1
+ * 2. ตัวอย่าง2
  */
 function numberedRow(number, label, value) {
   const contents = [
@@ -410,6 +421,7 @@ function standardHeader({
   logoUrl,
   title: titleValue,
   subtitle: subtitleValue,
+  logoAspectRatio,
   titleColor,
   subtitleColor,
 } = {}) {
@@ -419,7 +431,7 @@ function standardHeader({
     contents.push(
       logo({
         url: logoUrl,
-        aspectRatio: "10:2",
+        aspectRatio: logoAspectRatio,
       }),
     );
   }

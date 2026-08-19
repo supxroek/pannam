@@ -1,7 +1,7 @@
 import * as line from "@line/bot-sdk";
 import axios from "axios";
 import config from "../config/line.config.js";
-// const { employeeModelV2 } = require("../../modules/models/v2/employee.model");
+import { prisma } from '../packages/lib/prisma.js'
 
 // const { LINE_RICH_MENU_ID } = process.env;
 
@@ -86,6 +86,14 @@ class LineProvider {
     }
   }
 
+  // Check if the user is a member
+  async isMember(userId) {
+    const member = await prisma.user.findUnique({
+      where: { lineUserId: userId },
+    });
+    return !!member ; // ลบ Hard code "userId" ออก เมื่อใช้งานจริง
+  }
+
   // async checkMemberStatus(source) {
   //   if (!source?.userId) return;
   //   const member = await employeeModelV2.findActiveByLineUserId({
@@ -121,11 +129,11 @@ class LineProvider {
   // }
 
   async linkRichMenu(userId, richMenuId) {
-    return await this.client.linkRichMenuToUser(userId, richMenuId);
+    return await this.client.linkRichMenuIdToUser(userId, richMenuId);
   }
 
   async unlinkRichMenu(userId) {
-    return await this.client.unlinkRichMenuFromUser(userId);
+    return await this.client.unlinkRichMenuIdFromUser(userId);
   }
 }
 
