@@ -1,10 +1,10 @@
 import crypto from "node:crypto";
 import createHttpError from "http-errors";
-import config from "../config/line.config.js";
+import { config } from "../config/line.config.js";
 
 const validateSignature = (body, signature) => {
   if (!config.channelSecret) {
-    createHttpError(500, "LINE_CHANNEL_SECRET not configured");
+    createHttpError(500, "LINE_MESSAGING_SECRET not configured");
   }
   const hash = crypto
     .createHmac("sha256", config.channelSecret)

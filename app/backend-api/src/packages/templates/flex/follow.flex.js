@@ -1,4 +1,8 @@
 import {
+  LINE_DEFAULT_LIFF_URL,
+  LINE_LIFF_ID_REGISTERED,
+} from "../../../config/line.config.js";
+import {
   flex,
   bubble,
   box,
@@ -41,7 +45,7 @@ export default function followmeFlex() {
             action: {
               type: "uri",
               label: "เริ่มต้นใช้งาน",
-              uri: "https://liff.line.me/YOUR-LIFF-ID/register",
+              uri: `${LINE_DEFAULT_LIFF_URL}${LINE_LIFF_ID_REGISTERED}`,
             },
             style: "primary",
             color: "#0288D1",
