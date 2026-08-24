@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model WaterRate
- * 4. ตารางอัตราค่าน้ำแบบก้าวหน้า (Tiered Water Rate)
+ * 6. อัตราค่าน้ำ
  */
 export type WaterRateModel = runtime.Types.Result.DefaultSelection<Prisma.$WaterRatePayload>
 
@@ -49,6 +49,7 @@ export type WaterRateMinAggregateOutputType = {
   maxUnit: runtime.Decimal | null
   pricePerUnit: runtime.Decimal | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type WaterRateMaxAggregateOutputType = {
@@ -58,6 +59,7 @@ export type WaterRateMaxAggregateOutputType = {
   maxUnit: runtime.Decimal | null
   pricePerUnit: runtime.Decimal | null
   createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type WaterRateCountAggregateOutputType = {
@@ -67,6 +69,7 @@ export type WaterRateCountAggregateOutputType = {
   maxUnit: number
   pricePerUnit: number
   createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -94,6 +97,7 @@ export type WaterRateMinAggregateInputType = {
   maxUnit?: true
   pricePerUnit?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type WaterRateMaxAggregateInputType = {
@@ -103,6 +107,7 @@ export type WaterRateMaxAggregateInputType = {
   maxUnit?: true
   pricePerUnit?: true
   createdAt?: true
+  updatedAt?: true
 }
 
 export type WaterRateCountAggregateInputType = {
@@ -112,6 +117,7 @@ export type WaterRateCountAggregateInputType = {
   maxUnit?: true
   pricePerUnit?: true
   createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -208,6 +214,7 @@ export type WaterRateGroupByOutputType = {
   maxUnit: runtime.Decimal | null
   pricePerUnit: runtime.Decimal
   createdAt: Date
+  updatedAt: Date
   _count: WaterRateCountAggregateOutputType | null
   _avg: WaterRateAvgAggregateOutputType | null
   _sum: WaterRateSumAggregateOutputType | null
@@ -240,6 +247,7 @@ export type WaterRateWhereInput = {
   maxUnit?: Prisma.DecimalNullableFilter<"WaterRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFilter<"WaterRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"WaterRate"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"WaterRate"> | Date | string
   village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
 }
 
@@ -250,6 +258,7 @@ export type WaterRateOrderByWithRelationInput = {
   maxUnit?: Prisma.SortOrderInput | Prisma.SortOrder
   pricePerUnit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   village?: Prisma.VillageOrderByWithRelationInput
 }
 
@@ -263,6 +272,7 @@ export type WaterRateWhereUniqueInput = Prisma.AtLeast<{
   maxUnit?: Prisma.DecimalNullableFilter<"WaterRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFilter<"WaterRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"WaterRate"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"WaterRate"> | Date | string
   village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
 }, "id">
 
@@ -273,6 +283,7 @@ export type WaterRateOrderByWithAggregationInput = {
   maxUnit?: Prisma.SortOrderInput | Prisma.SortOrder
   pricePerUnit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.WaterRateCountOrderByAggregateInput
   _avg?: Prisma.WaterRateAvgOrderByAggregateInput
   _max?: Prisma.WaterRateMaxOrderByAggregateInput
@@ -290,6 +301,7 @@ export type WaterRateScalarWhereWithAggregatesInput = {
   maxUnit?: Prisma.DecimalNullableWithAggregatesFilter<"WaterRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalWithAggregatesFilter<"WaterRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WaterRate"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WaterRate"> | Date | string
 }
 
 export type WaterRateCreateInput = {
@@ -297,6 +309,7 @@ export type WaterRateCreateInput = {
   maxUnit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  updatedAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutWaterRatesInput
 }
 
@@ -307,6 +320,7 @@ export type WaterRateUncheckedCreateInput = {
   maxUnit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type WaterRateUpdateInput = {
@@ -314,6 +328,7 @@ export type WaterRateUpdateInput = {
   maxUnit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutWaterRatesNestedInput
 }
 
@@ -324,6 +339,7 @@ export type WaterRateUncheckedUpdateInput = {
   maxUnit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WaterRateCreateManyInput = {
@@ -333,6 +349,7 @@ export type WaterRateCreateManyInput = {
   maxUnit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type WaterRateUpdateManyMutationInput = {
@@ -340,6 +357,7 @@ export type WaterRateUpdateManyMutationInput = {
   maxUnit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WaterRateUncheckedUpdateManyInput = {
@@ -349,6 +367,7 @@ export type WaterRateUncheckedUpdateManyInput = {
   maxUnit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WaterRateListRelationFilter = {
@@ -368,6 +387,7 @@ export type WaterRateCountOrderByAggregateInput = {
   maxUnit?: Prisma.SortOrder
   pricePerUnit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type WaterRateAvgOrderByAggregateInput = {
@@ -385,6 +405,7 @@ export type WaterRateMaxOrderByAggregateInput = {
   maxUnit?: Prisma.SortOrder
   pricePerUnit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type WaterRateMinOrderByAggregateInput = {
@@ -394,6 +415,7 @@ export type WaterRateMinOrderByAggregateInput = {
   maxUnit?: Prisma.SortOrder
   pricePerUnit?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type WaterRateSumOrderByAggregateInput = {
@@ -446,6 +468,14 @@ export type WaterRateUncheckedUpdateManyWithoutVillageNestedInput = {
   deleteMany?: Prisma.WaterRateScalarWhereInput | Prisma.WaterRateScalarWhereInput[]
 }
 
+export type DecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type NullableDecimalFieldUpdateOperationsInput = {
   set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -459,6 +489,7 @@ export type WaterRateCreateWithoutVillageInput = {
   maxUnit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type WaterRateUncheckedCreateWithoutVillageInput = {
@@ -467,6 +498,7 @@ export type WaterRateUncheckedCreateWithoutVillageInput = {
   maxUnit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type WaterRateCreateOrConnectWithoutVillageInput = {
@@ -505,6 +537,7 @@ export type WaterRateScalarWhereInput = {
   maxUnit?: Prisma.DecimalNullableFilter<"WaterRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFilter<"WaterRate"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFilter<"WaterRate"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"WaterRate"> | Date | string
 }
 
 export type WaterRateCreateManyVillageInput = {
@@ -513,6 +546,7 @@ export type WaterRateCreateManyVillageInput = {
   maxUnit?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
+  updatedAt?: Date | string
 }
 
 export type WaterRateUpdateWithoutVillageInput = {
@@ -520,6 +554,7 @@ export type WaterRateUpdateWithoutVillageInput = {
   maxUnit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WaterRateUncheckedUpdateWithoutVillageInput = {
@@ -528,6 +563,7 @@ export type WaterRateUncheckedUpdateWithoutVillageInput = {
   maxUnit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type WaterRateUncheckedUpdateManyWithoutVillageInput = {
@@ -536,6 +572,7 @@ export type WaterRateUncheckedUpdateManyWithoutVillageInput = {
   maxUnit?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   pricePerUnit?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -547,6 +584,7 @@ export type WaterRateSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
   maxUnit?: boolean
   pricePerUnit?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["waterRate"]>
 
@@ -557,6 +595,7 @@ export type WaterRateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
   maxUnit?: boolean
   pricePerUnit?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["waterRate"]>
 
@@ -567,6 +606,7 @@ export type WaterRateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
   maxUnit?: boolean
   pricePerUnit?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["waterRate"]>
 
@@ -577,9 +617,10 @@ export type WaterRateSelectScalar = {
   maxUnit?: boolean
   pricePerUnit?: boolean
   createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type WaterRateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageId" | "minUnit" | "maxUnit" | "pricePerUnit" | "createdAt", ExtArgs["result"]["waterRate"]>
+export type WaterRateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageId" | "minUnit" | "maxUnit" | "pricePerUnit" | "createdAt" | "updatedAt", ExtArgs["result"]["waterRate"]>
 export type WaterRateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
 }
@@ -602,6 +643,7 @@ export type $WaterRatePayload<ExtArgs extends runtime.Types.Extensions.InternalA
     maxUnit: runtime.Decimal | null
     pricePerUnit: runtime.Decimal
     createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["waterRate"]>
   composites: {}
 }
@@ -1032,6 +1074,7 @@ export interface WaterRateFieldRefs {
   readonly maxUnit: Prisma.FieldRef<"WaterRate", 'Decimal'>
   readonly pricePerUnit: Prisma.FieldRef<"WaterRate", 'Decimal'>
   readonly createdAt: Prisma.FieldRef<"WaterRate", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"WaterRate", 'DateTime'>
 }
     
 

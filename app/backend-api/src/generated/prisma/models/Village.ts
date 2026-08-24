@@ -28,23 +28,23 @@ export type AggregateVillage = {
 
 export type VillageAvgAggregateOutputType = {
   id: number | null
-  defaultServiceFee: runtime.Decimal | null
 }
 
 export type VillageSumAggregateOutputType = {
   id: number | null
-  defaultServiceFee: runtime.Decimal | null
 }
 
 export type VillageMinAggregateOutputType = {
   id: number | null
-  villageCode: string | null
   address: string | null
   subDistrict: string | null
   district: string | null
   province: string | null
   postalCode: string | null
-  defaultServiceFee: runtime.Decimal | null
+  paymentMethod: $Enums.PaymentMethod | null
+  bankProvider: string | null
+  bankNumber: string | null
+  bankPayeeName: string | null
   promptpayNo: string | null
   promptpayName: string | null
   promptpayImage: string | null
@@ -56,13 +56,15 @@ export type VillageMinAggregateOutputType = {
 
 export type VillageMaxAggregateOutputType = {
   id: number | null
-  villageCode: string | null
   address: string | null
   subDistrict: string | null
   district: string | null
   province: string | null
   postalCode: string | null
-  defaultServiceFee: runtime.Decimal | null
+  paymentMethod: $Enums.PaymentMethod | null
+  bankProvider: string | null
+  bankNumber: string | null
+  bankPayeeName: string | null
   promptpayNo: string | null
   promptpayName: string | null
   promptpayImage: string | null
@@ -74,13 +76,15 @@ export type VillageMaxAggregateOutputType = {
 
 export type VillageCountAggregateOutputType = {
   id: number
-  villageCode: number
   address: number
   subDistrict: number
   district: number
   province: number
   postalCode: number
-  defaultServiceFee: number
+  paymentMethod: number
+  bankProvider: number
+  bankNumber: number
+  bankPayeeName: number
   promptpayNo: number
   promptpayName: number
   promptpayImage: number
@@ -94,23 +98,23 @@ export type VillageCountAggregateOutputType = {
 
 export type VillageAvgAggregateInputType = {
   id?: true
-  defaultServiceFee?: true
 }
 
 export type VillageSumAggregateInputType = {
   id?: true
-  defaultServiceFee?: true
 }
 
 export type VillageMinAggregateInputType = {
   id?: true
-  villageCode?: true
   address?: true
   subDistrict?: true
   district?: true
   province?: true
   postalCode?: true
-  defaultServiceFee?: true
+  paymentMethod?: true
+  bankProvider?: true
+  bankNumber?: true
+  bankPayeeName?: true
   promptpayNo?: true
   promptpayName?: true
   promptpayImage?: true
@@ -122,13 +126,15 @@ export type VillageMinAggregateInputType = {
 
 export type VillageMaxAggregateInputType = {
   id?: true
-  villageCode?: true
   address?: true
   subDistrict?: true
   district?: true
   province?: true
   postalCode?: true
-  defaultServiceFee?: true
+  paymentMethod?: true
+  bankProvider?: true
+  bankNumber?: true
+  bankPayeeName?: true
   promptpayNo?: true
   promptpayName?: true
   promptpayImage?: true
@@ -140,13 +146,15 @@ export type VillageMaxAggregateInputType = {
 
 export type VillageCountAggregateInputType = {
   id?: true
-  villageCode?: true
   address?: true
   subDistrict?: true
   district?: true
   province?: true
   postalCode?: true
-  defaultServiceFee?: true
+  paymentMethod?: true
+  bankProvider?: true
+  bankNumber?: true
+  bankPayeeName?: true
   promptpayNo?: true
   promptpayName?: true
   promptpayImage?: true
@@ -245,13 +253,15 @@ export type VillageGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type VillageGroupByOutputType = {
   id: number
-  villageCode: string
   address: string | null
   subDistrict: string | null
   district: string | null
   province: string | null
   postalCode: string | null
-  defaultServiceFee: runtime.Decimal
+  paymentMethod: $Enums.PaymentMethod
+  bankProvider: string | null
+  bankNumber: string | null
+  bankPayeeName: string | null
   promptpayNo: string | null
   promptpayName: string | null
   promptpayImage: string | null
@@ -286,13 +296,15 @@ export type VillageWhereInput = {
   OR?: Prisma.VillageWhereInput[]
   NOT?: Prisma.VillageWhereInput | Prisma.VillageWhereInput[]
   id?: Prisma.IntFilter<"Village"> | number
-  villageCode?: Prisma.StringFilter<"Village"> | string
   address?: Prisma.StringNullableFilter<"Village"> | string | null
   subDistrict?: Prisma.StringNullableFilter<"Village"> | string | null
   district?: Prisma.StringNullableFilter<"Village"> | string | null
   province?: Prisma.StringNullableFilter<"Village"> | string | null
   postalCode?: Prisma.StringNullableFilter<"Village"> | string | null
-  defaultServiceFee?: Prisma.DecimalFilter<"Village"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFilter<"Village"> | $Enums.PaymentMethod
+  bankProvider?: Prisma.StringNullableFilter<"Village"> | string | null
+  bankNumber?: Prisma.StringNullableFilter<"Village"> | string | null
+  bankPayeeName?: Prisma.StringNullableFilter<"Village"> | string | null
   promptpayNo?: Prisma.StringNullableFilter<"Village"> | string | null
   promptpayName?: Prisma.StringNullableFilter<"Village"> | string | null
   promptpayImage?: Prisma.StringNullableFilter<"Village"> | string | null
@@ -304,19 +316,20 @@ export type VillageWhereInput = {
   waterRates?: Prisma.WaterRateListRelationFilter
   properties?: Prisma.PropertyListRelationFilter
   meterReadings?: Prisma.MeterReadingListRelationFilter
-  invoices?: Prisma.InvoiceListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
 }
 
 export type VillageOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  villageCode?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   subDistrict?: Prisma.SortOrderInput | Prisma.SortOrder
   district?: Prisma.SortOrderInput | Prisma.SortOrder
   province?: Prisma.SortOrderInput | Prisma.SortOrder
   postalCode?: Prisma.SortOrderInput | Prisma.SortOrder
-  defaultServiceFee?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  bankProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankPayeeName?: Prisma.SortOrderInput | Prisma.SortOrder
   promptpayNo?: Prisma.SortOrderInput | Prisma.SortOrder
   promptpayName?: Prisma.SortOrderInput | Prisma.SortOrder
   promptpayImage?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -328,13 +341,11 @@ export type VillageOrderByWithRelationInput = {
   waterRates?: Prisma.WaterRateOrderByRelationAggregateInput
   properties?: Prisma.PropertyOrderByRelationAggregateInput
   meterReadings?: Prisma.MeterReadingOrderByRelationAggregateInput
-  invoices?: Prisma.InvoiceOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
 }
 
 export type VillageWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  villageCode?: string
   AND?: Prisma.VillageWhereInput | Prisma.VillageWhereInput[]
   OR?: Prisma.VillageWhereInput[]
   NOT?: Prisma.VillageWhereInput | Prisma.VillageWhereInput[]
@@ -343,7 +354,10 @@ export type VillageWhereUniqueInput = Prisma.AtLeast<{
   district?: Prisma.StringNullableFilter<"Village"> | string | null
   province?: Prisma.StringNullableFilter<"Village"> | string | null
   postalCode?: Prisma.StringNullableFilter<"Village"> | string | null
-  defaultServiceFee?: Prisma.DecimalFilter<"Village"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFilter<"Village"> | $Enums.PaymentMethod
+  bankProvider?: Prisma.StringNullableFilter<"Village"> | string | null
+  bankNumber?: Prisma.StringNullableFilter<"Village"> | string | null
+  bankPayeeName?: Prisma.StringNullableFilter<"Village"> | string | null
   promptpayNo?: Prisma.StringNullableFilter<"Village"> | string | null
   promptpayName?: Prisma.StringNullableFilter<"Village"> | string | null
   promptpayImage?: Prisma.StringNullableFilter<"Village"> | string | null
@@ -355,19 +369,20 @@ export type VillageWhereUniqueInput = Prisma.AtLeast<{
   waterRates?: Prisma.WaterRateListRelationFilter
   properties?: Prisma.PropertyListRelationFilter
   meterReadings?: Prisma.MeterReadingListRelationFilter
-  invoices?: Prisma.InvoiceListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
-}, "id" | "villageCode">
+}, "id">
 
 export type VillageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  villageCode?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   subDistrict?: Prisma.SortOrderInput | Prisma.SortOrder
   district?: Prisma.SortOrderInput | Prisma.SortOrder
   province?: Prisma.SortOrderInput | Prisma.SortOrder
   postalCode?: Prisma.SortOrderInput | Prisma.SortOrder
-  defaultServiceFee?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  bankProvider?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankNumber?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankPayeeName?: Prisma.SortOrderInput | Prisma.SortOrder
   promptpayNo?: Prisma.SortOrderInput | Prisma.SortOrder
   promptpayName?: Prisma.SortOrderInput | Prisma.SortOrder
   promptpayImage?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -387,13 +402,15 @@ export type VillageScalarWhereWithAggregatesInput = {
   OR?: Prisma.VillageScalarWhereWithAggregatesInput[]
   NOT?: Prisma.VillageScalarWhereWithAggregatesInput | Prisma.VillageScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Village"> | number
-  villageCode?: Prisma.StringWithAggregatesFilter<"Village"> | string
   address?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   subDistrict?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   district?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   province?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   postalCode?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
-  defaultServiceFee?: Prisma.DecimalWithAggregatesFilter<"Village"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodWithAggregatesFilter<"Village"> | $Enums.PaymentMethod
+  bankProvider?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
+  bankNumber?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
+  bankPayeeName?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   promptpayNo?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   promptpayName?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
   promptpayImage?: Prisma.StringNullableWithAggregatesFilter<"Village"> | string | null
@@ -404,13 +421,15 @@ export type VillageScalarWhereWithAggregatesInput = {
 }
 
 export type VillageCreateInput = {
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -422,19 +441,20 @@ export type VillageCreateInput = {
   waterRates?: Prisma.WaterRateCreateNestedManyWithoutVillageInput
   properties?: Prisma.PropertyCreateNestedManyWithoutVillageInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutVillageInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutVillageInput
 }
 
 export type VillageUncheckedCreateInput = {
   id?: number
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -446,18 +466,19 @@ export type VillageUncheckedCreateInput = {
   waterRates?: Prisma.WaterRateUncheckedCreateNestedManyWithoutVillageInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutVillageInput
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutVillageInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutVillageInput
 }
 
 export type VillageUpdateInput = {
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -469,19 +490,20 @@ export type VillageUpdateInput = {
   waterRates?: Prisma.WaterRateUpdateManyWithoutVillageNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutVillageNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutVillageNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutVillageNestedInput
 }
 
 export type VillageUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -493,19 +515,20 @@ export type VillageUncheckedUpdateInput = {
   waterRates?: Prisma.WaterRateUncheckedUpdateManyWithoutVillageNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutVillageNestedInput
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutVillageNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutVillageNestedInput
 }
 
 export type VillageCreateManyInput = {
   id?: number
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -516,13 +539,15 @@ export type VillageCreateManyInput = {
 }
 
 export type VillageUpdateManyMutationInput = {
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -534,13 +559,15 @@ export type VillageUpdateManyMutationInput = {
 
 export type VillageUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -552,13 +579,15 @@ export type VillageUncheckedUpdateManyInput = {
 
 export type VillageCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  villageCode?: Prisma.SortOrder
   address?: Prisma.SortOrder
   subDistrict?: Prisma.SortOrder
   district?: Prisma.SortOrder
   province?: Prisma.SortOrder
   postalCode?: Prisma.SortOrder
-  defaultServiceFee?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  bankProvider?: Prisma.SortOrder
+  bankNumber?: Prisma.SortOrder
+  bankPayeeName?: Prisma.SortOrder
   promptpayNo?: Prisma.SortOrder
   promptpayName?: Prisma.SortOrder
   promptpayImage?: Prisma.SortOrder
@@ -570,18 +599,19 @@ export type VillageCountOrderByAggregateInput = {
 
 export type VillageAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  defaultServiceFee?: Prisma.SortOrder
 }
 
 export type VillageMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  villageCode?: Prisma.SortOrder
   address?: Prisma.SortOrder
   subDistrict?: Prisma.SortOrder
   district?: Prisma.SortOrder
   province?: Prisma.SortOrder
   postalCode?: Prisma.SortOrder
-  defaultServiceFee?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  bankProvider?: Prisma.SortOrder
+  bankNumber?: Prisma.SortOrder
+  bankPayeeName?: Prisma.SortOrder
   promptpayNo?: Prisma.SortOrder
   promptpayName?: Prisma.SortOrder
   promptpayImage?: Prisma.SortOrder
@@ -593,13 +623,15 @@ export type VillageMaxOrderByAggregateInput = {
 
 export type VillageMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  villageCode?: Prisma.SortOrder
   address?: Prisma.SortOrder
   subDistrict?: Prisma.SortOrder
   district?: Prisma.SortOrder
   province?: Prisma.SortOrder
   postalCode?: Prisma.SortOrder
-  defaultServiceFee?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  bankProvider?: Prisma.SortOrder
+  bankNumber?: Prisma.SortOrder
+  bankPayeeName?: Prisma.SortOrder
   promptpayNo?: Prisma.SortOrder
   promptpayName?: Prisma.SortOrder
   promptpayImage?: Prisma.SortOrder
@@ -611,7 +643,6 @@ export type VillageMinOrderByAggregateInput = {
 
 export type VillageSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  defaultServiceFee?: Prisma.SortOrder
 }
 
 export type VillageScalarRelationFilter = {
@@ -624,20 +655,12 @@ export type VillageNullableScalarRelationFilter = {
   isNot?: Prisma.VillageWhereInput | null
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
 }
 
-export type DecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+export type EnumPaymentMethodFieldUpdateOperationsInput = {
+  set?: $Enums.PaymentMethod
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -670,20 +693,6 @@ export type VillageUpdateOneRequiredWithoutUserVillagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VillageUpdateToOneWithWhereWithoutUserVillagesInput, Prisma.VillageUpdateWithoutUserVillagesInput>, Prisma.VillageUncheckedUpdateWithoutUserVillagesInput>
 }
 
-export type VillageCreateNestedOneWithoutWaterRatesInput = {
-  create?: Prisma.XOR<Prisma.VillageCreateWithoutWaterRatesInput, Prisma.VillageUncheckedCreateWithoutWaterRatesInput>
-  connectOrCreate?: Prisma.VillageCreateOrConnectWithoutWaterRatesInput
-  connect?: Prisma.VillageWhereUniqueInput
-}
-
-export type VillageUpdateOneRequiredWithoutWaterRatesNestedInput = {
-  create?: Prisma.XOR<Prisma.VillageCreateWithoutWaterRatesInput, Prisma.VillageUncheckedCreateWithoutWaterRatesInput>
-  connectOrCreate?: Prisma.VillageCreateOrConnectWithoutWaterRatesInput
-  upsert?: Prisma.VillageUpsertWithoutWaterRatesInput
-  connect?: Prisma.VillageWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.VillageUpdateToOneWithWhereWithoutWaterRatesInput, Prisma.VillageUpdateWithoutWaterRatesInput>, Prisma.VillageUncheckedUpdateWithoutWaterRatesInput>
-}
-
 export type VillageCreateNestedOneWithoutPropertiesInput = {
   create?: Prisma.XOR<Prisma.VillageCreateWithoutPropertiesInput, Prisma.VillageUncheckedCreateWithoutPropertiesInput>
   connectOrCreate?: Prisma.VillageCreateOrConnectWithoutPropertiesInput
@@ -698,6 +707,20 @@ export type VillageUpdateOneRequiredWithoutPropertiesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.VillageUpdateToOneWithWhereWithoutPropertiesInput, Prisma.VillageUpdateWithoutPropertiesInput>, Prisma.VillageUncheckedUpdateWithoutPropertiesInput>
 }
 
+export type VillageCreateNestedOneWithoutWaterRatesInput = {
+  create?: Prisma.XOR<Prisma.VillageCreateWithoutWaterRatesInput, Prisma.VillageUncheckedCreateWithoutWaterRatesInput>
+  connectOrCreate?: Prisma.VillageCreateOrConnectWithoutWaterRatesInput
+  connect?: Prisma.VillageWhereUniqueInput
+}
+
+export type VillageUpdateOneRequiredWithoutWaterRatesNestedInput = {
+  create?: Prisma.XOR<Prisma.VillageCreateWithoutWaterRatesInput, Prisma.VillageUncheckedCreateWithoutWaterRatesInput>
+  connectOrCreate?: Prisma.VillageCreateOrConnectWithoutWaterRatesInput
+  upsert?: Prisma.VillageUpsertWithoutWaterRatesInput
+  connect?: Prisma.VillageWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.VillageUpdateToOneWithWhereWithoutWaterRatesInput, Prisma.VillageUpdateWithoutWaterRatesInput>, Prisma.VillageUncheckedUpdateWithoutWaterRatesInput>
+}
+
 export type VillageCreateNestedOneWithoutMeterReadingsInput = {
   create?: Prisma.XOR<Prisma.VillageCreateWithoutMeterReadingsInput, Prisma.VillageUncheckedCreateWithoutMeterReadingsInput>
   connectOrCreate?: Prisma.VillageCreateOrConnectWithoutMeterReadingsInput
@@ -710,20 +733,6 @@ export type VillageUpdateOneRequiredWithoutMeterReadingsNestedInput = {
   upsert?: Prisma.VillageUpsertWithoutMeterReadingsInput
   connect?: Prisma.VillageWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.VillageUpdateToOneWithWhereWithoutMeterReadingsInput, Prisma.VillageUpdateWithoutMeterReadingsInput>, Prisma.VillageUncheckedUpdateWithoutMeterReadingsInput>
-}
-
-export type VillageCreateNestedOneWithoutInvoicesInput = {
-  create?: Prisma.XOR<Prisma.VillageCreateWithoutInvoicesInput, Prisma.VillageUncheckedCreateWithoutInvoicesInput>
-  connectOrCreate?: Prisma.VillageCreateOrConnectWithoutInvoicesInput
-  connect?: Prisma.VillageWhereUniqueInput
-}
-
-export type VillageUpdateOneRequiredWithoutInvoicesNestedInput = {
-  create?: Prisma.XOR<Prisma.VillageCreateWithoutInvoicesInput, Prisma.VillageUncheckedCreateWithoutInvoicesInput>
-  connectOrCreate?: Prisma.VillageCreateOrConnectWithoutInvoicesInput
-  upsert?: Prisma.VillageUpsertWithoutInvoicesInput
-  connect?: Prisma.VillageWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.VillageUpdateToOneWithWhereWithoutInvoicesInput, Prisma.VillageUpdateWithoutInvoicesInput>, Prisma.VillageUncheckedUpdateWithoutInvoicesInput>
 }
 
 export type VillageCreateNestedOneWithoutAuditLogsInput = {
@@ -743,13 +752,15 @@ export type VillageUpdateOneWithoutAuditLogsNestedInput = {
 }
 
 export type VillageCreateWithoutUserVillagesInput = {
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -760,19 +771,20 @@ export type VillageCreateWithoutUserVillagesInput = {
   waterRates?: Prisma.WaterRateCreateNestedManyWithoutVillageInput
   properties?: Prisma.PropertyCreateNestedManyWithoutVillageInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutVillageInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutVillageInput
 }
 
 export type VillageUncheckedCreateWithoutUserVillagesInput = {
   id?: number
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -783,7 +795,6 @@ export type VillageUncheckedCreateWithoutUserVillagesInput = {
   waterRates?: Prisma.WaterRateUncheckedCreateNestedManyWithoutVillageInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutVillageInput
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutVillageInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutVillageInput
 }
 
@@ -804,13 +815,15 @@ export type VillageUpdateToOneWithWhereWithoutUserVillagesInput = {
 }
 
 export type VillageUpdateWithoutUserVillagesInput = {
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -821,19 +834,20 @@ export type VillageUpdateWithoutUserVillagesInput = {
   waterRates?: Prisma.WaterRateUpdateManyWithoutVillageNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutVillageNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutVillageNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutVillageNestedInput
 }
 
 export type VillageUncheckedUpdateWithoutUserVillagesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -844,124 +858,19 @@ export type VillageUncheckedUpdateWithoutUserVillagesInput = {
   waterRates?: Prisma.WaterRateUncheckedUpdateManyWithoutVillageNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutVillageNestedInput
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutVillageNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutVillageNestedInput
-}
-
-export type VillageCreateWithoutWaterRatesInput = {
-  villageCode: string
-  address?: string | null
-  subDistrict?: string | null
-  district?: string | null
-  province?: string | null
-  postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  promptpayNo?: string | null
-  promptpayName?: string | null
-  promptpayImage?: string | null
-  enablePromptpay?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  userVillages?: Prisma.UserVillageCreateNestedManyWithoutVillageInput
-  properties?: Prisma.PropertyCreateNestedManyWithoutVillageInput
-  meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutVillageInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutVillageInput
-}
-
-export type VillageUncheckedCreateWithoutWaterRatesInput = {
-  id?: number
-  villageCode: string
-  address?: string | null
-  subDistrict?: string | null
-  district?: string | null
-  province?: string | null
-  postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  promptpayNo?: string | null
-  promptpayName?: string | null
-  promptpayImage?: string | null
-  enablePromptpay?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  userVillages?: Prisma.UserVillageUncheckedCreateNestedManyWithoutVillageInput
-  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutVillageInput
-  meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutVillageInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutVillageInput
-}
-
-export type VillageCreateOrConnectWithoutWaterRatesInput = {
-  where: Prisma.VillageWhereUniqueInput
-  create: Prisma.XOR<Prisma.VillageCreateWithoutWaterRatesInput, Prisma.VillageUncheckedCreateWithoutWaterRatesInput>
-}
-
-export type VillageUpsertWithoutWaterRatesInput = {
-  update: Prisma.XOR<Prisma.VillageUpdateWithoutWaterRatesInput, Prisma.VillageUncheckedUpdateWithoutWaterRatesInput>
-  create: Prisma.XOR<Prisma.VillageCreateWithoutWaterRatesInput, Prisma.VillageUncheckedCreateWithoutWaterRatesInput>
-  where?: Prisma.VillageWhereInput
-}
-
-export type VillageUpdateToOneWithWhereWithoutWaterRatesInput = {
-  where?: Prisma.VillageWhereInput
-  data: Prisma.XOR<Prisma.VillageUpdateWithoutWaterRatesInput, Prisma.VillageUncheckedUpdateWithoutWaterRatesInput>
-}
-
-export type VillageUpdateWithoutWaterRatesInput = {
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userVillages?: Prisma.UserVillageUpdateManyWithoutVillageNestedInput
-  properties?: Prisma.PropertyUpdateManyWithoutVillageNestedInput
-  meterReadings?: Prisma.MeterReadingUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutVillageNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutVillageNestedInput
-}
-
-export type VillageUncheckedUpdateWithoutWaterRatesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userVillages?: Prisma.UserVillageUncheckedUpdateManyWithoutVillageNestedInput
-  properties?: Prisma.PropertyUncheckedUpdateManyWithoutVillageNestedInput
-  meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutVillageNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutVillageNestedInput
 }
 
 export type VillageCreateWithoutPropertiesInput = {
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -972,19 +881,20 @@ export type VillageCreateWithoutPropertiesInput = {
   userVillages?: Prisma.UserVillageCreateNestedManyWithoutVillageInput
   waterRates?: Prisma.WaterRateCreateNestedManyWithoutVillageInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutVillageInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutVillageInput
 }
 
 export type VillageUncheckedCreateWithoutPropertiesInput = {
   id?: number
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -995,7 +905,6 @@ export type VillageUncheckedCreateWithoutPropertiesInput = {
   userVillages?: Prisma.UserVillageUncheckedCreateNestedManyWithoutVillageInput
   waterRates?: Prisma.WaterRateUncheckedCreateNestedManyWithoutVillageInput
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutVillageInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutVillageInput
 }
 
@@ -1016,13 +925,15 @@ export type VillageUpdateToOneWithWhereWithoutPropertiesInput = {
 }
 
 export type VillageUpdateWithoutPropertiesInput = {
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1033,19 +944,20 @@ export type VillageUpdateWithoutPropertiesInput = {
   userVillages?: Prisma.UserVillageUpdateManyWithoutVillageNestedInput
   waterRates?: Prisma.WaterRateUpdateManyWithoutVillageNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutVillageNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutVillageNestedInput
 }
 
 export type VillageUncheckedUpdateWithoutPropertiesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1056,18 +968,129 @@ export type VillageUncheckedUpdateWithoutPropertiesInput = {
   userVillages?: Prisma.UserVillageUncheckedUpdateManyWithoutVillageNestedInput
   waterRates?: Prisma.WaterRateUncheckedUpdateManyWithoutVillageNestedInput
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutVillageNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutVillageNestedInput
 }
 
-export type VillageCreateWithoutMeterReadingsInput = {
-  villageCode: string
+export type VillageCreateWithoutWaterRatesInput = {
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
+  promptpayNo?: string | null
+  promptpayName?: string | null
+  promptpayImage?: string | null
+  enablePromptpay?: boolean
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userVillages?: Prisma.UserVillageCreateNestedManyWithoutVillageInput
+  properties?: Prisma.PropertyCreateNestedManyWithoutVillageInput
+  meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutVillageInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutVillageInput
+}
+
+export type VillageUncheckedCreateWithoutWaterRatesInput = {
+  id?: number
+  address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
+  promptpayNo?: string | null
+  promptpayName?: string | null
+  promptpayImage?: string | null
+  enablePromptpay?: boolean
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  userVillages?: Prisma.UserVillageUncheckedCreateNestedManyWithoutVillageInput
+  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutVillageInput
+  meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutVillageInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutVillageInput
+}
+
+export type VillageCreateOrConnectWithoutWaterRatesInput = {
+  where: Prisma.VillageWhereUniqueInput
+  create: Prisma.XOR<Prisma.VillageCreateWithoutWaterRatesInput, Prisma.VillageUncheckedCreateWithoutWaterRatesInput>
+}
+
+export type VillageUpsertWithoutWaterRatesInput = {
+  update: Prisma.XOR<Prisma.VillageUpdateWithoutWaterRatesInput, Prisma.VillageUncheckedUpdateWithoutWaterRatesInput>
+  create: Prisma.XOR<Prisma.VillageCreateWithoutWaterRatesInput, Prisma.VillageUncheckedCreateWithoutWaterRatesInput>
+  where?: Prisma.VillageWhereInput
+}
+
+export type VillageUpdateToOneWithWhereWithoutWaterRatesInput = {
+  where?: Prisma.VillageWhereInput
+  data: Prisma.XOR<Prisma.VillageUpdateWithoutWaterRatesInput, Prisma.VillageUncheckedUpdateWithoutWaterRatesInput>
+}
+
+export type VillageUpdateWithoutWaterRatesInput = {
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userVillages?: Prisma.UserVillageUpdateManyWithoutVillageNestedInput
+  properties?: Prisma.PropertyUpdateManyWithoutVillageNestedInput
+  meterReadings?: Prisma.MeterReadingUpdateManyWithoutVillageNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutVillageNestedInput
+}
+
+export type VillageUncheckedUpdateWithoutWaterRatesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  userVillages?: Prisma.UserVillageUncheckedUpdateManyWithoutVillageNestedInput
+  properties?: Prisma.PropertyUncheckedUpdateManyWithoutVillageNestedInput
+  meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutVillageNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutVillageNestedInput
+}
+
+export type VillageCreateWithoutMeterReadingsInput = {
+  address?: string | null
+  subDistrict?: string | null
+  district?: string | null
+  province?: string | null
+  postalCode?: string | null
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -1078,19 +1101,20 @@ export type VillageCreateWithoutMeterReadingsInput = {
   userVillages?: Prisma.UserVillageCreateNestedManyWithoutVillageInput
   waterRates?: Prisma.WaterRateCreateNestedManyWithoutVillageInput
   properties?: Prisma.PropertyCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutVillageInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutVillageInput
 }
 
 export type VillageUncheckedCreateWithoutMeterReadingsInput = {
   id?: number
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -1101,7 +1125,6 @@ export type VillageUncheckedCreateWithoutMeterReadingsInput = {
   userVillages?: Prisma.UserVillageUncheckedCreateNestedManyWithoutVillageInput
   waterRates?: Prisma.WaterRateUncheckedCreateNestedManyWithoutVillageInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutVillageInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutVillageInput
 }
 
@@ -1122,13 +1145,15 @@ export type VillageUpdateToOneWithWhereWithoutMeterReadingsInput = {
 }
 
 export type VillageUpdateWithoutMeterReadingsInput = {
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1139,19 +1164,20 @@ export type VillageUpdateWithoutMeterReadingsInput = {
   userVillages?: Prisma.UserVillageUpdateManyWithoutVillageNestedInput
   waterRates?: Prisma.WaterRateUpdateManyWithoutVillageNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutVillageNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutVillageNestedInput
 }
 
 export type VillageUncheckedUpdateWithoutMeterReadingsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1162,124 +1188,19 @@ export type VillageUncheckedUpdateWithoutMeterReadingsInput = {
   userVillages?: Prisma.UserVillageUncheckedUpdateManyWithoutVillageNestedInput
   waterRates?: Prisma.WaterRateUncheckedUpdateManyWithoutVillageNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutVillageNestedInput
-  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutVillageNestedInput
-}
-
-export type VillageCreateWithoutInvoicesInput = {
-  villageCode: string
-  address?: string | null
-  subDistrict?: string | null
-  district?: string | null
-  province?: string | null
-  postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  promptpayNo?: string | null
-  promptpayName?: string | null
-  promptpayImage?: string | null
-  enablePromptpay?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  userVillages?: Prisma.UserVillageCreateNestedManyWithoutVillageInput
-  waterRates?: Prisma.WaterRateCreateNestedManyWithoutVillageInput
-  properties?: Prisma.PropertyCreateNestedManyWithoutVillageInput
-  meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutVillageInput
-  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutVillageInput
-}
-
-export type VillageUncheckedCreateWithoutInvoicesInput = {
-  id?: number
-  villageCode: string
-  address?: string | null
-  subDistrict?: string | null
-  district?: string | null
-  province?: string | null
-  postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  promptpayNo?: string | null
-  promptpayName?: string | null
-  promptpayImage?: string | null
-  enablePromptpay?: boolean
-  isActive?: boolean
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  userVillages?: Prisma.UserVillageUncheckedCreateNestedManyWithoutVillageInput
-  waterRates?: Prisma.WaterRateUncheckedCreateNestedManyWithoutVillageInput
-  properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutVillageInput
-  meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutVillageInput
-  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutVillageInput
-}
-
-export type VillageCreateOrConnectWithoutInvoicesInput = {
-  where: Prisma.VillageWhereUniqueInput
-  create: Prisma.XOR<Prisma.VillageCreateWithoutInvoicesInput, Prisma.VillageUncheckedCreateWithoutInvoicesInput>
-}
-
-export type VillageUpsertWithoutInvoicesInput = {
-  update: Prisma.XOR<Prisma.VillageUpdateWithoutInvoicesInput, Prisma.VillageUncheckedUpdateWithoutInvoicesInput>
-  create: Prisma.XOR<Prisma.VillageCreateWithoutInvoicesInput, Prisma.VillageUncheckedCreateWithoutInvoicesInput>
-  where?: Prisma.VillageWhereInput
-}
-
-export type VillageUpdateToOneWithWhereWithoutInvoicesInput = {
-  where?: Prisma.VillageWhereInput
-  data: Prisma.XOR<Prisma.VillageUpdateWithoutInvoicesInput, Prisma.VillageUncheckedUpdateWithoutInvoicesInput>
-}
-
-export type VillageUpdateWithoutInvoicesInput = {
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userVillages?: Prisma.UserVillageUpdateManyWithoutVillageNestedInput
-  waterRates?: Prisma.WaterRateUpdateManyWithoutVillageNestedInput
-  properties?: Prisma.PropertyUpdateManyWithoutVillageNestedInput
-  meterReadings?: Prisma.MeterReadingUpdateManyWithoutVillageNestedInput
-  auditLogs?: Prisma.AuditLogUpdateManyWithoutVillageNestedInput
-}
-
-export type VillageUncheckedUpdateWithoutInvoicesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
-  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  enablePromptpay?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userVillages?: Prisma.UserVillageUncheckedUpdateManyWithoutVillageNestedInput
-  waterRates?: Prisma.WaterRateUncheckedUpdateManyWithoutVillageNestedInput
-  properties?: Prisma.PropertyUncheckedUpdateManyWithoutVillageNestedInput
-  meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutVillageNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutVillageNestedInput
 }
 
 export type VillageCreateWithoutAuditLogsInput = {
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -1291,18 +1212,19 @@ export type VillageCreateWithoutAuditLogsInput = {
   waterRates?: Prisma.WaterRateCreateNestedManyWithoutVillageInput
   properties?: Prisma.PropertyCreateNestedManyWithoutVillageInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutVillageInput
 }
 
 export type VillageUncheckedCreateWithoutAuditLogsInput = {
   id?: number
-  villageCode: string
   address?: string | null
   subDistrict?: string | null
   district?: string | null
   province?: string | null
   postalCode?: string | null
-  defaultServiceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: $Enums.PaymentMethod
+  bankProvider?: string | null
+  bankNumber?: string | null
+  bankPayeeName?: string | null
   promptpayNo?: string | null
   promptpayName?: string | null
   promptpayImage?: string | null
@@ -1314,7 +1236,6 @@ export type VillageUncheckedCreateWithoutAuditLogsInput = {
   waterRates?: Prisma.WaterRateUncheckedCreateNestedManyWithoutVillageInput
   properties?: Prisma.PropertyUncheckedCreateNestedManyWithoutVillageInput
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutVillageInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutVillageInput
 }
 
 export type VillageCreateOrConnectWithoutAuditLogsInput = {
@@ -1334,13 +1255,15 @@ export type VillageUpdateToOneWithWhereWithoutAuditLogsInput = {
 }
 
 export type VillageUpdateWithoutAuditLogsInput = {
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1352,18 +1275,19 @@ export type VillageUpdateWithoutAuditLogsInput = {
   waterRates?: Prisma.WaterRateUpdateManyWithoutVillageNestedInput
   properties?: Prisma.PropertyUpdateManyWithoutVillageNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutVillageNestedInput
 }
 
 export type VillageUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageCode?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subDistrict?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   district?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   postalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  defaultServiceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  paymentMethod?: Prisma.EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+  bankProvider?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankPayeeName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   promptpayImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1375,7 +1299,6 @@ export type VillageUncheckedUpdateWithoutAuditLogsInput = {
   waterRates?: Prisma.WaterRateUncheckedUpdateManyWithoutVillageNestedInput
   properties?: Prisma.PropertyUncheckedUpdateManyWithoutVillageNestedInput
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutVillageNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutVillageNestedInput
 }
 
 
@@ -1388,7 +1311,6 @@ export type VillageCountOutputType = {
   waterRates: number
   properties: number
   meterReadings: number
-  invoices: number
   auditLogs: number
 }
 
@@ -1397,7 +1319,6 @@ export type VillageCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   waterRates?: boolean | VillageCountOutputTypeCountWaterRatesArgs
   properties?: boolean | VillageCountOutputTypeCountPropertiesArgs
   meterReadings?: boolean | VillageCountOutputTypeCountMeterReadingsArgs
-  invoices?: boolean | VillageCountOutputTypeCountInvoicesArgs
   auditLogs?: boolean | VillageCountOutputTypeCountAuditLogsArgs
 }
 
@@ -1442,13 +1363,6 @@ export type VillageCountOutputTypeCountMeterReadingsArgs<ExtArgs extends runtime
 /**
  * VillageCountOutputType without action
  */
-export type VillageCountOutputTypeCountInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InvoiceWhereInput
-}
-
-/**
- * VillageCountOutputType without action
- */
 export type VillageCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AuditLogWhereInput
 }
@@ -1456,13 +1370,15 @@ export type VillageCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Typ
 
 export type VillageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  villageCode?: boolean
   address?: boolean
   subDistrict?: boolean
   district?: boolean
   province?: boolean
   postalCode?: boolean
-  defaultServiceFee?: boolean
+  paymentMethod?: boolean
+  bankProvider?: boolean
+  bankNumber?: boolean
+  bankPayeeName?: boolean
   promptpayNo?: boolean
   promptpayName?: boolean
   promptpayImage?: boolean
@@ -1474,20 +1390,21 @@ export type VillageSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   waterRates?: boolean | Prisma.Village$waterRatesArgs<ExtArgs>
   properties?: boolean | Prisma.Village$propertiesArgs<ExtArgs>
   meterReadings?: boolean | Prisma.Village$meterReadingsArgs<ExtArgs>
-  invoices?: boolean | Prisma.Village$invoicesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Village$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.VillageCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["village"]>
 
 export type VillageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  villageCode?: boolean
   address?: boolean
   subDistrict?: boolean
   district?: boolean
   province?: boolean
   postalCode?: boolean
-  defaultServiceFee?: boolean
+  paymentMethod?: boolean
+  bankProvider?: boolean
+  bankNumber?: boolean
+  bankPayeeName?: boolean
   promptpayNo?: boolean
   promptpayName?: boolean
   promptpayImage?: boolean
@@ -1499,13 +1416,15 @@ export type VillageSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type VillageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  villageCode?: boolean
   address?: boolean
   subDistrict?: boolean
   district?: boolean
   province?: boolean
   postalCode?: boolean
-  defaultServiceFee?: boolean
+  paymentMethod?: boolean
+  bankProvider?: boolean
+  bankNumber?: boolean
+  bankPayeeName?: boolean
   promptpayNo?: boolean
   promptpayName?: boolean
   promptpayImage?: boolean
@@ -1517,13 +1436,15 @@ export type VillageSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
 
 export type VillageSelectScalar = {
   id?: boolean
-  villageCode?: boolean
   address?: boolean
   subDistrict?: boolean
   district?: boolean
   province?: boolean
   postalCode?: boolean
-  defaultServiceFee?: boolean
+  paymentMethod?: boolean
+  bankProvider?: boolean
+  bankNumber?: boolean
+  bankPayeeName?: boolean
   promptpayNo?: boolean
   promptpayName?: boolean
   promptpayImage?: boolean
@@ -1533,13 +1454,12 @@ export type VillageSelectScalar = {
   updatedAt?: boolean
 }
 
-export type VillageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageCode" | "address" | "subDistrict" | "district" | "province" | "postalCode" | "defaultServiceFee" | "promptpayNo" | "promptpayName" | "promptpayImage" | "enablePromptpay" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["village"]>
+export type VillageOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "address" | "subDistrict" | "district" | "province" | "postalCode" | "paymentMethod" | "bankProvider" | "bankNumber" | "bankPayeeName" | "promptpayNo" | "promptpayName" | "promptpayImage" | "enablePromptpay" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["village"]>
 export type VillageInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   userVillages?: boolean | Prisma.Village$userVillagesArgs<ExtArgs>
   waterRates?: boolean | Prisma.Village$waterRatesArgs<ExtArgs>
   properties?: boolean | Prisma.Village$propertiesArgs<ExtArgs>
   meterReadings?: boolean | Prisma.Village$meterReadingsArgs<ExtArgs>
-  invoices?: boolean | Prisma.Village$invoicesArgs<ExtArgs>
   auditLogs?: boolean | Prisma.Village$auditLogsArgs<ExtArgs>
   _count?: boolean | Prisma.VillageCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1553,18 +1473,19 @@ export type $VillagePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     waterRates: Prisma.$WaterRatePayload<ExtArgs>[]
     properties: Prisma.$PropertyPayload<ExtArgs>[]
     meterReadings: Prisma.$MeterReadingPayload<ExtArgs>[]
-    invoices: Prisma.$InvoicePayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    villageCode: string
     address: string | null
     subDistrict: string | null
     district: string | null
     province: string | null
     postalCode: string | null
-    defaultServiceFee: runtime.Decimal
+    paymentMethod: $Enums.PaymentMethod
+    bankProvider: string | null
+    bankNumber: string | null
+    bankPayeeName: string | null
     promptpayNo: string | null
     promptpayName: string | null
     promptpayImage: string | null
@@ -1970,7 +1891,6 @@ export interface Prisma__VillageClient<T, Null = never, ExtArgs extends runtime.
   waterRates<T extends Prisma.Village$waterRatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Village$waterRatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WaterRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   properties<T extends Prisma.Village$propertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Village$propertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   meterReadings<T extends Prisma.Village$meterReadingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Village$meterReadingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeterReadingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  invoices<T extends Prisma.Village$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Village$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.Village$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Village$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2002,13 +1922,15 @@ export interface Prisma__VillageClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface VillageFieldRefs {
   readonly id: Prisma.FieldRef<"Village", 'Int'>
-  readonly villageCode: Prisma.FieldRef<"Village", 'String'>
   readonly address: Prisma.FieldRef<"Village", 'String'>
   readonly subDistrict: Prisma.FieldRef<"Village", 'String'>
   readonly district: Prisma.FieldRef<"Village", 'String'>
   readonly province: Prisma.FieldRef<"Village", 'String'>
   readonly postalCode: Prisma.FieldRef<"Village", 'String'>
-  readonly defaultServiceFee: Prisma.FieldRef<"Village", 'Decimal'>
+  readonly paymentMethod: Prisma.FieldRef<"Village", 'PaymentMethod'>
+  readonly bankProvider: Prisma.FieldRef<"Village", 'String'>
+  readonly bankNumber: Prisma.FieldRef<"Village", 'String'>
+  readonly bankPayeeName: Prisma.FieldRef<"Village", 'String'>
   readonly promptpayNo: Prisma.FieldRef<"Village", 'String'>
   readonly promptpayName: Prisma.FieldRef<"Village", 'String'>
   readonly promptpayImage: Prisma.FieldRef<"Village", 'String'>
@@ -2239,7 +2161,7 @@ export type VillageCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * The data needed to create a Village.
    */
-  data: Prisma.XOR<Prisma.VillageCreateInput, Prisma.VillageUncheckedCreateInput>
+  data?: Prisma.XOR<Prisma.VillageCreateInput, Prisma.VillageUncheckedCreateInput>
 }
 
 /**
@@ -2502,30 +2424,6 @@ export type Village$meterReadingsArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.MeterReadingScalarFieldEnum | Prisma.MeterReadingScalarFieldEnum[]
-}
-
-/**
- * Village.invoices
- */
-export type Village$invoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Invoice
-   */
-  select?: Prisma.InvoiceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Invoice
-   */
-  omit?: Prisma.InvoiceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.InvoiceInclude<ExtArgs> | null
-  where?: Prisma.InvoiceWhereInput
-  orderBy?: Prisma.InvoiceOrderByWithRelationInput | Prisma.InvoiceOrderByWithRelationInput[]
-  cursor?: Prisma.InvoiceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.InvoiceScalarFieldEnum | Prisma.InvoiceScalarFieldEnum[]
 }
 
 /**

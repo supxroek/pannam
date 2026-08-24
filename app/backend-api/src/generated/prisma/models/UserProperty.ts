@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model UserProperty
- * 6. ตารางผูกสิทธิ์คนเข้ากับบ้าน
+ * 5. ตารางผูกสิทธิ์คนเข้ากับบ้าน
  */
 export type UserPropertyModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPropertyPayload>
 

@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model MeterReading
- * 7. ตารางบันทึกการอ่านมิเตอร์น้ำ
+ * 7. การอ่านมิเตอร์น้ำ
  */
 export type MeterReadingModel = runtime.Types.Result.DefaultSelection<Prisma.$MeterReadingPayload>
 
@@ -51,12 +51,12 @@ export type MeterReadingMinAggregateOutputType = {
   villageId: number | null
   propertyId: number | null
   readerId: number | null
-  billingMonth: Date | null
   previousReading: runtime.Decimal | null
   currentReading: runtime.Decimal | null
   consumption: runtime.Decimal | null
   imageUrl: string | null
   readingDate: Date | null
+  createdAt: Date | null
 }
 
 export type MeterReadingMaxAggregateOutputType = {
@@ -64,12 +64,12 @@ export type MeterReadingMaxAggregateOutputType = {
   villageId: number | null
   propertyId: number | null
   readerId: number | null
-  billingMonth: Date | null
   previousReading: runtime.Decimal | null
   currentReading: runtime.Decimal | null
   consumption: runtime.Decimal | null
   imageUrl: string | null
   readingDate: Date | null
+  createdAt: Date | null
 }
 
 export type MeterReadingCountAggregateOutputType = {
@@ -77,12 +77,12 @@ export type MeterReadingCountAggregateOutputType = {
   villageId: number
   propertyId: number
   readerId: number
-  billingMonth: number
   previousReading: number
   currentReading: number
   consumption: number
   imageUrl: number
   readingDate: number
+  createdAt: number
   _all: number
 }
 
@@ -112,12 +112,12 @@ export type MeterReadingMinAggregateInputType = {
   villageId?: true
   propertyId?: true
   readerId?: true
-  billingMonth?: true
   previousReading?: true
   currentReading?: true
   consumption?: true
   imageUrl?: true
   readingDate?: true
+  createdAt?: true
 }
 
 export type MeterReadingMaxAggregateInputType = {
@@ -125,12 +125,12 @@ export type MeterReadingMaxAggregateInputType = {
   villageId?: true
   propertyId?: true
   readerId?: true
-  billingMonth?: true
   previousReading?: true
   currentReading?: true
   consumption?: true
   imageUrl?: true
   readingDate?: true
+  createdAt?: true
 }
 
 export type MeterReadingCountAggregateInputType = {
@@ -138,12 +138,12 @@ export type MeterReadingCountAggregateInputType = {
   villageId?: true
   propertyId?: true
   readerId?: true
-  billingMonth?: true
   previousReading?: true
   currentReading?: true
   consumption?: true
   imageUrl?: true
   readingDate?: true
+  createdAt?: true
   _all?: true
 }
 
@@ -238,12 +238,12 @@ export type MeterReadingGroupByOutputType = {
   villageId: number
   propertyId: number
   readerId: number | null
-  billingMonth: Date
   previousReading: runtime.Decimal
   currentReading: runtime.Decimal
   consumption: runtime.Decimal
   imageUrl: string | null
   readingDate: Date
+  createdAt: Date
   _count: MeterReadingCountAggregateOutputType | null
   _avg: MeterReadingAvgAggregateOutputType | null
   _sum: MeterReadingSumAggregateOutputType | null
@@ -274,12 +274,12 @@ export type MeterReadingWhereInput = {
   villageId?: Prisma.IntFilter<"MeterReading"> | number
   propertyId?: Prisma.IntFilter<"MeterReading"> | number
   readerId?: Prisma.IntNullableFilter<"MeterReading"> | number | null
-  billingMonth?: Prisma.DateTimeFilter<"MeterReading"> | Date | string
   previousReading?: Prisma.DecimalFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringNullableFilter<"MeterReading"> | string | null
   readingDate?: Prisma.DateTimeFilter<"MeterReading"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"MeterReading"> | Date | string
   village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
   property?: Prisma.XOR<Prisma.PropertyScalarRelationFilter, Prisma.PropertyWhereInput>
   reader?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
@@ -291,12 +291,12 @@ export type MeterReadingOrderByWithRelationInput = {
   villageId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
   readerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
   previousReading?: Prisma.SortOrder
   currentReading?: Prisma.SortOrder
   consumption?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   readingDate?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   village?: Prisma.VillageOrderByWithRelationInput
   property?: Prisma.PropertyOrderByWithRelationInput
   reader?: Prisma.UserOrderByWithRelationInput
@@ -305,36 +305,35 @@ export type MeterReadingOrderByWithRelationInput = {
 
 export type MeterReadingWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  propertyId_billingMonth?: Prisma.MeterReadingPropertyIdBillingMonthCompoundUniqueInput
   AND?: Prisma.MeterReadingWhereInput | Prisma.MeterReadingWhereInput[]
   OR?: Prisma.MeterReadingWhereInput[]
   NOT?: Prisma.MeterReadingWhereInput | Prisma.MeterReadingWhereInput[]
   villageId?: Prisma.IntFilter<"MeterReading"> | number
   propertyId?: Prisma.IntFilter<"MeterReading"> | number
   readerId?: Prisma.IntNullableFilter<"MeterReading"> | number | null
-  billingMonth?: Prisma.DateTimeFilter<"MeterReading"> | Date | string
   previousReading?: Prisma.DecimalFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringNullableFilter<"MeterReading"> | string | null
   readingDate?: Prisma.DateTimeFilter<"MeterReading"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"MeterReading"> | Date | string
   village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
   property?: Prisma.XOR<Prisma.PropertyScalarRelationFilter, Prisma.PropertyWhereInput>
   reader?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
-}, "id" | "propertyId_billingMonth">
+}, "id">
 
 export type MeterReadingOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   villageId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
   readerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
   previousReading?: Prisma.SortOrder
   currentReading?: Prisma.SortOrder
   consumption?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   readingDate?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
   _count?: Prisma.MeterReadingCountOrderByAggregateInput
   _avg?: Prisma.MeterReadingAvgOrderByAggregateInput
   _max?: Prisma.MeterReadingMaxOrderByAggregateInput
@@ -350,25 +349,25 @@ export type MeterReadingScalarWhereWithAggregatesInput = {
   villageId?: Prisma.IntWithAggregatesFilter<"MeterReading"> | number
   propertyId?: Prisma.IntWithAggregatesFilter<"MeterReading"> | number
   readerId?: Prisma.IntNullableWithAggregatesFilter<"MeterReading"> | number | null
-  billingMonth?: Prisma.DateTimeWithAggregatesFilter<"MeterReading"> | Date | string
   previousReading?: Prisma.DecimalWithAggregatesFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalWithAggregatesFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalWithAggregatesFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"MeterReading"> | string | null
   readingDate?: Prisma.DateTimeWithAggregatesFilter<"MeterReading"> | Date | string
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"MeterReading"> | Date | string
 }
 
 export type MeterReadingCreateInput = {
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutMeterReadingsInput
   property: Prisma.PropertyCreateNestedOneWithoutMeterReadingsInput
   reader?: Prisma.UserCreateNestedOneWithoutReadingsTakenInput
-  invoice?: Prisma.InvoiceCreateNestedOneWithoutReadingInput
+  invoice?: Prisma.InvoiceCreateNestedOneWithoutMeterReadingInput
 }
 
 export type MeterReadingUncheckedCreateInput = {
@@ -376,26 +375,26 @@ export type MeterReadingUncheckedCreateInput = {
   villageId: number
   propertyId: number
   readerId?: number | null
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
-  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutReadingInput
+  readingDate: Date | string
+  createdAt?: Date | string
+  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutMeterReadingInput
 }
 
 export type MeterReadingUpdateInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutMeterReadingsNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutMeterReadingsNestedInput
   reader?: Prisma.UserUpdateOneWithoutReadingsTakenNestedInput
-  invoice?: Prisma.InvoiceUpdateOneWithoutReadingNestedInput
+  invoice?: Prisma.InvoiceUpdateOneWithoutMeterReadingNestedInput
 }
 
 export type MeterReadingUncheckedUpdateInput = {
@@ -403,13 +402,13 @@ export type MeterReadingUncheckedUpdateInput = {
   villageId?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
   readerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutReadingNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutMeterReadingNestedInput
 }
 
 export type MeterReadingCreateManyInput = {
@@ -417,21 +416,21 @@ export type MeterReadingCreateManyInput = {
   villageId: number
   propertyId: number
   readerId?: number | null
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
 }
 
 export type MeterReadingUpdateManyMutationInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MeterReadingUncheckedUpdateManyInput = {
@@ -439,12 +438,12 @@ export type MeterReadingUncheckedUpdateManyInput = {
   villageId?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
   readerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MeterReadingListRelationFilter = {
@@ -457,22 +456,17 @@ export type MeterReadingOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type MeterReadingPropertyIdBillingMonthCompoundUniqueInput = {
-  propertyId: number
-  billingMonth: Date | string
-}
-
 export type MeterReadingCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   villageId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
   readerId?: Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
   previousReading?: Prisma.SortOrder
   currentReading?: Prisma.SortOrder
   consumption?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   readingDate?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type MeterReadingAvgOrderByAggregateInput = {
@@ -490,12 +484,12 @@ export type MeterReadingMaxOrderByAggregateInput = {
   villageId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
   readerId?: Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
   previousReading?: Prisma.SortOrder
   currentReading?: Prisma.SortOrder
   consumption?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   readingDate?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type MeterReadingMinOrderByAggregateInput = {
@@ -503,12 +497,12 @@ export type MeterReadingMinOrderByAggregateInput = {
   villageId?: Prisma.SortOrder
   propertyId?: Prisma.SortOrder
   readerId?: Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
   previousReading?: Prisma.SortOrder
   currentReading?: Prisma.SortOrder
   consumption?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
   readingDate?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
 }
 
 export type MeterReadingSumOrderByAggregateInput = {
@@ -675,28 +669,28 @@ export type MeterReadingUpdateOneRequiredWithoutInvoiceNestedInput = {
 }
 
 export type MeterReadingCreateWithoutVillageInput = {
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
   property: Prisma.PropertyCreateNestedOneWithoutMeterReadingsInput
   reader?: Prisma.UserCreateNestedOneWithoutReadingsTakenInput
-  invoice?: Prisma.InvoiceCreateNestedOneWithoutReadingInput
+  invoice?: Prisma.InvoiceCreateNestedOneWithoutMeterReadingInput
 }
 
 export type MeterReadingUncheckedCreateWithoutVillageInput = {
   id?: number
   propertyId: number
   readerId?: number | null
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
-  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutReadingInput
+  readingDate: Date | string
+  createdAt?: Date | string
+  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutMeterReadingInput
 }
 
 export type MeterReadingCreateOrConnectWithoutVillageInput = {
@@ -733,37 +727,37 @@ export type MeterReadingScalarWhereInput = {
   villageId?: Prisma.IntFilter<"MeterReading"> | number
   propertyId?: Prisma.IntFilter<"MeterReading"> | number
   readerId?: Prisma.IntNullableFilter<"MeterReading"> | number | null
-  billingMonth?: Prisma.DateTimeFilter<"MeterReading"> | Date | string
   previousReading?: Prisma.DecimalFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFilter<"MeterReading"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.StringNullableFilter<"MeterReading"> | string | null
   readingDate?: Prisma.DateTimeFilter<"MeterReading"> | Date | string
+  createdAt?: Prisma.DateTimeFilter<"MeterReading"> | Date | string
 }
 
 export type MeterReadingCreateWithoutReaderInput = {
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutMeterReadingsInput
   property: Prisma.PropertyCreateNestedOneWithoutMeterReadingsInput
-  invoice?: Prisma.InvoiceCreateNestedOneWithoutReadingInput
+  invoice?: Prisma.InvoiceCreateNestedOneWithoutMeterReadingInput
 }
 
 export type MeterReadingUncheckedCreateWithoutReaderInput = {
   id?: number
   villageId: number
   propertyId: number
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
-  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutReadingInput
+  readingDate: Date | string
+  createdAt?: Date | string
+  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutMeterReadingInput
 }
 
 export type MeterReadingCreateOrConnectWithoutReaderInput = {
@@ -793,28 +787,28 @@ export type MeterReadingUpdateManyWithWhereWithoutReaderInput = {
 }
 
 export type MeterReadingCreateWithoutPropertyInput = {
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutMeterReadingsInput
   reader?: Prisma.UserCreateNestedOneWithoutReadingsTakenInput
-  invoice?: Prisma.InvoiceCreateNestedOneWithoutReadingInput
+  invoice?: Prisma.InvoiceCreateNestedOneWithoutMeterReadingInput
 }
 
 export type MeterReadingUncheckedCreateWithoutPropertyInput = {
   id?: number
   villageId: number
   readerId?: number | null
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
-  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutReadingInput
+  readingDate: Date | string
+  createdAt?: Date | string
+  invoice?: Prisma.InvoiceUncheckedCreateNestedOneWithoutMeterReadingInput
 }
 
 export type MeterReadingCreateOrConnectWithoutPropertyInput = {
@@ -844,12 +838,12 @@ export type MeterReadingUpdateManyWithWhereWithoutPropertyInput = {
 }
 
 export type MeterReadingCreateWithoutInvoiceInput = {
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutMeterReadingsInput
   property: Prisma.PropertyCreateNestedOneWithoutMeterReadingsInput
   reader?: Prisma.UserCreateNestedOneWithoutReadingsTakenInput
@@ -860,12 +854,12 @@ export type MeterReadingUncheckedCreateWithoutInvoiceInput = {
   villageId: number
   propertyId: number
   readerId?: number | null
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
 }
 
 export type MeterReadingCreateOrConnectWithoutInvoiceInput = {
@@ -885,12 +879,12 @@ export type MeterReadingUpdateToOneWithWhereWithoutInvoiceInput = {
 }
 
 export type MeterReadingUpdateWithoutInvoiceInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutMeterReadingsNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutMeterReadingsNestedInput
   reader?: Prisma.UserUpdateOneWithoutReadingsTakenNestedInput
@@ -901,159 +895,159 @@ export type MeterReadingUncheckedUpdateWithoutInvoiceInput = {
   villageId?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
   readerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MeterReadingCreateManyVillageInput = {
   id?: number
   propertyId: number
   readerId?: number | null
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
 }
 
 export type MeterReadingUpdateWithoutVillageInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   property?: Prisma.PropertyUpdateOneRequiredWithoutMeterReadingsNestedInput
   reader?: Prisma.UserUpdateOneWithoutReadingsTakenNestedInput
-  invoice?: Prisma.InvoiceUpdateOneWithoutReadingNestedInput
+  invoice?: Prisma.InvoiceUpdateOneWithoutMeterReadingNestedInput
 }
 
 export type MeterReadingUncheckedUpdateWithoutVillageInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
   readerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutReadingNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutMeterReadingNestedInput
 }
 
 export type MeterReadingUncheckedUpdateManyWithoutVillageInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
   readerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MeterReadingCreateManyReaderInput = {
   id?: number
   villageId: number
   propertyId: number
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
 }
 
 export type MeterReadingUpdateWithoutReaderInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutMeterReadingsNestedInput
   property?: Prisma.PropertyUpdateOneRequiredWithoutMeterReadingsNestedInput
-  invoice?: Prisma.InvoiceUpdateOneWithoutReadingNestedInput
+  invoice?: Prisma.InvoiceUpdateOneWithoutMeterReadingNestedInput
 }
 
 export type MeterReadingUncheckedUpdateWithoutReaderInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageId?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutReadingNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutMeterReadingNestedInput
 }
 
 export type MeterReadingUncheckedUpdateManyWithoutReaderInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageId?: Prisma.IntFieldUpdateOperationsInput | number
   propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type MeterReadingCreateManyPropertyInput = {
   id?: number
   villageId: number
   readerId?: number | null
-  billingMonth: Date | string
   previousReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading: runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption: runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: string | null
-  readingDate?: Date | string
+  readingDate: Date | string
+  createdAt?: Date | string
 }
 
 export type MeterReadingUpdateWithoutPropertyInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutMeterReadingsNestedInput
   reader?: Prisma.UserUpdateOneWithoutReadingsTakenNestedInput
-  invoice?: Prisma.InvoiceUpdateOneWithoutReadingNestedInput
+  invoice?: Prisma.InvoiceUpdateOneWithoutMeterReadingNestedInput
 }
 
 export type MeterReadingUncheckedUpdateWithoutPropertyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageId?: Prisma.IntFieldUpdateOperationsInput | number
   readerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutReadingNestedInput
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoice?: Prisma.InvoiceUncheckedUpdateOneWithoutMeterReadingNestedInput
 }
 
 export type MeterReadingUncheckedUpdateManyWithoutPropertyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   villageId?: Prisma.IntFieldUpdateOperationsInput | number
   readerId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   previousReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   currentReading?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   consumption?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   readingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1063,12 +1057,12 @@ export type MeterReadingSelect<ExtArgs extends runtime.Types.Extensions.Internal
   villageId?: boolean
   propertyId?: boolean
   readerId?: boolean
-  billingMonth?: boolean
   previousReading?: boolean
   currentReading?: boolean
   consumption?: boolean
   imageUrl?: boolean
   readingDate?: boolean
+  createdAt?: boolean
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
   reader?: boolean | Prisma.MeterReading$readerArgs<ExtArgs>
@@ -1080,12 +1074,12 @@ export type MeterReadingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   villageId?: boolean
   propertyId?: boolean
   readerId?: boolean
-  billingMonth?: boolean
   previousReading?: boolean
   currentReading?: boolean
   consumption?: boolean
   imageUrl?: boolean
   readingDate?: boolean
+  createdAt?: boolean
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
   reader?: boolean | Prisma.MeterReading$readerArgs<ExtArgs>
@@ -1096,12 +1090,12 @@ export type MeterReadingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   villageId?: boolean
   propertyId?: boolean
   readerId?: boolean
-  billingMonth?: boolean
   previousReading?: boolean
   currentReading?: boolean
   consumption?: boolean
   imageUrl?: boolean
   readingDate?: boolean
+  createdAt?: boolean
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
   reader?: boolean | Prisma.MeterReading$readerArgs<ExtArgs>
@@ -1112,15 +1106,15 @@ export type MeterReadingSelectScalar = {
   villageId?: boolean
   propertyId?: boolean
   readerId?: boolean
-  billingMonth?: boolean
   previousReading?: boolean
   currentReading?: boolean
   consumption?: boolean
   imageUrl?: boolean
   readingDate?: boolean
+  createdAt?: boolean
 }
 
-export type MeterReadingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageId" | "propertyId" | "readerId" | "billingMonth" | "previousReading" | "currentReading" | "consumption" | "imageUrl" | "readingDate", ExtArgs["result"]["meterReading"]>
+export type MeterReadingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageId" | "propertyId" | "readerId" | "previousReading" | "currentReading" | "consumption" | "imageUrl" | "readingDate" | "createdAt", ExtArgs["result"]["meterReading"]>
 export type MeterReadingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
   property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
@@ -1151,12 +1145,12 @@ export type $MeterReadingPayload<ExtArgs extends runtime.Types.Extensions.Intern
     villageId: number
     propertyId: number
     readerId: number | null
-    billingMonth: Date
     previousReading: runtime.Decimal
     currentReading: runtime.Decimal
     consumption: runtime.Decimal
     imageUrl: string | null
     readingDate: Date
+    createdAt: Date
   }, ExtArgs["result"]["meterReading"]>
   composites: {}
 }
@@ -1588,12 +1582,12 @@ export interface MeterReadingFieldRefs {
   readonly villageId: Prisma.FieldRef<"MeterReading", 'Int'>
   readonly propertyId: Prisma.FieldRef<"MeterReading", 'Int'>
   readonly readerId: Prisma.FieldRef<"MeterReading", 'Int'>
-  readonly billingMonth: Prisma.FieldRef<"MeterReading", 'DateTime'>
   readonly previousReading: Prisma.FieldRef<"MeterReading", 'Decimal'>
   readonly currentReading: Prisma.FieldRef<"MeterReading", 'Decimal'>
   readonly consumption: Prisma.FieldRef<"MeterReading", 'Decimal'>
   readonly imageUrl: Prisma.FieldRef<"MeterReading", 'String'>
   readonly readingDate: Prisma.FieldRef<"MeterReading", 'DateTime'>
+  readonly createdAt: Prisma.FieldRef<"MeterReading", 'DateTime'>
 }
     
 

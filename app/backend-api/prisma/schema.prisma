@@ -46,6 +46,11 @@ enum PaymentSlipStatus {
   REJECTED       @map("rejected") // สถานะไม่อนุมัติ
 }
 
+enum PaymentMethod {
+  BANK           @map("bank") // ชำระเงินผ่านธนาคาร
+  PROMPTPAY      @map("promptpay") // ชำระเงินผ่านพร้อมเพย์
+}
+
 // ==========================================
 // MODELS
 // ==========================================
@@ -53,16 +58,23 @@ enum PaymentSlipStatus {
 /// 1. ข้อมูลหมู่บ้าน (Tenants)
 model Village {
   id                Int      @id @default(autoincrement()) @map("village_id")
-  villageCode       String   @unique @map("village_code") @db.VarChar(20) // รหัสหมู่บ้าน เช่น V001
   address           String?  @db.Text // ที่อยู่ เช่น บ้านคลองไคร หมู่ที่ 10
-  subDistrict       String?  @db.VarChar(100) // ตำบล
+  subDistrict       String?  @map("sub_district") @db.VarChar(100) // ตำบล
   district          String?  @db.VarChar(100) // อำเภอ
   province          String?  @db.VarChar(100) // จังหวัด
-  postalCode        String?  @db.VarChar(10) // รหัสไปรษณีย์
-  defaultServiceFee Decimal  @default(0.00) @map("default_service_fee") @db.Decimal(8, 2) // ค่าบริการเริ่มต้น
+  postalCode        String?  @map("postal_code") @db.VarChar(10) // รหัสไปรษณีย์
+
+  // เลือกวิธีการชำระเงิน
+  paymentMethod     PaymentMethod @map("payment_method") @default(BANK) // วิธีการชำระเงิน: ธนาคาร, พร้อมเพย์
+
+  // เลือกชำระผ่านธนาคาร
+  bankProvider      String?  @map("bank_provider") @db.VarChar(100) // ชื่อธนาคาร
+  bankNumber        String?  @map("bank_number") @db.VarChar(100) // หมายเลขธนาคาร
+  bankPayeeName     String?  @map("bank_payee_name") @db.VarChar(100) // ชื่อผู้รับเงิน
+  // เลือกชำระผ่านพร้อมเพย์
   promptpayNo       String?  @map("promptpay_no") @db.VarChar(20) // เลขบัญชี PromptPay
   promptpayName     String?  @map("promptpay_name") @db.VarChar(100) // ชื่อ PromptPay
-  promptpayImage    String?  @map("promptpay_image") @db.VarChar(255) // รูปภาพ PromptPay
+  promptpayImage    String?  @map("promptpay_image") @db.Text // รูปภาพ PromptPay QR
 
   // Feature Flag: เปิด-ปิด ระบบโอนเงิน PromptPay ( default: false จ่ายเงินสดก่อน )
   enablePromptpay   Boolean  @default(false) @map("enable_promptpay")
@@ -76,7 +88,6 @@ model Village {
   waterRates    WaterRate[]
   properties    Property[]
   meterReadings MeterReading[]
-  invoices      Invoice[]
   auditLogs     AuditLog[]
 
   @@map("villages")
@@ -86,7 +97,10 @@ model Village {
 model User {
   id            Int      @id @default(autoincrement()) @map("user_id")
   lineUserId    String   @unique @map("line_user_id") @db.VarChar(255) // เลขผู้ใช้ LINE
+  lineProfileUrl String? @map("line_profile_url") // url โปรไฟล์ไลน์
   fullName      String   @map("full_name") @db.VarChar(100) // ชื่อ-นามสกุล
+  birthdate     DateTime? @map("birth_date") @db.Date // วัน/เดือน/ปีเกิด
+  nationalId    String?   @map("national_id") @unique @db.VarChar(13) // หมายเลขบัตรประชาชน
   phoneNumber   String?  @map("phone_number") @db.VarChar(15) // เบอร์โทร
   isGlobalAdmin Boolean  @default(false) @map("is_global_admin") // สถานะผู้ดูแลระบบ
   createdAt     DateTime @default(now()) @map("created_at") // วันที่สร้าง
@@ -100,6 +114,7 @@ model User {
   paymentsVerified Payment[]      @relation("VerifiedBy")
   auditLogs        AuditLog[]
 
+  @@index([phoneNumber])
   @@map("users")
 }
 
@@ -116,31 +131,17 @@ model UserVillage {
   village Village @relation(fields: [villageId], references: [id], onDelete: Cascade)
 
   @@unique([userId, villageId])
+  @@index([userId])
   @@index([villageId])
   @@map("user_villages")
 }
 
-/// 4. ตารางอัตราค่าน้ำแบบก้าวหน้า (Tiered Water Rate)
-model WaterRate {
-  id           Int      @id @default(autoincrement()) @map("rate_id")
-  villageId    Int      @map("village_id") // รหัสหมู่บ้าน
-  minUnit      Decimal  @default(0.00) @map("min_unit") @db.Decimal(10, 2) // จำนวนหน่วยน้ำต่ำสุด
-  maxUnit      Decimal? @map("max_unit") @db.Decimal(10, 2) // จำนวนหน่วยน้ำสูงสุด
-  pricePerUnit Decimal  @map("price_per_unit") @db.Decimal(8, 2) // ราคาต่อหน่วย
-  createdAt    DateTime @default(now()) @map("created_at") // วันที่สร้าง
-
-  village Village @relation(fields: [villageId], references: [id], onDelete: Cascade)
-
-  @@index([villageId])
-  @@map("water_rates")
-}
-
-/// 5. ตารางแปลง/บ้านเลขที่
+/// 4. บ้านเลขที่
 model Property {
   id          Int            @id @default(autoincrement()) @map("property_id")
   villageId   Int            @map("village_id") // รหัสหมู่บ้าน
-  houseNumber String         @map("house_number") @db.VarChar(50) // เลขบ้าน
-  zone        String?        @db.VarChar(50) // หน่วย
+  houseNumber String         @map("house_number") @db.VarChar(50) // บ้านเลขที่
+  zone        String?        @db.VarChar(50) // โซน
   meterCode   String?        @map("meter_code") @db.VarChar(50) // รหัสตัววัด
   status      PropertyStatus @default(ACTIVE) // สถานะ
   createdAt   DateTime       @default(now()) @map("created_at") // วันที่สร้าง
@@ -149,18 +150,17 @@ model Property {
   village        Village        @relation(fields: [villageId], references: [id], onDelete: Cascade)
   userProperties UserProperty[]
   meterReadings  MeterReading[]
-  invoices       Invoice[]
 
   @@unique([villageId, houseNumber])
   @@index([villageId])
   @@map("properties")
 }
 
-/// 6. ตารางผูกสิทธิ์คนเข้ากับบ้าน
+/// 5. ตารางผูกสิทธิ์คนเข้ากับบ้าน
 model UserProperty {
   id             Int      @id @default(autoincrement()) @map("user_property_id")
   userId         Int      @map("user_id") // รหัสผู้ใช้
-  propertyId     Int      @map("property_id") // รหัสบ้าน
+  propertyId     Int      @map("property_id") // รหัสบ้านเลขที่
   createdAt      DateTime @default(now()) @map("created_at") // วันที่สร้าง
   updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") // วันที่อัปเดต
 
@@ -173,37 +173,52 @@ model UserProperty {
   @@map("user_properties")
 }
 
-/// 7. ตารางบันทึกการอ่านมิเตอร์น้ำ
+/// 6. อัตราค่าน้ำ
+model WaterRate {
+  id           Int      @id @default(autoincrement()) @map("rate_id")
+  villageId    Int      @map("village_id") // รหัสหมู่บ้าน
+
+  // ใช้สำหรับตรวจสอบความผิดปกติ
+  minUnit      Decimal  @default(0.00) @map("min_unit") @db.Decimal(10, 2) // จำนวนหน่วยน้ำต่ำสุด
+  maxUnit      Decimal? @map("max_unit") @db.Decimal(10, 2) // จำนวนหน่วยน้ำสูงสุด
+
+  pricePerUnit Decimal  @map("price_per_unit") @db.Decimal(8, 2) // ราคาต่อหน่วย
+  createdAt    DateTime @default(now()) @map("created_at") // วันที่สร้าง
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") // วันที่อัปเดต
+
+  village Village @relation(fields: [villageId], references: [id], onDelete: Cascade)
+
+  @@index([villageId])
+  @@map("water_rates")
+}
+
+/// 7. การอ่านมิเตอร์น้ำ
 model MeterReading {
   id              Int      @id @default(autoincrement()) @map("reading_id")
   villageId       Int      @map("village_id") // รหัสหมู่บ้าน
-  propertyId      Int      @map("property_id") // รหัสบ้าน
-  readerId        Int?     @map("reader_id") // รหัสผู้อ่าน
-  billingMonth    DateTime @map("billing_month") @db.Date // เดือนบิล
+  propertyId      Int      @map("property_id") // รหัสบ้านเลขที่
+  readerId        Int?     @map("reader_id") // รหัสผู้อ่าน (user_id)
   previousReading Decimal  @map("previous_reading") @db.Decimal(10, 2) // อ่านมิเตอร์ก่อนหน้า
   currentReading  Decimal  @map("current_reading") @db.Decimal(10, 2) // อ่านมิเตอร์ปัจจุบัน
-  consumption     Decimal  @map("consumption") @db.Decimal(10, 2) // ยอดรวม
+  consumption     Decimal  @map("consumption") @db.Decimal(10, 2) // ยอดน้ำ
   imageUrl        String?  @map("image_url") @db.Text // URL รูปภาพ
-  readingDate     DateTime @default(now()) @map("reading_date") // วันที่อ่าน
+  readingDate     DateTime @map("reading_date") @db.Date // วันที่อ่าน
+  createdAt       DateTime @default(now()) @map("created_at") // วันที่สร้าง
 
   village  Village  @relation(fields: [villageId], references: [id], onDelete: Cascade)
   property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
   reader   User?    @relation("ReaderReadings", fields: [readerId], references: [id], onDelete: SetNull)
   invoice  Invoice?
 
-  @@unique([propertyId, billingMonth])
-  @@index([villageId, billingMonth])
-  @@index([propertyId])
+  @@index([villageId, readingDate])
+  @@index([propertyId, readingDate])
   @@map("meter_readings")
 }
 
-/// 8. ตารางใบแจ้งหนี้ / บิล
+/// 8. ใบแจ้งหนี้ / บิล
 model Invoice {
   id            Int           @id @default(autoincrement()) @map("invoice_id")
-  villageId     Int           @map("village_id") // รหัสหมู่บ้าน
-  propertyId    Int           @map("property_id") // รหัสบ้าน
-  readingId     Int           @unique @map("reading_id") // รหัสอ่านมิเตอร์
-  billingMonth  DateTime      @map("billing_month") @db.Date // เดือนบิล
+  meterReadingId Int          @unique @map("meter_reading_id") // รหัสการอ่านมิเตอร์น้ำ
   waterAmount   Decimal       @map("water_amount") @db.Decimal(10, 2) // ยอดน้ำ
   serviceFee    Decimal       @default(0.00) @map("service_fee") @db.Decimal(10, 2) // ค่าบริการ
   fineAmount    Decimal       @default(0.00) @map("fine_amount") @db.Decimal(10, 2) // ค่าปรับ
@@ -213,25 +228,21 @@ model Invoice {
   createdAt     DateTime      @default(now()) @map("created_at") // วันที่สร้าง
   updatedAt     DateTime      @default(now()) @updatedAt @map("updated_at") // วันที่อัปเดต
 
-  village  Village      @relation(fields: [villageId], references: [id], onDelete: Cascade)
-  property Property     @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  reading  MeterReading @relation(fields: [readingId], references: [id], onDelete: Restrict)
+  meterReading  MeterReading  @relation(fields: [meterReadingId], references: [id], onDelete: Cascade)
   payments Payment[]
 
-  @@index([villageId, billingMonth])
-  @@index([propertyId])
   @@index([paymentStatus])
   @@map("invoices")
 }
 
-/// 9. ตารางประวัติการชำระเงินสลิป
+/// 9. การชำระเงิน
 model Payment {
   id               Int               @id @default(autoincrement()) @map("payment_id")
   invoiceId        Int               @map("invoice_id") // รหัสใบแจ้งหนี้
-  paidByUserId     Int?              @map("paid_by_user_id") // รหัสผู้ชำระ
+  paidByUserId     Int?              @map("paid_by_user_id") // รหัสผู้ชำระ (user_id)
   amountPaid       Decimal           @map("amount_paid") @db.Decimal(10, 2) // จำนวนเงินที่ชำระ
   slipUrl          String            @map("slip_url") @db.Text // URL สลิป
-  verifiedByUserId Int?              @map("verified_by_user_id") // รหัสผู้ตรวจสอบ
+  verifiedByUserId Int?              @map("verified_by_user_id") // รหัสผู้ตรวจสอบ (user_id)
   paymentStatus    PaymentSlipStatus @default(SUBMITTED) @map("payment_status") // สถานะการชำระ
   rejectReason     String?           @map("reject_reason") @db.Text // เหตุผลการปฏิเสธ
   verifiedAt       DateTime?         @map("verified_at") // วันที่ตรวจสอบ

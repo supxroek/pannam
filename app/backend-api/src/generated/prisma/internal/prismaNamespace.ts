@@ -400,9 +400,9 @@ export const ModelName = {
   Village: 'Village',
   User: 'User',
   UserVillage: 'UserVillage',
-  WaterRate: 'WaterRate',
   Property: 'Property',
   UserProperty: 'UserProperty',
+  WaterRate: 'WaterRate',
   MeterReading: 'MeterReading',
   Invoice: 'Invoice',
   Payment: 'Payment',
@@ -422,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "village" | "user" | "userVillage" | "waterRate" | "property" | "userProperty" | "meterReading" | "invoice" | "payment" | "auditLog"
+    modelProps: "village" | "user" | "userVillage" | "property" | "userProperty" | "waterRate" | "meterReading" | "invoice" | "payment" | "auditLog"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -648,80 +648,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
-    WaterRate: {
-      payload: Prisma.$WaterRatePayload<ExtArgs>
-      fields: Prisma.WaterRateFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.WaterRateFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.WaterRateFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
-        }
-        findFirst: {
-          args: Prisma.WaterRateFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.WaterRateFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
-        }
-        findMany: {
-          args: Prisma.WaterRateFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>[]
-        }
-        create: {
-          args: Prisma.WaterRateCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
-        }
-        createMany: {
-          args: Prisma.WaterRateCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.WaterRateCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>[]
-        }
-        delete: {
-          args: Prisma.WaterRateDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
-        }
-        update: {
-          args: Prisma.WaterRateUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
-        }
-        deleteMany: {
-          args: Prisma.WaterRateDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.WaterRateUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.WaterRateUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>[]
-        }
-        upsert: {
-          args: Prisma.WaterRateUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
-        }
-        aggregate: {
-          args: Prisma.WaterRateAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateWaterRate>
-        }
-        groupBy: {
-          args: Prisma.WaterRateGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.WaterRateGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.WaterRateCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.WaterRateCountAggregateOutputType> | number
-        }
-      }
-    }
     Property: {
       payload: Prisma.$PropertyPayload<ExtArgs>
       fields: Prisma.PropertyFieldRefs
@@ -867,6 +793,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserPropertyCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserPropertyCountAggregateOutputType> | number
+        }
+      }
+    }
+    WaterRate: {
+      payload: Prisma.$WaterRatePayload<ExtArgs>
+      fields: Prisma.WaterRateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WaterRateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WaterRateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
+        }
+        findFirst: {
+          args: Prisma.WaterRateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WaterRateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
+        }
+        findMany: {
+          args: Prisma.WaterRateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>[]
+        }
+        create: {
+          args: Prisma.WaterRateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
+        }
+        createMany: {
+          args: Prisma.WaterRateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WaterRateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>[]
+        }
+        delete: {
+          args: Prisma.WaterRateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
+        }
+        update: {
+          args: Prisma.WaterRateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
+        }
+        deleteMany: {
+          args: Prisma.WaterRateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WaterRateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WaterRateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>[]
+        }
+        upsert: {
+          args: Prisma.WaterRateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaterRatePayload>
+        }
+        aggregate: {
+          args: Prisma.WaterRateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWaterRate>
+        }
+        groupBy: {
+          args: Prisma.WaterRateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WaterRateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WaterRateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WaterRateCountAggregateOutputType> | number
         }
       }
     }
@@ -1207,13 +1207,15 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const VillageScalarFieldEnum = {
   id: 'id',
-  villageCode: 'villageCode',
   address: 'address',
   subDistrict: 'subDistrict',
   district: 'district',
   province: 'province',
   postalCode: 'postalCode',
-  defaultServiceFee: 'defaultServiceFee',
+  paymentMethod: 'paymentMethod',
+  bankProvider: 'bankProvider',
+  bankNumber: 'bankNumber',
+  bankPayeeName: 'bankPayeeName',
   promptpayNo: 'promptpayNo',
   promptpayName: 'promptpayName',
   promptpayImage: 'promptpayImage',
@@ -1229,7 +1231,10 @@ export type VillageScalarFieldEnum = (typeof VillageScalarFieldEnum)[keyof typeo
 export const UserScalarFieldEnum = {
   id: 'id',
   lineUserId: 'lineUserId',
+  lineProfileUrl: 'lineProfileUrl',
   fullName: 'fullName',
+  birthdate: 'birthdate',
+  nationalId: 'nationalId',
   phoneNumber: 'phoneNumber',
   isGlobalAdmin: 'isGlobalAdmin',
   createdAt: 'createdAt',
@@ -1249,18 +1254,6 @@ export const UserVillageScalarFieldEnum = {
 } as const
 
 export type UserVillageScalarFieldEnum = (typeof UserVillageScalarFieldEnum)[keyof typeof UserVillageScalarFieldEnum]
-
-
-export const WaterRateScalarFieldEnum = {
-  id: 'id',
-  villageId: 'villageId',
-  minUnit: 'minUnit',
-  maxUnit: 'maxUnit',
-  pricePerUnit: 'pricePerUnit',
-  createdAt: 'createdAt'
-} as const
-
-export type WaterRateScalarFieldEnum = (typeof WaterRateScalarFieldEnum)[keyof typeof WaterRateScalarFieldEnum]
 
 
 export const PropertyScalarFieldEnum = {
@@ -1288,17 +1281,30 @@ export const UserPropertyScalarFieldEnum = {
 export type UserPropertyScalarFieldEnum = (typeof UserPropertyScalarFieldEnum)[keyof typeof UserPropertyScalarFieldEnum]
 
 
+export const WaterRateScalarFieldEnum = {
+  id: 'id',
+  villageId: 'villageId',
+  minUnit: 'minUnit',
+  maxUnit: 'maxUnit',
+  pricePerUnit: 'pricePerUnit',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WaterRateScalarFieldEnum = (typeof WaterRateScalarFieldEnum)[keyof typeof WaterRateScalarFieldEnum]
+
+
 export const MeterReadingScalarFieldEnum = {
   id: 'id',
   villageId: 'villageId',
   propertyId: 'propertyId',
   readerId: 'readerId',
-  billingMonth: 'billingMonth',
   previousReading: 'previousReading',
   currentReading: 'currentReading',
   consumption: 'consumption',
   imageUrl: 'imageUrl',
-  readingDate: 'readingDate'
+  readingDate: 'readingDate',
+  createdAt: 'createdAt'
 } as const
 
 export type MeterReadingScalarFieldEnum = (typeof MeterReadingScalarFieldEnum)[keyof typeof MeterReadingScalarFieldEnum]
@@ -1306,10 +1312,7 @@ export type MeterReadingScalarFieldEnum = (typeof MeterReadingScalarFieldEnum)[k
 
 export const InvoiceScalarFieldEnum = {
   id: 'id',
-  villageId: 'villageId',
-  propertyId: 'propertyId',
-  readingId: 'readingId',
-  billingMonth: 'billingMonth',
+  meterReadingId: 'meterReadingId',
   waterAmount: 'waterAmount',
   serviceFee: 'serviceFee',
   fineAmount: 'fineAmount',
@@ -1430,16 +1433,16 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Decimal'
+ * Reference to a field of type 'PaymentMethod'
  */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+export type EnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod'>
     
 
 
 /**
- * Reference to a field of type 'Decimal[]'
+ * Reference to a field of type 'PaymentMethod[]'
  */
-export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod[]'>
     
 
 
@@ -1503,6 +1506,20 @@ export type EnumPropertyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$P
  * Reference to a field of type 'PropertyStatus[]'
  */
 export type ListEnumPropertyStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PropertyStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -1715,9 +1732,9 @@ export type GlobalOmitConfig = {
   village?: Prisma.VillageOmit
   user?: Prisma.UserOmit
   userVillage?: Prisma.UserVillageOmit
-  waterRate?: Prisma.WaterRateOmit
   property?: Prisma.PropertyOmit
   userProperty?: Prisma.UserPropertyOmit
+  waterRate?: Prisma.WaterRateOmit
   meterReading?: Prisma.MeterReadingOmit
   invoice?: Prisma.InvoiceOmit
   payment?: Prisma.PaymentOmit

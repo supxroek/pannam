@@ -37,7 +37,10 @@ export type UserSumAggregateOutputType = {
 export type UserMinAggregateOutputType = {
   id: number | null
   lineUserId: string | null
+  lineProfileUrl: string | null
   fullName: string | null
+  birthdate: Date | null
+  nationalId: string | null
   phoneNumber: string | null
   isGlobalAdmin: boolean | null
   createdAt: Date | null
@@ -47,7 +50,10 @@ export type UserMinAggregateOutputType = {
 export type UserMaxAggregateOutputType = {
   id: number | null
   lineUserId: string | null
+  lineProfileUrl: string | null
   fullName: string | null
+  birthdate: Date | null
+  nationalId: string | null
   phoneNumber: string | null
   isGlobalAdmin: boolean | null
   createdAt: Date | null
@@ -57,7 +63,10 @@ export type UserMaxAggregateOutputType = {
 export type UserCountAggregateOutputType = {
   id: number
   lineUserId: number
+  lineProfileUrl: number
   fullName: number
+  birthdate: number
+  nationalId: number
   phoneNumber: number
   isGlobalAdmin: number
   createdAt: number
@@ -77,7 +86,10 @@ export type UserSumAggregateInputType = {
 export type UserMinAggregateInputType = {
   id?: true
   lineUserId?: true
+  lineProfileUrl?: true
   fullName?: true
+  birthdate?: true
+  nationalId?: true
   phoneNumber?: true
   isGlobalAdmin?: true
   createdAt?: true
@@ -87,7 +99,10 @@ export type UserMinAggregateInputType = {
 export type UserMaxAggregateInputType = {
   id?: true
   lineUserId?: true
+  lineProfileUrl?: true
   fullName?: true
+  birthdate?: true
+  nationalId?: true
   phoneNumber?: true
   isGlobalAdmin?: true
   createdAt?: true
@@ -97,7 +112,10 @@ export type UserMaxAggregateInputType = {
 export type UserCountAggregateInputType = {
   id?: true
   lineUserId?: true
+  lineProfileUrl?: true
   fullName?: true
+  birthdate?: true
+  nationalId?: true
   phoneNumber?: true
   isGlobalAdmin?: true
   createdAt?: true
@@ -194,7 +212,10 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type UserGroupByOutputType = {
   id: number
   lineUserId: string
+  lineProfileUrl: string | null
   fullName: string
+  birthdate: Date | null
+  nationalId: string | null
   phoneNumber: string | null
   isGlobalAdmin: boolean
   createdAt: Date
@@ -227,7 +248,10 @@ export type UserWhereInput = {
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.IntFilter<"User"> | number
   lineUserId?: Prisma.StringFilter<"User"> | string
+  lineProfileUrl?: Prisma.StringNullableFilter<"User"> | string | null
   fullName?: Prisma.StringFilter<"User"> | string
+  birthdate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  nationalId?: Prisma.StringNullableFilter<"User"> | string | null
   phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null
   isGlobalAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -243,7 +267,10 @@ export type UserWhereInput = {
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrder
+  lineProfileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  birthdate?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationalId?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   isGlobalAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -259,10 +286,13 @@ export type UserOrderByWithRelationInput = {
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   lineUserId?: string
+  nationalId?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
+  lineProfileUrl?: Prisma.StringNullableFilter<"User"> | string | null
   fullName?: Prisma.StringFilter<"User"> | string
+  birthdate?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   phoneNumber?: Prisma.StringNullableFilter<"User"> | string | null
   isGlobalAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -273,12 +303,15 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   paymentsMade?: Prisma.PaymentListRelationFilter
   paymentsVerified?: Prisma.PaymentListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
-}, "id" | "lineUserId">
+}, "id" | "lineUserId" | "nationalId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrder
+  lineProfileUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  birthdate?: Prisma.SortOrderInput | Prisma.SortOrder
+  nationalId?: Prisma.SortOrderInput | Prisma.SortOrder
   phoneNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   isGlobalAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -296,7 +329,10 @@ export type UserScalarWhereWithAggregatesInput = {
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"User"> | number
   lineUserId?: Prisma.StringWithAggregatesFilter<"User"> | string
+  lineProfileUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   fullName?: Prisma.StringWithAggregatesFilter<"User"> | string
+  birthdate?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  nationalId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   phoneNumber?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   isGlobalAdmin?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -305,7 +341,10 @@ export type UserScalarWhereWithAggregatesInput = {
 
 export type UserCreateInput = {
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -321,7 +360,10 @@ export type UserCreateInput = {
 export type UserUncheckedCreateInput = {
   id?: number
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -336,7 +378,10 @@ export type UserUncheckedCreateInput = {
 
 export type UserUpdateInput = {
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -352,7 +397,10 @@ export type UserUpdateInput = {
 export type UserUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -368,7 +416,10 @@ export type UserUncheckedUpdateInput = {
 export type UserCreateManyInput = {
   id?: number
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -377,7 +428,10 @@ export type UserCreateManyInput = {
 
 export type UserUpdateManyMutationInput = {
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -387,7 +441,10 @@ export type UserUpdateManyMutationInput = {
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -397,7 +454,10 @@ export type UserUncheckedUpdateManyInput = {
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrder
+  lineProfileUrl?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  birthdate?: Prisma.SortOrder
+  nationalId?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   isGlobalAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -411,7 +471,10 @@ export type UserAvgOrderByAggregateInput = {
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrder
+  lineProfileUrl?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  birthdate?: Prisma.SortOrder
+  nationalId?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   isGlobalAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -421,7 +484,10 @@ export type UserMaxOrderByAggregateInput = {
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   lineUserId?: Prisma.SortOrder
+  lineProfileUrl?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
+  birthdate?: Prisma.SortOrder
+  nationalId?: Prisma.SortOrder
   phoneNumber?: Prisma.SortOrder
   isGlobalAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -440,6 +506,14 @@ export type UserScalarRelationFilter = {
 export type UserNullableScalarRelationFilter = {
   is?: Prisma.UserWhereInput | null
   isNot?: Prisma.UserWhereInput | null
+}
+
+export type StringFieldUpdateOperationsInput = {
+  set?: string
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type UserCreateNestedOneWithoutUserVillagesInput = {
@@ -536,7 +610,10 @@ export type UserUpdateOneWithoutAuditLogsNestedInput = {
 
 export type UserCreateWithoutUserVillagesInput = {
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -551,7 +628,10 @@ export type UserCreateWithoutUserVillagesInput = {
 export type UserUncheckedCreateWithoutUserVillagesInput = {
   id?: number
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -581,7 +661,10 @@ export type UserUpdateToOneWithWhereWithoutUserVillagesInput = {
 
 export type UserUpdateWithoutUserVillagesInput = {
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -596,7 +679,10 @@ export type UserUpdateWithoutUserVillagesInput = {
 export type UserUncheckedUpdateWithoutUserVillagesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -610,7 +696,10 @@ export type UserUncheckedUpdateWithoutUserVillagesInput = {
 
 export type UserCreateWithoutUserPropertiesInput = {
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -625,7 +714,10 @@ export type UserCreateWithoutUserPropertiesInput = {
 export type UserUncheckedCreateWithoutUserPropertiesInput = {
   id?: number
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -655,7 +747,10 @@ export type UserUpdateToOneWithWhereWithoutUserPropertiesInput = {
 
 export type UserUpdateWithoutUserPropertiesInput = {
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -670,7 +765,10 @@ export type UserUpdateWithoutUserPropertiesInput = {
 export type UserUncheckedUpdateWithoutUserPropertiesInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -684,7 +782,10 @@ export type UserUncheckedUpdateWithoutUserPropertiesInput = {
 
 export type UserCreateWithoutReadingsTakenInput = {
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -699,7 +800,10 @@ export type UserCreateWithoutReadingsTakenInput = {
 export type UserUncheckedCreateWithoutReadingsTakenInput = {
   id?: number
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -729,7 +833,10 @@ export type UserUpdateToOneWithWhereWithoutReadingsTakenInput = {
 
 export type UserUpdateWithoutReadingsTakenInput = {
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -744,7 +851,10 @@ export type UserUpdateWithoutReadingsTakenInput = {
 export type UserUncheckedUpdateWithoutReadingsTakenInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -758,7 +868,10 @@ export type UserUncheckedUpdateWithoutReadingsTakenInput = {
 
 export type UserCreateWithoutPaymentsMadeInput = {
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -773,7 +886,10 @@ export type UserCreateWithoutPaymentsMadeInput = {
 export type UserUncheckedCreateWithoutPaymentsMadeInput = {
   id?: number
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -792,7 +908,10 @@ export type UserCreateOrConnectWithoutPaymentsMadeInput = {
 
 export type UserCreateWithoutPaymentsVerifiedInput = {
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -807,7 +926,10 @@ export type UserCreateWithoutPaymentsVerifiedInput = {
 export type UserUncheckedCreateWithoutPaymentsVerifiedInput = {
   id?: number
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -837,7 +959,10 @@ export type UserUpdateToOneWithWhereWithoutPaymentsMadeInput = {
 
 export type UserUpdateWithoutPaymentsMadeInput = {
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -852,7 +977,10 @@ export type UserUpdateWithoutPaymentsMadeInput = {
 export type UserUncheckedUpdateWithoutPaymentsMadeInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -877,7 +1005,10 @@ export type UserUpdateToOneWithWhereWithoutPaymentsVerifiedInput = {
 
 export type UserUpdateWithoutPaymentsVerifiedInput = {
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -892,7 +1023,10 @@ export type UserUpdateWithoutPaymentsVerifiedInput = {
 export type UserUncheckedUpdateWithoutPaymentsVerifiedInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -906,7 +1040,10 @@ export type UserUncheckedUpdateWithoutPaymentsVerifiedInput = {
 
 export type UserCreateWithoutAuditLogsInput = {
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -921,7 +1058,10 @@ export type UserCreateWithoutAuditLogsInput = {
 export type UserUncheckedCreateWithoutAuditLogsInput = {
   id?: number
   lineUserId: string
+  lineProfileUrl?: string | null
   fullName: string
+  birthdate?: Date | string | null
+  nationalId?: string | null
   phoneNumber?: string | null
   isGlobalAdmin?: boolean
   createdAt?: Date | string
@@ -951,7 +1091,10 @@ export type UserUpdateToOneWithWhereWithoutAuditLogsInput = {
 
 export type UserUpdateWithoutAuditLogsInput = {
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -966,7 +1109,10 @@ export type UserUpdateWithoutAuditLogsInput = {
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   lineUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  lineProfileUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  birthdate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  nationalId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phoneNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isGlobalAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1057,7 +1203,10 @@ export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   lineUserId?: boolean
+  lineProfileUrl?: boolean
   fullName?: boolean
+  birthdate?: boolean
+  nationalId?: boolean
   phoneNumber?: boolean
   isGlobalAdmin?: boolean
   createdAt?: boolean
@@ -1074,7 +1223,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   lineUserId?: boolean
+  lineProfileUrl?: boolean
   fullName?: boolean
+  birthdate?: boolean
+  nationalId?: boolean
   phoneNumber?: boolean
   isGlobalAdmin?: boolean
   createdAt?: boolean
@@ -1084,7 +1236,10 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   lineUserId?: boolean
+  lineProfileUrl?: boolean
   fullName?: boolean
+  birthdate?: boolean
+  nationalId?: boolean
   phoneNumber?: boolean
   isGlobalAdmin?: boolean
   createdAt?: boolean
@@ -1094,14 +1249,17 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 export type UserSelectScalar = {
   id?: boolean
   lineUserId?: boolean
+  lineProfileUrl?: boolean
   fullName?: boolean
+  birthdate?: boolean
+  nationalId?: boolean
   phoneNumber?: boolean
   isGlobalAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lineUserId" | "fullName" | "phoneNumber" | "isGlobalAdmin" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "lineUserId" | "lineProfileUrl" | "fullName" | "birthdate" | "nationalId" | "phoneNumber" | "isGlobalAdmin" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   userVillages?: boolean | Prisma.User$userVillagesArgs<ExtArgs>
   userProperties?: boolean | Prisma.User$userPropertiesArgs<ExtArgs>
@@ -1127,7 +1285,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
     lineUserId: string
+    lineProfileUrl: string | null
     fullName: string
+    birthdate: Date | null
+    nationalId: string | null
     phoneNumber: string | null
     isGlobalAdmin: boolean
     createdAt: Date
@@ -1563,7 +1724,10 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'Int'>
   readonly lineUserId: Prisma.FieldRef<"User", 'String'>
+  readonly lineProfileUrl: Prisma.FieldRef<"User", 'String'>
   readonly fullName: Prisma.FieldRef<"User", 'String'>
+  readonly birthdate: Prisma.FieldRef<"User", 'DateTime'>
+  readonly nationalId: Prisma.FieldRef<"User", 'String'>
   readonly phoneNumber: Prisma.FieldRef<"User", 'String'>
   readonly isGlobalAdmin: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>

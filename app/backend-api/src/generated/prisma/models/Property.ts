@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model Property
- * 5. ตารางแปลง/บ้านเลขที่
+ * 4. บ้านเลขที่
  */
 export type PropertyModel = runtime.Types.Result.DefaultSelection<Prisma.$PropertyPayload>
 
@@ -247,7 +247,6 @@ export type PropertyWhereInput = {
   village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
   userProperties?: Prisma.UserPropertyListRelationFilter
   meterReadings?: Prisma.MeterReadingListRelationFilter
-  invoices?: Prisma.InvoiceListRelationFilter
 }
 
 export type PropertyOrderByWithRelationInput = {
@@ -262,7 +261,6 @@ export type PropertyOrderByWithRelationInput = {
   village?: Prisma.VillageOrderByWithRelationInput
   userProperties?: Prisma.UserPropertyOrderByRelationAggregateInput
   meterReadings?: Prisma.MeterReadingOrderByRelationAggregateInput
-  invoices?: Prisma.InvoiceOrderByRelationAggregateInput
 }
 
 export type PropertyWhereUniqueInput = Prisma.AtLeast<{
@@ -281,7 +279,6 @@ export type PropertyWhereUniqueInput = Prisma.AtLeast<{
   village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
   userProperties?: Prisma.UserPropertyListRelationFilter
   meterReadings?: Prisma.MeterReadingListRelationFilter
-  invoices?: Prisma.InvoiceListRelationFilter
 }, "id" | "villageId_houseNumber">
 
 export type PropertyOrderByWithAggregationInput = {
@@ -324,7 +321,6 @@ export type PropertyCreateInput = {
   village: Prisma.VillageCreateNestedOneWithoutPropertiesInput
   userProperties?: Prisma.UserPropertyCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutPropertyInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutPropertyInput
 }
 
 export type PropertyUncheckedCreateInput = {
@@ -338,7 +334,6 @@ export type PropertyUncheckedCreateInput = {
   updatedAt?: Date | string
   userProperties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutPropertyInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPropertyInput
 }
 
 export type PropertyUpdateInput = {
@@ -351,7 +346,6 @@ export type PropertyUpdateInput = {
   village?: Prisma.VillageUpdateOneRequiredWithoutPropertiesNestedInput
   userProperties?: Prisma.UserPropertyUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutPropertyNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutPropertyNestedInput
 }
 
 export type PropertyUncheckedUpdateInput = {
@@ -365,7 +359,6 @@ export type PropertyUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userProperties?: Prisma.UserPropertyUncheckedUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutPropertyNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPropertyNestedInput
 }
 
 export type PropertyCreateManyInput = {
@@ -536,20 +529,6 @@ export type PropertyUpdateOneRequiredWithoutMeterReadingsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.PropertyUpdateToOneWithWhereWithoutMeterReadingsInput, Prisma.PropertyUpdateWithoutMeterReadingsInput>, Prisma.PropertyUncheckedUpdateWithoutMeterReadingsInput>
 }
 
-export type PropertyCreateNestedOneWithoutInvoicesInput = {
-  create?: Prisma.XOR<Prisma.PropertyCreateWithoutInvoicesInput, Prisma.PropertyUncheckedCreateWithoutInvoicesInput>
-  connectOrCreate?: Prisma.PropertyCreateOrConnectWithoutInvoicesInput
-  connect?: Prisma.PropertyWhereUniqueInput
-}
-
-export type PropertyUpdateOneRequiredWithoutInvoicesNestedInput = {
-  create?: Prisma.XOR<Prisma.PropertyCreateWithoutInvoicesInput, Prisma.PropertyUncheckedCreateWithoutInvoicesInput>
-  connectOrCreate?: Prisma.PropertyCreateOrConnectWithoutInvoicesInput
-  upsert?: Prisma.PropertyUpsertWithoutInvoicesInput
-  connect?: Prisma.PropertyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.PropertyUpdateToOneWithWhereWithoutInvoicesInput, Prisma.PropertyUpdateWithoutInvoicesInput>, Prisma.PropertyUncheckedUpdateWithoutInvoicesInput>
-}
-
 export type PropertyCreateWithoutVillageInput = {
   houseNumber: string
   zone?: string | null
@@ -559,7 +538,6 @@ export type PropertyCreateWithoutVillageInput = {
   updatedAt?: Date | string
   userProperties?: Prisma.UserPropertyCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutPropertyInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutPropertyInput
 }
 
 export type PropertyUncheckedCreateWithoutVillageInput = {
@@ -572,7 +550,6 @@ export type PropertyUncheckedCreateWithoutVillageInput = {
   updatedAt?: Date | string
   userProperties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutPropertyInput
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutPropertyInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPropertyInput
 }
 
 export type PropertyCreateOrConnectWithoutVillageInput = {
@@ -624,7 +601,6 @@ export type PropertyCreateWithoutUserPropertiesInput = {
   updatedAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutPropertiesInput
   meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutPropertyInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutPropertyInput
 }
 
 export type PropertyUncheckedCreateWithoutUserPropertiesInput = {
@@ -637,7 +613,6 @@ export type PropertyUncheckedCreateWithoutUserPropertiesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutPropertyInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPropertyInput
 }
 
 export type PropertyCreateOrConnectWithoutUserPropertiesInput = {
@@ -665,7 +640,6 @@ export type PropertyUpdateWithoutUserPropertiesInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutPropertiesNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutPropertyNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutPropertyNestedInput
 }
 
 export type PropertyUncheckedUpdateWithoutUserPropertiesInput = {
@@ -678,7 +652,6 @@ export type PropertyUncheckedUpdateWithoutUserPropertiesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutPropertyNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPropertyNestedInput
 }
 
 export type PropertyCreateWithoutMeterReadingsInput = {
@@ -690,7 +663,6 @@ export type PropertyCreateWithoutMeterReadingsInput = {
   updatedAt?: Date | string
   village: Prisma.VillageCreateNestedOneWithoutPropertiesInput
   userProperties?: Prisma.UserPropertyCreateNestedManyWithoutPropertyInput
-  invoices?: Prisma.InvoiceCreateNestedManyWithoutPropertyInput
 }
 
 export type PropertyUncheckedCreateWithoutMeterReadingsInput = {
@@ -703,7 +675,6 @@ export type PropertyUncheckedCreateWithoutMeterReadingsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   userProperties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutPropertyInput
-  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutPropertyInput
 }
 
 export type PropertyCreateOrConnectWithoutMeterReadingsInput = {
@@ -731,7 +702,6 @@ export type PropertyUpdateWithoutMeterReadingsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   village?: Prisma.VillageUpdateOneRequiredWithoutPropertiesNestedInput
   userProperties?: Prisma.UserPropertyUpdateManyWithoutPropertyNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutPropertyNestedInput
 }
 
 export type PropertyUncheckedUpdateWithoutMeterReadingsInput = {
@@ -744,73 +714,6 @@ export type PropertyUncheckedUpdateWithoutMeterReadingsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userProperties?: Prisma.UserPropertyUncheckedUpdateManyWithoutPropertyNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPropertyNestedInput
-}
-
-export type PropertyCreateWithoutInvoicesInput = {
-  houseNumber: string
-  zone?: string | null
-  meterCode?: string | null
-  status?: $Enums.PropertyStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  village: Prisma.VillageCreateNestedOneWithoutPropertiesInput
-  userProperties?: Prisma.UserPropertyCreateNestedManyWithoutPropertyInput
-  meterReadings?: Prisma.MeterReadingCreateNestedManyWithoutPropertyInput
-}
-
-export type PropertyUncheckedCreateWithoutInvoicesInput = {
-  id?: number
-  villageId: number
-  houseNumber: string
-  zone?: string | null
-  meterCode?: string | null
-  status?: $Enums.PropertyStatus
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  userProperties?: Prisma.UserPropertyUncheckedCreateNestedManyWithoutPropertyInput
-  meterReadings?: Prisma.MeterReadingUncheckedCreateNestedManyWithoutPropertyInput
-}
-
-export type PropertyCreateOrConnectWithoutInvoicesInput = {
-  where: Prisma.PropertyWhereUniqueInput
-  create: Prisma.XOR<Prisma.PropertyCreateWithoutInvoicesInput, Prisma.PropertyUncheckedCreateWithoutInvoicesInput>
-}
-
-export type PropertyUpsertWithoutInvoicesInput = {
-  update: Prisma.XOR<Prisma.PropertyUpdateWithoutInvoicesInput, Prisma.PropertyUncheckedUpdateWithoutInvoicesInput>
-  create: Prisma.XOR<Prisma.PropertyCreateWithoutInvoicesInput, Prisma.PropertyUncheckedCreateWithoutInvoicesInput>
-  where?: Prisma.PropertyWhereInput
-}
-
-export type PropertyUpdateToOneWithWhereWithoutInvoicesInput = {
-  where?: Prisma.PropertyWhereInput
-  data: Prisma.XOR<Prisma.PropertyUpdateWithoutInvoicesInput, Prisma.PropertyUncheckedUpdateWithoutInvoicesInput>
-}
-
-export type PropertyUpdateWithoutInvoicesInput = {
-  houseNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  zone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  village?: Prisma.VillageUpdateOneRequiredWithoutPropertiesNestedInput
-  userProperties?: Prisma.UserPropertyUpdateManyWithoutPropertyNestedInput
-  meterReadings?: Prisma.MeterReadingUpdateManyWithoutPropertyNestedInput
-}
-
-export type PropertyUncheckedUpdateWithoutInvoicesInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageId?: Prisma.IntFieldUpdateOperationsInput | number
-  houseNumber?: Prisma.StringFieldUpdateOperationsInput | string
-  zone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  meterCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  status?: Prisma.EnumPropertyStatusFieldUpdateOperationsInput | $Enums.PropertyStatus
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  userProperties?: Prisma.UserPropertyUncheckedUpdateManyWithoutPropertyNestedInput
-  meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutPropertyNestedInput
 }
 
 export type PropertyCreateManyVillageInput = {
@@ -832,7 +735,6 @@ export type PropertyUpdateWithoutVillageInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userProperties?: Prisma.UserPropertyUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUpdateManyWithoutPropertyNestedInput
-  invoices?: Prisma.InvoiceUpdateManyWithoutPropertyNestedInput
 }
 
 export type PropertyUncheckedUpdateWithoutVillageInput = {
@@ -845,7 +747,6 @@ export type PropertyUncheckedUpdateWithoutVillageInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userProperties?: Prisma.UserPropertyUncheckedUpdateManyWithoutPropertyNestedInput
   meterReadings?: Prisma.MeterReadingUncheckedUpdateManyWithoutPropertyNestedInput
-  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutPropertyNestedInput
 }
 
 export type PropertyUncheckedUpdateManyWithoutVillageInput = {
@@ -866,13 +767,11 @@ export type PropertyUncheckedUpdateManyWithoutVillageInput = {
 export type PropertyCountOutputType = {
   userProperties: number
   meterReadings: number
-  invoices: number
 }
 
 export type PropertyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   userProperties?: boolean | PropertyCountOutputTypeCountUserPropertiesArgs
   meterReadings?: boolean | PropertyCountOutputTypeCountMeterReadingsArgs
-  invoices?: boolean | PropertyCountOutputTypeCountInvoicesArgs
 }
 
 /**
@@ -899,13 +798,6 @@ export type PropertyCountOutputTypeCountMeterReadingsArgs<ExtArgs extends runtim
   where?: Prisma.MeterReadingWhereInput
 }
 
-/**
- * PropertyCountOutputType without action
- */
-export type PropertyCountOutputTypeCountInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.InvoiceWhereInput
-}
-
 
 export type PropertySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -919,7 +811,6 @@ export type PropertySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
   userProperties?: boolean | Prisma.Property$userPropertiesArgs<ExtArgs>
   meterReadings?: boolean | Prisma.Property$meterReadingsArgs<ExtArgs>
-  invoices?: boolean | Prisma.Property$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.PropertyCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["property"]>
 
@@ -963,7 +854,6 @@ export type PropertyInclude<ExtArgs extends runtime.Types.Extensions.InternalArg
   village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
   userProperties?: boolean | Prisma.Property$userPropertiesArgs<ExtArgs>
   meterReadings?: boolean | Prisma.Property$meterReadingsArgs<ExtArgs>
-  invoices?: boolean | Prisma.Property$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.PropertyCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type PropertyIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -979,7 +869,6 @@ export type $PropertyPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     village: Prisma.$VillagePayload<ExtArgs>
     userProperties: Prisma.$UserPropertyPayload<ExtArgs>[]
     meterReadings: Prisma.$MeterReadingPayload<ExtArgs>[]
-    invoices: Prisma.$InvoicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1387,7 +1276,6 @@ export interface Prisma__PropertyClient<T, Null = never, ExtArgs extends runtime
   village<T extends Prisma.VillageDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.VillageDefaultArgs<ExtArgs>>): Prisma.Prisma__VillageClient<runtime.Types.Result.GetResult<Prisma.$VillagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   userProperties<T extends Prisma.Property$userPropertiesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Property$userPropertiesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPropertyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   meterReadings<T extends Prisma.Property$meterReadingsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Property$meterReadingsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MeterReadingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  invoices<T extends Prisma.Property$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Property$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1871,30 +1759,6 @@ export type Property$meterReadingsArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.MeterReadingScalarFieldEnum | Prisma.MeterReadingScalarFieldEnum[]
-}
-
-/**
- * Property.invoices
- */
-export type Property$invoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the Invoice
-   */
-  select?: Prisma.InvoiceSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the Invoice
-   */
-  omit?: Prisma.InvoiceOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.InvoiceInclude<ExtArgs> | null
-  where?: Prisma.InvoiceWhereInput
-  orderBy?: Prisma.InvoiceOrderByWithRelationInput | Prisma.InvoiceOrderByWithRelationInput[]
-  cursor?: Prisma.InvoiceWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.InvoiceScalarFieldEnum | Prisma.InvoiceScalarFieldEnum[]
 }
 
 /**

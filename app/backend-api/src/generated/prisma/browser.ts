@@ -33,33 +33,33 @@ export type User = Prisma.UserModel
  */
 export type UserVillage = Prisma.UserVillageModel
 /**
- * Model WaterRate
- * 4. ตารางอัตราค่าน้ำแบบก้าวหน้า (Tiered Water Rate)
- */
-export type WaterRate = Prisma.WaterRateModel
-/**
  * Model Property
- * 5. ตารางแปลง/บ้านเลขที่
+ * 4. บ้านเลขที่
  */
 export type Property = Prisma.PropertyModel
 /**
  * Model UserProperty
- * 6. ตารางผูกสิทธิ์คนเข้ากับบ้าน
+ * 5. ตารางผูกสิทธิ์คนเข้ากับบ้าน
  */
 export type UserProperty = Prisma.UserPropertyModel
 /**
+ * Model WaterRate
+ * 6. อัตราค่าน้ำ
+ */
+export type WaterRate = Prisma.WaterRateModel
+/**
  * Model MeterReading
- * 7. ตารางบันทึกการอ่านมิเตอร์น้ำ
+ * 7. การอ่านมิเตอร์น้ำ
  */
 export type MeterReading = Prisma.MeterReadingModel
 /**
  * Model Invoice
- * 8. ตารางใบแจ้งหนี้ / บิล
+ * 8. ใบแจ้งหนี้ / บิล
  */
 export type Invoice = Prisma.InvoiceModel
 /**
  * Model Payment
- * 9. ตารางประวัติการชำระเงินสลิป
+ * 9. การชำระเงิน
  */
 export type Payment = Prisma.PaymentModel
 /**

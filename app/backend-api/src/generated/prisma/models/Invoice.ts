@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model Invoice
- * 8. ตารางใบแจ้งหนี้ / บิล
+ * 8. ใบแจ้งหนี้ / บิล
  */
 export type InvoiceModel = runtime.Types.Result.DefaultSelection<Prisma.$InvoicePayload>
 
@@ -28,9 +28,7 @@ export type AggregateInvoice = {
 
 export type InvoiceAvgAggregateOutputType = {
   id: number | null
-  villageId: number | null
-  propertyId: number | null
-  readingId: number | null
+  meterReadingId: number | null
   waterAmount: runtime.Decimal | null
   serviceFee: runtime.Decimal | null
   fineAmount: runtime.Decimal | null
@@ -39,9 +37,7 @@ export type InvoiceAvgAggregateOutputType = {
 
 export type InvoiceSumAggregateOutputType = {
   id: number | null
-  villageId: number | null
-  propertyId: number | null
-  readingId: number | null
+  meterReadingId: number | null
   waterAmount: runtime.Decimal | null
   serviceFee: runtime.Decimal | null
   fineAmount: runtime.Decimal | null
@@ -50,10 +46,7 @@ export type InvoiceSumAggregateOutputType = {
 
 export type InvoiceMinAggregateOutputType = {
   id: number | null
-  villageId: number | null
-  propertyId: number | null
-  readingId: number | null
-  billingMonth: Date | null
+  meterReadingId: number | null
   waterAmount: runtime.Decimal | null
   serviceFee: runtime.Decimal | null
   fineAmount: runtime.Decimal | null
@@ -66,10 +59,7 @@ export type InvoiceMinAggregateOutputType = {
 
 export type InvoiceMaxAggregateOutputType = {
   id: number | null
-  villageId: number | null
-  propertyId: number | null
-  readingId: number | null
-  billingMonth: Date | null
+  meterReadingId: number | null
   waterAmount: runtime.Decimal | null
   serviceFee: runtime.Decimal | null
   fineAmount: runtime.Decimal | null
@@ -82,10 +72,7 @@ export type InvoiceMaxAggregateOutputType = {
 
 export type InvoiceCountAggregateOutputType = {
   id: number
-  villageId: number
-  propertyId: number
-  readingId: number
-  billingMonth: number
+  meterReadingId: number
   waterAmount: number
   serviceFee: number
   fineAmount: number
@@ -100,9 +87,7 @@ export type InvoiceCountAggregateOutputType = {
 
 export type InvoiceAvgAggregateInputType = {
   id?: true
-  villageId?: true
-  propertyId?: true
-  readingId?: true
+  meterReadingId?: true
   waterAmount?: true
   serviceFee?: true
   fineAmount?: true
@@ -111,9 +96,7 @@ export type InvoiceAvgAggregateInputType = {
 
 export type InvoiceSumAggregateInputType = {
   id?: true
-  villageId?: true
-  propertyId?: true
-  readingId?: true
+  meterReadingId?: true
   waterAmount?: true
   serviceFee?: true
   fineAmount?: true
@@ -122,10 +105,7 @@ export type InvoiceSumAggregateInputType = {
 
 export type InvoiceMinAggregateInputType = {
   id?: true
-  villageId?: true
-  propertyId?: true
-  readingId?: true
-  billingMonth?: true
+  meterReadingId?: true
   waterAmount?: true
   serviceFee?: true
   fineAmount?: true
@@ -138,10 +118,7 @@ export type InvoiceMinAggregateInputType = {
 
 export type InvoiceMaxAggregateInputType = {
   id?: true
-  villageId?: true
-  propertyId?: true
-  readingId?: true
-  billingMonth?: true
+  meterReadingId?: true
   waterAmount?: true
   serviceFee?: true
   fineAmount?: true
@@ -154,10 +131,7 @@ export type InvoiceMaxAggregateInputType = {
 
 export type InvoiceCountAggregateInputType = {
   id?: true
-  villageId?: true
-  propertyId?: true
-  readingId?: true
-  billingMonth?: true
+  meterReadingId?: true
   waterAmount?: true
   serviceFee?: true
   fineAmount?: true
@@ -257,10 +231,7 @@ export type InvoiceGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
 
 export type InvoiceGroupByOutputType = {
   id: number
-  villageId: number
-  propertyId: number
-  readingId: number
-  billingMonth: Date
+  meterReadingId: number
   waterAmount: runtime.Decimal
   serviceFee: runtime.Decimal
   fineAmount: runtime.Decimal
@@ -296,10 +267,7 @@ export type InvoiceWhereInput = {
   OR?: Prisma.InvoiceWhereInput[]
   NOT?: Prisma.InvoiceWhereInput | Prisma.InvoiceWhereInput[]
   id?: Prisma.IntFilter<"Invoice"> | number
-  villageId?: Prisma.IntFilter<"Invoice"> | number
-  propertyId?: Prisma.IntFilter<"Invoice"> | number
-  readingId?: Prisma.IntFilter<"Invoice"> | number
-  billingMonth?: Prisma.DateTimeFilter<"Invoice"> | Date | string
+  meterReadingId?: Prisma.IntFilter<"Invoice"> | number
   waterAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -308,18 +276,13 @@ export type InvoiceWhereInput = {
   dueDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
-  village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
-  property?: Prisma.XOR<Prisma.PropertyScalarRelationFilter, Prisma.PropertyWhereInput>
-  reading?: Prisma.XOR<Prisma.MeterReadingScalarRelationFilter, Prisma.MeterReadingWhereInput>
+  meterReading?: Prisma.XOR<Prisma.MeterReadingScalarRelationFilter, Prisma.MeterReadingWhereInput>
   payments?: Prisma.PaymentListRelationFilter
 }
 
 export type InvoiceOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  villageId?: Prisma.SortOrder
-  propertyId?: Prisma.SortOrder
-  readingId?: Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
+  meterReadingId?: Prisma.SortOrder
   waterAmount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
   fineAmount?: Prisma.SortOrder
@@ -328,21 +291,16 @@ export type InvoiceOrderByWithRelationInput = {
   dueDate?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  village?: Prisma.VillageOrderByWithRelationInput
-  property?: Prisma.PropertyOrderByWithRelationInput
-  reading?: Prisma.MeterReadingOrderByWithRelationInput
+  meterReading?: Prisma.MeterReadingOrderByWithRelationInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
 export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   id?: number
-  readingId?: number
+  meterReadingId?: number
   AND?: Prisma.InvoiceWhereInput | Prisma.InvoiceWhereInput[]
   OR?: Prisma.InvoiceWhereInput[]
   NOT?: Prisma.InvoiceWhereInput | Prisma.InvoiceWhereInput[]
-  villageId?: Prisma.IntFilter<"Invoice"> | number
-  propertyId?: Prisma.IntFilter<"Invoice"> | number
-  billingMonth?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   waterAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -351,18 +309,13 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   dueDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
-  village?: Prisma.XOR<Prisma.VillageScalarRelationFilter, Prisma.VillageWhereInput>
-  property?: Prisma.XOR<Prisma.PropertyScalarRelationFilter, Prisma.PropertyWhereInput>
-  reading?: Prisma.XOR<Prisma.MeterReadingScalarRelationFilter, Prisma.MeterReadingWhereInput>
+  meterReading?: Prisma.XOR<Prisma.MeterReadingScalarRelationFilter, Prisma.MeterReadingWhereInput>
   payments?: Prisma.PaymentListRelationFilter
-}, "id" | "readingId">
+}, "id" | "meterReadingId">
 
 export type InvoiceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  villageId?: Prisma.SortOrder
-  propertyId?: Prisma.SortOrder
-  readingId?: Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
+  meterReadingId?: Prisma.SortOrder
   waterAmount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
   fineAmount?: Prisma.SortOrder
@@ -383,10 +336,7 @@ export type InvoiceScalarWhereWithAggregatesInput = {
   OR?: Prisma.InvoiceScalarWhereWithAggregatesInput[]
   NOT?: Prisma.InvoiceScalarWhereWithAggregatesInput | Prisma.InvoiceScalarWhereWithAggregatesInput[]
   id?: Prisma.IntWithAggregatesFilter<"Invoice"> | number
-  villageId?: Prisma.IntWithAggregatesFilter<"Invoice"> | number
-  propertyId?: Prisma.IntWithAggregatesFilter<"Invoice"> | number
-  readingId?: Prisma.IntWithAggregatesFilter<"Invoice"> | number
-  billingMonth?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
+  meterReadingId?: Prisma.IntWithAggregatesFilter<"Invoice"> | number
   waterAmount?: Prisma.DecimalWithAggregatesFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalWithAggregatesFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalWithAggregatesFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -398,7 +348,6 @@ export type InvoiceScalarWhereWithAggregatesInput = {
 }
 
 export type InvoiceCreateInput = {
-  billingMonth: Date | string
   waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -407,18 +356,13 @@ export type InvoiceCreateInput = {
   dueDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  village: Prisma.VillageCreateNestedOneWithoutInvoicesInput
-  property: Prisma.PropertyCreateNestedOneWithoutInvoicesInput
-  reading: Prisma.MeterReadingCreateNestedOneWithoutInvoiceInput
+  meterReading: Prisma.MeterReadingCreateNestedOneWithoutInvoiceInput
   payments?: Prisma.PaymentCreateNestedManyWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateInput = {
   id?: number
-  villageId: number
-  propertyId: number
-  readingId: number
-  billingMonth: Date | string
+  meterReadingId: number
   waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -431,7 +375,6 @@ export type InvoiceUncheckedCreateInput = {
 }
 
 export type InvoiceUpdateInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -440,18 +383,13 @@ export type InvoiceUpdateInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  village?: Prisma.VillageUpdateOneRequiredWithoutInvoicesNestedInput
-  property?: Prisma.PropertyUpdateOneRequiredWithoutInvoicesNestedInput
-  reading?: Prisma.MeterReadingUpdateOneRequiredWithoutInvoiceNestedInput
+  meterReading?: Prisma.MeterReadingUpdateOneRequiredWithoutInvoiceNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageId?: Prisma.IntFieldUpdateOperationsInput | number
-  propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  readingId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  meterReadingId?: Prisma.IntFieldUpdateOperationsInput | number
   waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -465,10 +403,7 @@ export type InvoiceUncheckedUpdateInput = {
 
 export type InvoiceCreateManyInput = {
   id?: number
-  villageId: number
-  propertyId: number
-  readingId: number
-  billingMonth: Date | string
+  meterReadingId: number
   waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -480,7 +415,6 @@ export type InvoiceCreateManyInput = {
 }
 
 export type InvoiceUpdateManyMutationInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -493,10 +427,7 @@ export type InvoiceUpdateManyMutationInput = {
 
 export type InvoiceUncheckedUpdateManyInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageId?: Prisma.IntFieldUpdateOperationsInput | number
-  propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  readingId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  meterReadingId?: Prisma.IntFieldUpdateOperationsInput | number
   waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -507,16 +438,6 @@ export type InvoiceUncheckedUpdateManyInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type InvoiceListRelationFilter = {
-  every?: Prisma.InvoiceWhereInput
-  some?: Prisma.InvoiceWhereInput
-  none?: Prisma.InvoiceWhereInput
-}
-
-export type InvoiceOrderByRelationAggregateInput = {
-  _count?: Prisma.SortOrder
-}
-
 export type InvoiceNullableScalarRelationFilter = {
   is?: Prisma.InvoiceWhereInput | null
   isNot?: Prisma.InvoiceWhereInput | null
@@ -524,10 +445,7 @@ export type InvoiceNullableScalarRelationFilter = {
 
 export type InvoiceCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  villageId?: Prisma.SortOrder
-  propertyId?: Prisma.SortOrder
-  readingId?: Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
+  meterReadingId?: Prisma.SortOrder
   waterAmount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
   fineAmount?: Prisma.SortOrder
@@ -540,9 +458,7 @@ export type InvoiceCountOrderByAggregateInput = {
 
 export type InvoiceAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  villageId?: Prisma.SortOrder
-  propertyId?: Prisma.SortOrder
-  readingId?: Prisma.SortOrder
+  meterReadingId?: Prisma.SortOrder
   waterAmount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
   fineAmount?: Prisma.SortOrder
@@ -551,10 +467,7 @@ export type InvoiceAvgOrderByAggregateInput = {
 
 export type InvoiceMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  villageId?: Prisma.SortOrder
-  propertyId?: Prisma.SortOrder
-  readingId?: Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
+  meterReadingId?: Prisma.SortOrder
   waterAmount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
   fineAmount?: Prisma.SortOrder
@@ -567,10 +480,7 @@ export type InvoiceMaxOrderByAggregateInput = {
 
 export type InvoiceMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  villageId?: Prisma.SortOrder
-  propertyId?: Prisma.SortOrder
-  readingId?: Prisma.SortOrder
-  billingMonth?: Prisma.SortOrder
+  meterReadingId?: Prisma.SortOrder
   waterAmount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
   fineAmount?: Prisma.SortOrder
@@ -583,9 +493,7 @@ export type InvoiceMinOrderByAggregateInput = {
 
 export type InvoiceSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  villageId?: Prisma.SortOrder
-  propertyId?: Prisma.SortOrder
-  readingId?: Prisma.SortOrder
+  meterReadingId?: Prisma.SortOrder
   waterAmount?: Prisma.SortOrder
   serviceFee?: Prisma.SortOrder
   fineAmount?: Prisma.SortOrder
@@ -597,120 +505,36 @@ export type InvoiceScalarRelationFilter = {
   isNot?: Prisma.InvoiceWhereInput
 }
 
-export type InvoiceCreateNestedManyWithoutVillageInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutVillageInput, Prisma.InvoiceUncheckedCreateWithoutVillageInput> | Prisma.InvoiceCreateWithoutVillageInput[] | Prisma.InvoiceUncheckedCreateWithoutVillageInput[]
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutVillageInput | Prisma.InvoiceCreateOrConnectWithoutVillageInput[]
-  createMany?: Prisma.InvoiceCreateManyVillageInputEnvelope
-  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-}
-
-export type InvoiceUncheckedCreateNestedManyWithoutVillageInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutVillageInput, Prisma.InvoiceUncheckedCreateWithoutVillageInput> | Prisma.InvoiceCreateWithoutVillageInput[] | Prisma.InvoiceUncheckedCreateWithoutVillageInput[]
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutVillageInput | Prisma.InvoiceCreateOrConnectWithoutVillageInput[]
-  createMany?: Prisma.InvoiceCreateManyVillageInputEnvelope
-  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-}
-
-export type InvoiceUpdateManyWithoutVillageNestedInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutVillageInput, Prisma.InvoiceUncheckedCreateWithoutVillageInput> | Prisma.InvoiceCreateWithoutVillageInput[] | Prisma.InvoiceUncheckedCreateWithoutVillageInput[]
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutVillageInput | Prisma.InvoiceCreateOrConnectWithoutVillageInput[]
-  upsert?: Prisma.InvoiceUpsertWithWhereUniqueWithoutVillageInput | Prisma.InvoiceUpsertWithWhereUniqueWithoutVillageInput[]
-  createMany?: Prisma.InvoiceCreateManyVillageInputEnvelope
-  set?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  disconnect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  delete?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  update?: Prisma.InvoiceUpdateWithWhereUniqueWithoutVillageInput | Prisma.InvoiceUpdateWithWhereUniqueWithoutVillageInput[]
-  updateMany?: Prisma.InvoiceUpdateManyWithWhereWithoutVillageInput | Prisma.InvoiceUpdateManyWithWhereWithoutVillageInput[]
-  deleteMany?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
-}
-
-export type InvoiceUncheckedUpdateManyWithoutVillageNestedInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutVillageInput, Prisma.InvoiceUncheckedCreateWithoutVillageInput> | Prisma.InvoiceCreateWithoutVillageInput[] | Prisma.InvoiceUncheckedCreateWithoutVillageInput[]
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutVillageInput | Prisma.InvoiceCreateOrConnectWithoutVillageInput[]
-  upsert?: Prisma.InvoiceUpsertWithWhereUniqueWithoutVillageInput | Prisma.InvoiceUpsertWithWhereUniqueWithoutVillageInput[]
-  createMany?: Prisma.InvoiceCreateManyVillageInputEnvelope
-  set?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  disconnect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  delete?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  update?: Prisma.InvoiceUpdateWithWhereUniqueWithoutVillageInput | Prisma.InvoiceUpdateWithWhereUniqueWithoutVillageInput[]
-  updateMany?: Prisma.InvoiceUpdateManyWithWhereWithoutVillageInput | Prisma.InvoiceUpdateManyWithWhereWithoutVillageInput[]
-  deleteMany?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
-}
-
-export type InvoiceCreateNestedManyWithoutPropertyInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPropertyInput, Prisma.InvoiceUncheckedCreateWithoutPropertyInput> | Prisma.InvoiceCreateWithoutPropertyInput[] | Prisma.InvoiceUncheckedCreateWithoutPropertyInput[]
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPropertyInput | Prisma.InvoiceCreateOrConnectWithoutPropertyInput[]
-  createMany?: Prisma.InvoiceCreateManyPropertyInputEnvelope
-  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-}
-
-export type InvoiceUncheckedCreateNestedManyWithoutPropertyInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPropertyInput, Prisma.InvoiceUncheckedCreateWithoutPropertyInput> | Prisma.InvoiceCreateWithoutPropertyInput[] | Prisma.InvoiceUncheckedCreateWithoutPropertyInput[]
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPropertyInput | Prisma.InvoiceCreateOrConnectWithoutPropertyInput[]
-  createMany?: Prisma.InvoiceCreateManyPropertyInputEnvelope
-  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-}
-
-export type InvoiceUpdateManyWithoutPropertyNestedInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPropertyInput, Prisma.InvoiceUncheckedCreateWithoutPropertyInput> | Prisma.InvoiceCreateWithoutPropertyInput[] | Prisma.InvoiceUncheckedCreateWithoutPropertyInput[]
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPropertyInput | Prisma.InvoiceCreateOrConnectWithoutPropertyInput[]
-  upsert?: Prisma.InvoiceUpsertWithWhereUniqueWithoutPropertyInput | Prisma.InvoiceUpsertWithWhereUniqueWithoutPropertyInput[]
-  createMany?: Prisma.InvoiceCreateManyPropertyInputEnvelope
-  set?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  disconnect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  delete?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  update?: Prisma.InvoiceUpdateWithWhereUniqueWithoutPropertyInput | Prisma.InvoiceUpdateWithWhereUniqueWithoutPropertyInput[]
-  updateMany?: Prisma.InvoiceUpdateManyWithWhereWithoutPropertyInput | Prisma.InvoiceUpdateManyWithWhereWithoutPropertyInput[]
-  deleteMany?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
-}
-
-export type InvoiceUncheckedUpdateManyWithoutPropertyNestedInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutPropertyInput, Prisma.InvoiceUncheckedCreateWithoutPropertyInput> | Prisma.InvoiceCreateWithoutPropertyInput[] | Prisma.InvoiceUncheckedCreateWithoutPropertyInput[]
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutPropertyInput | Prisma.InvoiceCreateOrConnectWithoutPropertyInput[]
-  upsert?: Prisma.InvoiceUpsertWithWhereUniqueWithoutPropertyInput | Prisma.InvoiceUpsertWithWhereUniqueWithoutPropertyInput[]
-  createMany?: Prisma.InvoiceCreateManyPropertyInputEnvelope
-  set?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  disconnect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  delete?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  connect?: Prisma.InvoiceWhereUniqueInput | Prisma.InvoiceWhereUniqueInput[]
-  update?: Prisma.InvoiceUpdateWithWhereUniqueWithoutPropertyInput | Prisma.InvoiceUpdateWithWhereUniqueWithoutPropertyInput[]
-  updateMany?: Prisma.InvoiceUpdateManyWithWhereWithoutPropertyInput | Prisma.InvoiceUpdateManyWithWhereWithoutPropertyInput[]
-  deleteMany?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
-}
-
-export type InvoiceCreateNestedOneWithoutReadingInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutReadingInput, Prisma.InvoiceUncheckedCreateWithoutReadingInput>
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutReadingInput
+export type InvoiceCreateNestedOneWithoutMeterReadingInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutMeterReadingInput, Prisma.InvoiceUncheckedCreateWithoutMeterReadingInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutMeterReadingInput
   connect?: Prisma.InvoiceWhereUniqueInput
 }
 
-export type InvoiceUncheckedCreateNestedOneWithoutReadingInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutReadingInput, Prisma.InvoiceUncheckedCreateWithoutReadingInput>
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutReadingInput
+export type InvoiceUncheckedCreateNestedOneWithoutMeterReadingInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutMeterReadingInput, Prisma.InvoiceUncheckedCreateWithoutMeterReadingInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutMeterReadingInput
   connect?: Prisma.InvoiceWhereUniqueInput
 }
 
-export type InvoiceUpdateOneWithoutReadingNestedInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutReadingInput, Prisma.InvoiceUncheckedCreateWithoutReadingInput>
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutReadingInput
-  upsert?: Prisma.InvoiceUpsertWithoutReadingInput
+export type InvoiceUpdateOneWithoutMeterReadingNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutMeterReadingInput, Prisma.InvoiceUncheckedCreateWithoutMeterReadingInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutMeterReadingInput
+  upsert?: Prisma.InvoiceUpsertWithoutMeterReadingInput
   disconnect?: Prisma.InvoiceWhereInput | boolean
   delete?: Prisma.InvoiceWhereInput | boolean
   connect?: Prisma.InvoiceWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutReadingInput, Prisma.InvoiceUpdateWithoutReadingInput>, Prisma.InvoiceUncheckedUpdateWithoutReadingInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutMeterReadingInput, Prisma.InvoiceUpdateWithoutMeterReadingInput>, Prisma.InvoiceUncheckedUpdateWithoutMeterReadingInput>
 }
 
-export type InvoiceUncheckedUpdateOneWithoutReadingNestedInput = {
-  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutReadingInput, Prisma.InvoiceUncheckedCreateWithoutReadingInput>
-  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutReadingInput
-  upsert?: Prisma.InvoiceUpsertWithoutReadingInput
+export type InvoiceUncheckedUpdateOneWithoutMeterReadingNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutMeterReadingInput, Prisma.InvoiceUncheckedCreateWithoutMeterReadingInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutMeterReadingInput
+  upsert?: Prisma.InvoiceUpsertWithoutMeterReadingInput
   disconnect?: Prisma.InvoiceWhereInput | boolean
   delete?: Prisma.InvoiceWhereInput | boolean
   connect?: Prisma.InvoiceWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutReadingInput, Prisma.InvoiceUpdateWithoutReadingInput>, Prisma.InvoiceUncheckedUpdateWithoutReadingInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutMeterReadingInput, Prisma.InvoiceUpdateWithoutMeterReadingInput>, Prisma.InvoiceUncheckedUpdateWithoutMeterReadingInput>
 }
 
 export type EnumInvoiceStatusFieldUpdateOperationsInput = {
@@ -731,8 +555,7 @@ export type InvoiceUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutPaymentsInput, Prisma.InvoiceUpdateWithoutPaymentsInput>, Prisma.InvoiceUncheckedUpdateWithoutPaymentsInput>
 }
 
-export type InvoiceCreateWithoutVillageInput = {
-  billingMonth: Date | string
+export type InvoiceCreateWithoutMeterReadingInput = {
   waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -741,16 +564,11 @@ export type InvoiceCreateWithoutVillageInput = {
   dueDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  property: Prisma.PropertyCreateNestedOneWithoutInvoicesInput
-  reading: Prisma.MeterReadingCreateNestedOneWithoutInvoiceInput
   payments?: Prisma.PaymentCreateNestedManyWithoutInvoiceInput
 }
 
-export type InvoiceUncheckedCreateWithoutVillageInput = {
+export type InvoiceUncheckedCreateWithoutMeterReadingInput = {
   id?: number
-  propertyId: number
-  readingId: number
-  billingMonth: Date | string
   waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -762,157 +580,23 @@ export type InvoiceUncheckedCreateWithoutVillageInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInvoiceInput
 }
 
-export type InvoiceCreateOrConnectWithoutVillageInput = {
+export type InvoiceCreateOrConnectWithoutMeterReadingInput = {
   where: Prisma.InvoiceWhereUniqueInput
-  create: Prisma.XOR<Prisma.InvoiceCreateWithoutVillageInput, Prisma.InvoiceUncheckedCreateWithoutVillageInput>
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutMeterReadingInput, Prisma.InvoiceUncheckedCreateWithoutMeterReadingInput>
 }
 
-export type InvoiceCreateManyVillageInputEnvelope = {
-  data: Prisma.InvoiceCreateManyVillageInput | Prisma.InvoiceCreateManyVillageInput[]
-  skipDuplicates?: boolean
-}
-
-export type InvoiceUpsertWithWhereUniqueWithoutVillageInput = {
-  where: Prisma.InvoiceWhereUniqueInput
-  update: Prisma.XOR<Prisma.InvoiceUpdateWithoutVillageInput, Prisma.InvoiceUncheckedUpdateWithoutVillageInput>
-  create: Prisma.XOR<Prisma.InvoiceCreateWithoutVillageInput, Prisma.InvoiceUncheckedCreateWithoutVillageInput>
-}
-
-export type InvoiceUpdateWithWhereUniqueWithoutVillageInput = {
-  where: Prisma.InvoiceWhereUniqueInput
-  data: Prisma.XOR<Prisma.InvoiceUpdateWithoutVillageInput, Prisma.InvoiceUncheckedUpdateWithoutVillageInput>
-}
-
-export type InvoiceUpdateManyWithWhereWithoutVillageInput = {
-  where: Prisma.InvoiceScalarWhereInput
-  data: Prisma.XOR<Prisma.InvoiceUpdateManyMutationInput, Prisma.InvoiceUncheckedUpdateManyWithoutVillageInput>
-}
-
-export type InvoiceScalarWhereInput = {
-  AND?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
-  OR?: Prisma.InvoiceScalarWhereInput[]
-  NOT?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
-  id?: Prisma.IntFilter<"Invoice"> | number
-  villageId?: Prisma.IntFilter<"Invoice"> | number
-  propertyId?: Prisma.IntFilter<"Invoice"> | number
-  readingId?: Prisma.IntFilter<"Invoice"> | number
-  billingMonth?: Prisma.DateTimeFilter<"Invoice"> | Date | string
-  waterAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: Prisma.EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
-  dueDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
-  createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
-}
-
-export type InvoiceCreateWithoutPropertyInput = {
-  billingMonth: Date | string
-  waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: $Enums.InvoiceStatus
-  dueDate: Date | string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  village: Prisma.VillageCreateNestedOneWithoutInvoicesInput
-  reading: Prisma.MeterReadingCreateNestedOneWithoutInvoiceInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutInvoiceInput
-}
-
-export type InvoiceUncheckedCreateWithoutPropertyInput = {
-  id?: number
-  villageId: number
-  readingId: number
-  billingMonth: Date | string
-  waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: $Enums.InvoiceStatus
-  dueDate: Date | string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInvoiceInput
-}
-
-export type InvoiceCreateOrConnectWithoutPropertyInput = {
-  where: Prisma.InvoiceWhereUniqueInput
-  create: Prisma.XOR<Prisma.InvoiceCreateWithoutPropertyInput, Prisma.InvoiceUncheckedCreateWithoutPropertyInput>
-}
-
-export type InvoiceCreateManyPropertyInputEnvelope = {
-  data: Prisma.InvoiceCreateManyPropertyInput | Prisma.InvoiceCreateManyPropertyInput[]
-  skipDuplicates?: boolean
-}
-
-export type InvoiceUpsertWithWhereUniqueWithoutPropertyInput = {
-  where: Prisma.InvoiceWhereUniqueInput
-  update: Prisma.XOR<Prisma.InvoiceUpdateWithoutPropertyInput, Prisma.InvoiceUncheckedUpdateWithoutPropertyInput>
-  create: Prisma.XOR<Prisma.InvoiceCreateWithoutPropertyInput, Prisma.InvoiceUncheckedCreateWithoutPropertyInput>
-}
-
-export type InvoiceUpdateWithWhereUniqueWithoutPropertyInput = {
-  where: Prisma.InvoiceWhereUniqueInput
-  data: Prisma.XOR<Prisma.InvoiceUpdateWithoutPropertyInput, Prisma.InvoiceUncheckedUpdateWithoutPropertyInput>
-}
-
-export type InvoiceUpdateManyWithWhereWithoutPropertyInput = {
-  where: Prisma.InvoiceScalarWhereInput
-  data: Prisma.XOR<Prisma.InvoiceUpdateManyMutationInput, Prisma.InvoiceUncheckedUpdateManyWithoutPropertyInput>
-}
-
-export type InvoiceCreateWithoutReadingInput = {
-  billingMonth: Date | string
-  waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: $Enums.InvoiceStatus
-  dueDate: Date | string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  village: Prisma.VillageCreateNestedOneWithoutInvoicesInput
-  property: Prisma.PropertyCreateNestedOneWithoutInvoicesInput
-  payments?: Prisma.PaymentCreateNestedManyWithoutInvoiceInput
-}
-
-export type InvoiceUncheckedCreateWithoutReadingInput = {
-  id?: number
-  villageId: number
-  propertyId: number
-  billingMonth: Date | string
-  waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: $Enums.InvoiceStatus
-  dueDate: Date | string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutInvoiceInput
-}
-
-export type InvoiceCreateOrConnectWithoutReadingInput = {
-  where: Prisma.InvoiceWhereUniqueInput
-  create: Prisma.XOR<Prisma.InvoiceCreateWithoutReadingInput, Prisma.InvoiceUncheckedCreateWithoutReadingInput>
-}
-
-export type InvoiceUpsertWithoutReadingInput = {
-  update: Prisma.XOR<Prisma.InvoiceUpdateWithoutReadingInput, Prisma.InvoiceUncheckedUpdateWithoutReadingInput>
-  create: Prisma.XOR<Prisma.InvoiceCreateWithoutReadingInput, Prisma.InvoiceUncheckedCreateWithoutReadingInput>
+export type InvoiceUpsertWithoutMeterReadingInput = {
+  update: Prisma.XOR<Prisma.InvoiceUpdateWithoutMeterReadingInput, Prisma.InvoiceUncheckedUpdateWithoutMeterReadingInput>
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutMeterReadingInput, Prisma.InvoiceUncheckedCreateWithoutMeterReadingInput>
   where?: Prisma.InvoiceWhereInput
 }
 
-export type InvoiceUpdateToOneWithWhereWithoutReadingInput = {
+export type InvoiceUpdateToOneWithWhereWithoutMeterReadingInput = {
   where?: Prisma.InvoiceWhereInput
-  data: Prisma.XOR<Prisma.InvoiceUpdateWithoutReadingInput, Prisma.InvoiceUncheckedUpdateWithoutReadingInput>
+  data: Prisma.XOR<Prisma.InvoiceUpdateWithoutMeterReadingInput, Prisma.InvoiceUncheckedUpdateWithoutMeterReadingInput>
 }
 
-export type InvoiceUpdateWithoutReadingInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type InvoiceUpdateWithoutMeterReadingInput = {
   waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -921,16 +605,11 @@ export type InvoiceUpdateWithoutReadingInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  village?: Prisma.VillageUpdateOneRequiredWithoutInvoicesNestedInput
-  property?: Prisma.PropertyUpdateOneRequiredWithoutInvoicesNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutInvoiceNestedInput
 }
 
-export type InvoiceUncheckedUpdateWithoutReadingInput = {
+export type InvoiceUncheckedUpdateWithoutMeterReadingInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageId?: Prisma.IntFieldUpdateOperationsInput | number
-  propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -943,7 +622,6 @@ export type InvoiceUncheckedUpdateWithoutReadingInput = {
 }
 
 export type InvoiceCreateWithoutPaymentsInput = {
-  billingMonth: Date | string
   waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -952,17 +630,12 @@ export type InvoiceCreateWithoutPaymentsInput = {
   dueDate: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
-  village: Prisma.VillageCreateNestedOneWithoutInvoicesInput
-  property: Prisma.PropertyCreateNestedOneWithoutInvoicesInput
-  reading: Prisma.MeterReadingCreateNestedOneWithoutInvoiceInput
+  meterReading: Prisma.MeterReadingCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutPaymentsInput = {
   id?: number
-  villageId: number
-  propertyId: number
-  readingId: number
-  billingMonth: Date | string
+  meterReadingId: number
   waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -990,7 +663,6 @@ export type InvoiceUpdateToOneWithWhereWithoutPaymentsInput = {
 }
 
 export type InvoiceUpdateWithoutPaymentsInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -999,139 +671,12 @@ export type InvoiceUpdateWithoutPaymentsInput = {
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  village?: Prisma.VillageUpdateOneRequiredWithoutInvoicesNestedInput
-  property?: Prisma.PropertyUpdateOneRequiredWithoutInvoicesNestedInput
-  reading?: Prisma.MeterReadingUpdateOneRequiredWithoutInvoiceNestedInput
+  meterReading?: Prisma.MeterReadingUpdateOneRequiredWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageId?: Prisma.IntFieldUpdateOperationsInput | number
-  propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  readingId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type InvoiceCreateManyVillageInput = {
-  id?: number
-  propertyId: number
-  readingId: number
-  billingMonth: Date | string
-  waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: $Enums.InvoiceStatus
-  dueDate: Date | string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type InvoiceUpdateWithoutVillageInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  property?: Prisma.PropertyUpdateOneRequiredWithoutInvoicesNestedInput
-  reading?: Prisma.MeterReadingUpdateOneRequiredWithoutInvoiceNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutInvoiceNestedInput
-}
-
-export type InvoiceUncheckedUpdateWithoutVillageInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  readingId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
-}
-
-export type InvoiceUncheckedUpdateManyWithoutVillageInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  propertyId?: Prisma.IntFieldUpdateOperationsInput | number
-  readingId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type InvoiceCreateManyPropertyInput = {
-  id?: number
-  villageId: number
-  readingId: number
-  billingMonth: Date | string
-  waterAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: $Enums.InvoiceStatus
-  dueDate: Date | string
-  createdAt?: Date | string
-  updatedAt?: Date | string
-}
-
-export type InvoiceUpdateWithoutPropertyInput = {
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  village?: Prisma.VillageUpdateOneRequiredWithoutInvoicesNestedInput
-  reading?: Prisma.MeterReadingUpdateOneRequiredWithoutInvoiceNestedInput
-  payments?: Prisma.PaymentUpdateManyWithoutInvoiceNestedInput
-}
-
-export type InvoiceUncheckedUpdateWithoutPropertyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageId?: Prisma.IntFieldUpdateOperationsInput | number
-  readingId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  totalAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  paymentStatus?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
-  dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  payments?: Prisma.PaymentUncheckedUpdateManyWithoutInvoiceNestedInput
-}
-
-export type InvoiceUncheckedUpdateManyWithoutPropertyInput = {
-  id?: Prisma.IntFieldUpdateOperationsInput | number
-  villageId?: Prisma.IntFieldUpdateOperationsInput | number
-  readingId?: Prisma.IntFieldUpdateOperationsInput | number
-  billingMonth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  meterReadingId?: Prisma.IntFieldUpdateOperationsInput | number
   waterAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   serviceFee?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   fineAmount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -1175,10 +720,7 @@ export type InvoiceCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Type
 
 export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  villageId?: boolean
-  propertyId?: boolean
-  readingId?: boolean
-  billingMonth?: boolean
+  meterReadingId?: boolean
   waterAmount?: boolean
   serviceFee?: boolean
   fineAmount?: boolean
@@ -1187,19 +729,14 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   dueDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
-  property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
-  reading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
+  meterReading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Invoice$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
 
 export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  villageId?: boolean
-  propertyId?: boolean
-  readingId?: boolean
-  billingMonth?: boolean
+  meterReadingId?: boolean
   waterAmount?: boolean
   serviceFee?: boolean
   fineAmount?: boolean
@@ -1208,17 +745,12 @@ export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   dueDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
-  property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
-  reading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
+  meterReading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
 
 export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  villageId?: boolean
-  propertyId?: boolean
-  readingId?: boolean
-  billingMonth?: boolean
+  meterReadingId?: boolean
   waterAmount?: boolean
   serviceFee?: boolean
   fineAmount?: boolean
@@ -1227,17 +759,12 @@ export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   dueDate?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
-  property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
-  reading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
+  meterReading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
 
 export type InvoiceSelectScalar = {
   id?: boolean
-  villageId?: boolean
-  propertyId?: boolean
-  readingId?: boolean
-  billingMonth?: boolean
+  meterReadingId?: boolean
   waterAmount?: boolean
   serviceFee?: boolean
   fineAmount?: boolean
@@ -1248,39 +775,28 @@ export type InvoiceSelectScalar = {
   updatedAt?: boolean
 }
 
-export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "villageId" | "propertyId" | "readingId" | "billingMonth" | "waterAmount" | "serviceFee" | "fineAmount" | "totalAmount" | "paymentStatus" | "dueDate" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "meterReadingId" | "waterAmount" | "serviceFee" | "fineAmount" | "totalAmount" | "paymentStatus" | "dueDate" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
 export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
-  property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
-  reading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
+  meterReading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
   payments?: boolean | Prisma.Invoice$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
-  property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
-  reading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
+  meterReading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
 }
 export type InvoiceIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  village?: boolean | Prisma.VillageDefaultArgs<ExtArgs>
-  property?: boolean | Prisma.PropertyDefaultArgs<ExtArgs>
-  reading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
+  meterReading?: boolean | Prisma.MeterReadingDefaultArgs<ExtArgs>
 }
 
 export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Invoice"
   objects: {
-    village: Prisma.$VillagePayload<ExtArgs>
-    property: Prisma.$PropertyPayload<ExtArgs>
-    reading: Prisma.$MeterReadingPayload<ExtArgs>
+    meterReading: Prisma.$MeterReadingPayload<ExtArgs>
     payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
-    villageId: number
-    propertyId: number
-    readingId: number
-    billingMonth: Date
+    meterReadingId: number
     waterAmount: runtime.Decimal
     serviceFee: runtime.Decimal
     fineAmount: runtime.Decimal
@@ -1683,9 +1199,7 @@ readonly fields: InvoiceFieldRefs;
  */
 export interface Prisma__InvoiceClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  village<T extends Prisma.VillageDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.VillageDefaultArgs<ExtArgs>>): Prisma.Prisma__VillageClient<runtime.Types.Result.GetResult<Prisma.$VillagePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  property<T extends Prisma.PropertyDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.PropertyDefaultArgs<ExtArgs>>): Prisma.Prisma__PropertyClient<runtime.Types.Result.GetResult<Prisma.$PropertyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  reading<T extends Prisma.MeterReadingDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MeterReadingDefaultArgs<ExtArgs>>): Prisma.Prisma__MeterReadingClient<runtime.Types.Result.GetResult<Prisma.$MeterReadingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  meterReading<T extends Prisma.MeterReadingDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MeterReadingDefaultArgs<ExtArgs>>): Prisma.Prisma__MeterReadingClient<runtime.Types.Result.GetResult<Prisma.$MeterReadingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payments<T extends Prisma.Invoice$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1717,10 +1231,7 @@ export interface Prisma__InvoiceClient<T, Null = never, ExtArgs extends runtime.
  */
 export interface InvoiceFieldRefs {
   readonly id: Prisma.FieldRef<"Invoice", 'Int'>
-  readonly villageId: Prisma.FieldRef<"Invoice", 'Int'>
-  readonly propertyId: Prisma.FieldRef<"Invoice", 'Int'>
-  readonly readingId: Prisma.FieldRef<"Invoice", 'Int'>
-  readonly billingMonth: Prisma.FieldRef<"Invoice", 'DateTime'>
+  readonly meterReadingId: Prisma.FieldRef<"Invoice", 'Int'>
   readonly waterAmount: Prisma.FieldRef<"Invoice", 'Decimal'>
   readonly serviceFee: Prisma.FieldRef<"Invoice", 'Decimal'>
   readonly fineAmount: Prisma.FieldRef<"Invoice", 'Decimal'>

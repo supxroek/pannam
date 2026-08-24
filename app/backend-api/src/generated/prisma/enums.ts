@@ -52,3 +52,11 @@ export const PaymentSlipStatus = {
 } as const
 
 export type PaymentSlipStatus = (typeof PaymentSlipStatus)[keyof typeof PaymentSlipStatus]
+
+
+export const PaymentMethod = {
+  BANK: 'BANK',
+  PROMPTPAY: 'PROMPTPAY'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]

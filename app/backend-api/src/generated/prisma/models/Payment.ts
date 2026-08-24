@@ -14,7 +14,7 @@ import type * as Prisma from "../internal/prismaNamespace.ts"
 
 /**
  * Model Payment
- * 9. ตารางประวัติการชำระเงินสลิป
+ * 9. การชำระเงิน
  */
 export type PaymentModel = runtime.Types.Result.DefaultSelection<Prisma.$PaymentPayload>
 
@@ -624,10 +624,6 @@ export type PaymentUncheckedUpdateManyWithoutInvoiceNestedInput = {
 
 export type EnumPaymentSlipStatusFieldUpdateOperationsInput = {
   set?: $Enums.PaymentSlipStatus
-}
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
 }
 
 export type PaymentCreateWithoutPaidByInput = {

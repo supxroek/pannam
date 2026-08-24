@@ -54,9 +54,9 @@ export const ModelName = {
   Village: 'Village',
   User: 'User',
   UserVillage: 'UserVillage',
-  WaterRate: 'WaterRate',
   Property: 'Property',
   UserProperty: 'UserProperty',
+  WaterRate: 'WaterRate',
   MeterReading: 'MeterReading',
   Invoice: 'Invoice',
   Payment: 'Payment',
@@ -81,13 +81,15 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const VillageScalarFieldEnum = {
   id: 'id',
-  villageCode: 'villageCode',
   address: 'address',
   subDistrict: 'subDistrict',
   district: 'district',
   province: 'province',
   postalCode: 'postalCode',
-  defaultServiceFee: 'defaultServiceFee',
+  paymentMethod: 'paymentMethod',
+  bankProvider: 'bankProvider',
+  bankNumber: 'bankNumber',
+  bankPayeeName: 'bankPayeeName',
   promptpayNo: 'promptpayNo',
   promptpayName: 'promptpayName',
   promptpayImage: 'promptpayImage',
@@ -103,7 +105,10 @@ export type VillageScalarFieldEnum = (typeof VillageScalarFieldEnum)[keyof typeo
 export const UserScalarFieldEnum = {
   id: 'id',
   lineUserId: 'lineUserId',
+  lineProfileUrl: 'lineProfileUrl',
   fullName: 'fullName',
+  birthdate: 'birthdate',
+  nationalId: 'nationalId',
   phoneNumber: 'phoneNumber',
   isGlobalAdmin: 'isGlobalAdmin',
   createdAt: 'createdAt',
@@ -123,18 +128,6 @@ export const UserVillageScalarFieldEnum = {
 } as const
 
 export type UserVillageScalarFieldEnum = (typeof UserVillageScalarFieldEnum)[keyof typeof UserVillageScalarFieldEnum]
-
-
-export const WaterRateScalarFieldEnum = {
-  id: 'id',
-  villageId: 'villageId',
-  minUnit: 'minUnit',
-  maxUnit: 'maxUnit',
-  pricePerUnit: 'pricePerUnit',
-  createdAt: 'createdAt'
-} as const
-
-export type WaterRateScalarFieldEnum = (typeof WaterRateScalarFieldEnum)[keyof typeof WaterRateScalarFieldEnum]
 
 
 export const PropertyScalarFieldEnum = {
@@ -162,17 +155,30 @@ export const UserPropertyScalarFieldEnum = {
 export type UserPropertyScalarFieldEnum = (typeof UserPropertyScalarFieldEnum)[keyof typeof UserPropertyScalarFieldEnum]
 
 
+export const WaterRateScalarFieldEnum = {
+  id: 'id',
+  villageId: 'villageId',
+  minUnit: 'minUnit',
+  maxUnit: 'maxUnit',
+  pricePerUnit: 'pricePerUnit',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WaterRateScalarFieldEnum = (typeof WaterRateScalarFieldEnum)[keyof typeof WaterRateScalarFieldEnum]
+
+
 export const MeterReadingScalarFieldEnum = {
   id: 'id',
   villageId: 'villageId',
   propertyId: 'propertyId',
   readerId: 'readerId',
-  billingMonth: 'billingMonth',
   previousReading: 'previousReading',
   currentReading: 'currentReading',
   consumption: 'consumption',
   imageUrl: 'imageUrl',
-  readingDate: 'readingDate'
+  readingDate: 'readingDate',
+  createdAt: 'createdAt'
 } as const
 
 export type MeterReadingScalarFieldEnum = (typeof MeterReadingScalarFieldEnum)[keyof typeof MeterReadingScalarFieldEnum]
@@ -180,10 +186,7 @@ export type MeterReadingScalarFieldEnum = (typeof MeterReadingScalarFieldEnum)[k
 
 export const InvoiceScalarFieldEnum = {
   id: 'id',
-  villageId: 'villageId',
-  propertyId: 'propertyId',
-  readingId: 'readingId',
-  billingMonth: 'billingMonth',
+  meterReadingId: 'meterReadingId',
   waterAmount: 'waterAmount',
   serviceFee: 'serviceFee',
   fineAmount: 'fineAmount',
