@@ -21,27 +21,25 @@
 
 ### Columns
 
-| Name                  | Type            | Constraints |
-| :-------------------- | :-------------- | :---------- |
-| `village_id`          | `int4`          | Primary     |
-| `village_code`        | `varchar`       |             |
-| `address`             | `text`          | Nullable    |
-| `sub_district`        | `varchar`       | Nullable    |
-| `district`            | `varchar`       | Nullable    |
-| `province`            | `varchar`       | Nullable    |
-| `postal_code`         | `varchar`       | Nullable    |
-| `payment_method`      | `PaymentMethod` |             |
-| `bank_provider`       | `varchar`       | Nullable    |
-| `bank_number`         | `varchar`       | Nullable    |
-| `bank_payee_name`     | `varchar`       | Nullable    |
-| `promptpay_no`        | `varchar`       | Nullable    |
-| `promptpay_name`      | `varchar`       | Nullable    |
-| `promptpay_image`     | `text`          | Nullable    |
-| `default_service_fee` | `numeric`       |             |
-| `enable_promptpay`    | `bool`          |             |
-| `is_active`           | `bool`          |             |
-| `created_at`          | `timestamp`     |             |
-| `updated_at`          | `timestamp`     |             |
+| Name               | Type            | Constraints |
+| :----------------- | :-------------- | :---------- |
+| `village_id`       | `int4`          | Primary     |
+| `address`          | `text`          | Nullable    |
+| `sub_district`     | `varchar`       | Nullable    |
+| `district`         | `varchar`       | Nullable    |
+| `province`         | `varchar`       | Nullable    |
+| `postal_code`      | `varchar`       | Nullable    |
+| `payment_method`   | `PaymentMethod` |             |
+| `bank_provider`    | `varchar`       | Nullable    |
+| `bank_number`      | `varchar`       | Nullable    |
+| `bank_payee_name`  | `varchar`       | Nullable    |
+| `promptpay_no`     | `varchar`       | Nullable    |
+| `promptpay_name`   | `varchar`       | Nullable    |
+| `promptpay_image`  | `text`          | Nullable    |
+| `enable_promptpay` | `bool`          |             |
+| `is_active`        | `bool`          |             |
+| `created_at`       | `timestamp`     |             |
+| `updated_at`       | `timestamp`     |             |
 
 ---
 
@@ -79,22 +77,6 @@
 
 ---
 
-## Table `water_rates`
-
-### Columns
-
-| Name             | Type        | Constraints |
-| :--------------- | :---------- | :---------- |
-| `rate_id`        | `int4`      | Primary     |
-| `village_id`     | `int4`      | Foreign Key |
-| `min_unit`       | `numeric`   |             |
-| `max_unit`       | `numeric`   | Nullable    |
-| `price_per_unit` | `numeric`   |             |
-| `created_at`     | `timestamp` |             |
-| `updated_at`     | `timestamp` |             |
-
----
-
 ## Table `properties`
 
 ### Columns
@@ -126,6 +108,22 @@
 
 ---
 
+## Table `water_rates`
+
+### Columns
+
+| Name             | Type        | Constraints |
+| :--------------- | :---------- | :---------- |
+| `rate_id`        | `int4`      | Primary     |
+| `village_id`     | `int4`      | Foreign Key |
+| `min_unit`       | `numeric`   |             |
+| `max_unit`       | `numeric`   | Nullable    |
+| `price_per_unit` | `numeric`   |             |
+| `created_at`     | `timestamp` |             |
+| `updated_at`     | `timestamp` |             |
+
+---
+
 ## Table `meter_readings`
 
 ### Columns
@@ -136,11 +134,11 @@
 | `village_id`       | `int4`      | Foreign Key           |
 | `property_id`      | `int4`      | Foreign Key           |
 | `reader_id`        | `int4`      | Foreign Key, Nullable |
-| `reading_date`     | `date`      |                       |
 | `previous_reading` | `numeric`   |                       |
 | `current_reading`  | `numeric`   |                       |
 | `consumption`      | `numeric`   |                       |
 | `image_url`        | `text`      | Nullable              |
+| `reading_date`     | `date`      |                       |
 | `created_at`       | `timestamp` |                       |
 
 ---
