@@ -1,0 +1,98 @@
+import PANNAM_ICON from "../../assets/PANNAM-LOGO.png"
+
+export default function WelcomeScreen({ onStart }) {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-8 animate-fade-in-up">
+      <div className="w-full max-w-sm">
+        {/* Logo & Title */}
+        <div className="text-center mb-8">
+          <div className="h-38 w-auto mx-auto rounded-3xl flex items-center justify-center">
+            {/* <i className="fas fa-house-chimney text-white text-4xl"></i>*/}
+            <img src={PANNAM_ICON} className="w-56 h-56 "></img>
+          </div>
+          <h1 className="text-3xl font-bold text-slate-800 mb-3">
+            ยินดีต้อนรับสู่
+            <br />
+            <span className="text-[#2563eb]">PANNAM</span>
+          </h1>
+          <p className="text-slate-500 text-sm leading-relaxed">
+            ระบบจัดการน้ำสำหรับชุมชน
+            <br />
+            ลงทะเบียนเพื่อเริ่มใช้งาน
+          </p>
+        </div>
+
+        {/* Preparation Info Card */}
+        <div className="bg-white rounded-2xl p-6 shadow-lg shadow-slate-200 mb-8">
+          <h3 className="font-semibold text-slate-800 mb-4 flex items-center gap-2">
+            <i className="fas fa-clipboard-list text-[#2563eb]"></i>
+            ข้อมูลที่ต้องเตรียม
+          </h3>
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0">
+                <i className="fas fa-user text-[#2563eb] text-sm"></i>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-800">ข้อมูลส่วนตัว</p>
+                <p className="text-xs text-slate-400">ชื่อ-นามสกุล และวันเกิด</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-sky-50 flex items-center justify-center shrink-0">
+                <i className="fas fa-id-card text-sky-500 text-sm"></i>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-800">ข้อมูลบัตรประชาชน</p>
+                <p className="text-xs text-slate-400">เลขบัตรประชาชน 13 หลัก</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center shrink-0">
+                <i className="fas fa-phone text-amber-500 text-sm"></i>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-800">เบอร์โทรศัพท์</p>
+                <p className="text-xs text-slate-400">สำหรับติดต่อและยืนยันตัวตน</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <div className="w-8 h-8 rounded-lg bg-violet-50 flex items-center justify-center shrink-0">
+                <i className="fas fa-location-dot text-violet-500 text-sm"></i>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-800">ข้อมูลที่อยู่</p>
+                <p className="text-xs text-slate-400">หมู่บ้าน บ้านเลขที่ และโซน</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Security Note */}
+        <div className="bg-blue-50 rounded-xl p-4 mb-8 border border-blue-100">
+          <div className="flex items-start gap-3">
+            <i className="fas fa-shield-halved text-[#2563eb] mt-0.5"></i>
+            <div>
+              <p className="text-sm font-medium text-[#1e3a8a]">ข้อมูลของคุณปลอดภัย</p>
+              <p className="text-xs text-[#1e40af] mt-1">
+                ข้อมูลทั้งหมดถูกเก็บเป็นความลับและใช้เฉพาะภายในระบบ PANNAM เท่านั้น
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Start Button */}
+        <button
+          onClick={onStart}
+          className="w-full bg-linear-to-r from-[#3b82f6] to-[#1e40af] text-white font-semibold py-4 rounded-2xl shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 active:scale-[0.98] transition-all duration-200 text-lg flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span>เริ่มลงทะเบียน</span>
+          <i className="fas fa-arrow-right"></i>
+        </button>
+        <p className="text-center text-xs text-slate-400 mt-4">
+          ใช้เวลาประมาณ 2-3 นาที
+        </p>
+      </div>
+    </div>
+  );
+}

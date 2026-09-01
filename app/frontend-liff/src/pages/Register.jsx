@@ -1,248 +1,202 @@
-import { useState } from "react";
-import PANNAM from "../assets/PANNAM.png";
+import { useState, useCallback } from 'react';
+import StepIndicator from '../components/ui/StepIndicator';
+import WelcomeScreen from '../components/register/WelcomeScreen';
+import Step1PersonalInfo from '../components/register/Step1PersonalInfo';
+import Step2ContactInfo from '../components/register/Step2ContactInfo';
+import Step3AddressInfo from '../components/register/Step3AddressInfo';
+import Step4Review from '../components/register/Step4Review';
+import SuccessScreen from '../components/register/SuccessScreen';
+
+const stepTitles = ['ข้อมูลส่วนตัว', 'ข้อมูลติดต่อ', 'ที่อยู่', 'ตรวจสอบ'];
+const stepSubTitles = ['กรอกชื่อ-นามสกุล และวันเกิดของคุณ', 'กรอกเลขบัตรประชาชนและเบอร์โทรศัพท์', 'เลือกหมู่บ้านและระบุที่อยู่ของคุณ', 'กรุณาตรวจสอบความถูกต้องก่อนยืนยัน']
+const TOTAL_FORM_STEPS = 4;
 
 export default function Register() {
+  const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
-    fullName: "",
-    phone: "",
-    houseNumber: "",
-    zone: "",
-    village: "",
+    firstName: '',
+    lastName: '',
+    birthDay: '',
+    birthMonth: '',
+    birthYear: '',
+    idCard: '',
+    phone: '',
+    village: '',
+    houseNumber: '',
+    zone: '',
   });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+  const validateStep = (stepIndex) => {
+    const newErrors = {};
+
+    if (stepIndex === 0) {
+      if (!formData.firstName?.trim())
+        newErrors.firstName = 'กรุณากรอกชื่อจริง';
+      if (!formData.lastName?.trim())
+        newErrors.lastName = 'กรุณากรอกนามสกุล';
+      if (!formData.birthDay) newErrors.birthDay = 'กรุณาระบุวันเกิด';
+      if (formData.birthMonth === '' || formData.birthMonth === undefined)
+        newErrors.birthMonth = 'กรุณาระบุเดือนเกิด';
+      if (!formData.birthYear) newErrors.birthYear = 'กรุณาระบุปีเกิด';
+    }
+
+    if (stepIndex === 1) {
+      const idClean = formData.idCard?.replace(/[^0-9]/g, '') || '';
+      if (!idClean || idClean.length !== 13)
+        newErrors.idCard =
+          'กรุณากรอกเลขบัตรประชาชน 13 หลักให้ครบถ้วน';
+      const phoneClean = formData.phone?.replace(/[^0-9]/g, '') || '';
+      if (!phoneClean || phoneClean.length < 9 || phoneClean.length > 10)
+        newErrors.phone = 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง';
+    }
+
+    if (stepIndex === 2) {
+      if (!formData.village) newErrors.village = 'กรุณาเลือกหมู่บ้าน';
+      if (!formData.houseNumber?.trim())
+        newErrors.houseNumber = 'กรุณากรอกบ้านเลขที่';
+      if (formData.zone === '' || formData.zone === undefined)
+        newErrors.zone = 'กรุณาเลือกโซน';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(
-      `ลงทะเบียนสำเร็จ!\nชื่อ: ${formData.fullName}\nบ้านเลขที่: ${formData.houseNumber}`,
-    );
+  const handleChange = useCallback((field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => {
+      const newErrors = { ...prev };
+      delete newErrors[field];
+      return newErrors;
+    });
+  }, []);
+
+  const handleNext = () => {
+    if (!validateStep(step - 1)) return;
+    setStep((prev) => prev + 1);
   };
 
+  const handleBack = () => {
+    if (step > 1) setStep((prev) => prev - 1);
+  };
+
+  const handleGoToStep = (targetStep) => {
+    setStep(targetStep + 1);
+  };
+
+  const handleSubmit = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setStep(5);
+    }, 2000);
+  };
+
+  const handleReset = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      birthDay: '',
+      birthMonth: '',
+      birthYear: '',
+      idCard: '',
+      phone: '',
+      village: '',
+      houseNumber: '',
+      zone: '',
+    });
+    setErrors({});
+    setStep(0);
+  };
+
+  // Step 0: Welcome Screen
+  if (step === 0) return <WelcomeScreen onStart={() => setStep(1)} />;
+
+  // Step 5: Success Screen
+  if (step === 5) return <SuccessScreen data={formData} onReset={handleReset} />;
+
+  // Steps 1-4: Form Steps
   return (
-    <div className="w-full max-w-md mx-auto p-4 sm:p-6 font-sans antialiased text-slate-800">
-      {/* การ์ดหลัก */}
-      <div className="bg-white rounded-3xl px-6 pb-6 shadow-sm border border-slate-100 transition-all">
-        {/* ส่วนหัวข้อ (Header Section) */}
-        <div className="text-center mb-7">
-          <div className="flex justify-center">
-            <img src={PANNAM} alt="PANNAM" className="w-32 h-32" />
+    <div className="min-h-screen bg-[#f0f4f8] flex flex-col">
+      <div className="flex-1 flex flex-col max-w-md mx-auto w-full bg-white min-h-screen shadow-xl">
+        {/* Sticky Header */}
+        <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm px-5 pt-4 pb-3">
+          <div className="flex items-center gap-3 mb-3">
+            {step > 0 && (
+              <button
+                onClick={handleBack}
+                className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-slate-100 active:scale-95 transition-all cursor-pointer"
+              >
+                <i className="fas fa-arrow-left"></i>
+              </button>
+            )}
+            <div className="flex-1">
+              <StepIndicator
+                currentStep={step - 1}
+                totalSteps={TOTAL_FORM_STEPS}
+              />
+              <p className="text-xs text-slate-400 font-medium">
+                ขั้นตอนที่ {step} จาก {TOTAL_FORM_STEPS}
+              </p>
+              <h1 className="text-lg font-bold text-slate-800">
+                {stepTitles[step - 1]}
+              </h1>
+              <p className='text-slate-500 text-sm'>
+                {stepSubTitles[step - 1]}
+              </p>
+            </div>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-            ลงทะเบียน PANNAM
-          </h1>
-          <p className="text-sm text-slate-500 mt-1.5 leading-normal">
-            กรอกข้อมูลเพื่อเชื่อมต่อระบบเช็คค่าน้ำประปา
-          </p>
         </div>
 
-        {/* แบบฟอร์มลงทะเบียน */}
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* หมวดที่ 1: ข้อมูลผู้ใช้งาน */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 pb-1 border-b border-slate-100">
-              <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold flex items-center justify-center">
-                1
-              </span>
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                ข้อมูลส่วนตัว
-              </h2>
-            </div>
-
-            {/* 1.1 ชื่อ-นามสกุล */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="fullName"
-                className="text-sm font-medium text-slate-700"
-              >
-                ชื่อ - นามสกุล <span className="text-rose-500">*</span>
-              </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">
-                  👤
-                </span>
-                <input
-                  id="fullName"
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  placeholder="เช่น สมชาย ใจดี"
-                  required
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-base focus:bg-white focus:border-[#06C755] focus:ring-4 focus:ring-emerald-50 outline-none transition-all duration-200"
-                />
-              </div>
-            </div>
-
-            {/* 1.2 เบอร์โทรศัพท์ */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="phone"
-                className="text-sm font-medium text-slate-700"
-              >
-                เบอร์โทรศัพท์ <span className="text-rose-500">*</span>
-              </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">
-                  📞
-                </span>
-                <input
-                  id="phone"
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="เช่น 0812345678"
-                  pattern="[0-9]{10}"
-                  inputMode="numeric"
-                  required
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-base focus:bg-white focus:border-[#06C755] focus:ring-4 focus:ring-emerald-50 outline-none transition-all duration-200"
-                />
-              </div>
-            </div>
+        {/* Form Content */}
+        <div className="flex-1 px-5 py-4 overflow-y-auto">
+          <div className="animate-slide-in">
+            {step === 1 && (
+              <Step1PersonalInfo
+                data={formData}
+                onChange={handleChange}
+                errors={errors}
+              />
+            )}
+            {step === 2 && (
+              <Step2ContactInfo
+                data={formData}
+                onChange={handleChange}
+                errors={errors}
+              />
+            )}
+            {step === 3 && (
+              <Step3AddressInfo
+                data={formData}
+                onChange={handleChange}
+                errors={errors}
+              />
+            )}
+            {step === 4 && (
+              <Step4Review
+                data={formData}
+                onBack={handleGoToStep}
+                onSubmit={handleSubmit}
+                loading={loading}
+              />
+            )}
           </div>
+        </div>
 
-          {/* หมวดที่ 2: ข้อมูลที่อยู่ / มิเตอร์ */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 pb-1 border-b border-slate-100">
-              <span className="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold flex items-center justify-center">
-                2
-              </span>
-              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                ข้อมูลที่พักอาศัย
-              </h2>
-            </div>
-
-            {/* 2.1 หมู่บ้าน / ชุมชน */}
-            <div className="flex flex-col gap-1.5">
-              <label
-                htmlFor="village"
-                className="text-sm font-medium text-slate-700"
-              >
-                หมู่บ้าน / ชุมชน <span className="text-rose-500">*</span>
-              </label>
-              <div className="relative">
-                <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">
-                  🏢
-                </span>
-                <input
-                  id="village"
-                  type="text"
-                  name="village"
-                  value={formData.village}
-                  onChange={handleChange}
-                  placeholder="เช่น หมู่บ้านสุขใจ"
-                  required
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-base focus:bg-white focus:border-[#06C755] focus:ring-4 focus:ring-emerald-50 outline-none transition-all duration-200"
-                />
-              </div>
-            </div>
-
-            {/* จัด Layout แนวนอนสำหรับ บ้านเลขที่ และ โซน */}
-            <div className="grid grid-cols-2 gap-3">
-              {/* 2.2 บ้านเลขที่ */}
-              <div className="flex flex-col gap-1.5">
-                <label
-                  htmlFor="houseNumber"
-                  className="text-sm font-medium text-slate-700"
-                >
-                  บ้านเลขที่ <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">
-                    🏠
-                  </span>
-                  <input
-                    id="houseNumber"
-                    type="text"
-                    name="houseNumber"
-                    value={formData.houseNumber}
-                    onChange={handleChange}
-                    placeholder="เช่น 99/1"
-                    required
-                    className="w-full pl-10 pr-3 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder:text-slate-400 text-base focus:bg-white focus:border-[#06C755] focus:ring-4 focus:ring-emerald-50 outline-none transition-all duration-200"
-                  />
-                </div>
-              </div>
-
-              {/* 2.3 โซน */}
-              <div className="flex flex-col gap-1.5">
-                <label
-                  htmlFor="zone"
-                  className="text-sm font-medium text-slate-700"
-                >
-                  โซน / เขต <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <select
-                    id="zone"
-                    name="zone"
-                    value={formData.zone}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-3.5 py-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-base focus:bg-white focus:border-[#06C755] focus:ring-4 focus:ring-emerald-50 outline-none transition-all duration-200 appearance-none cursor-pointer"
-                  >
-                    <option value="" disabled>
-                      เลือกโซน
-                    </option>
-                    <option value="A">โซน A (เหนือ)</option>
-                    <option value="B">โซน B (ใต้)</option>
-                    <option value="C">โซน C (ออก)</option>
-                    <option value="D">โซน D (ตก)</option>
-                  </select>
-                  <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center pointer-events-none text-slate-400">
-                    <svg
-                      className="w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* ปุ่ม Submit และ ข้อความ Security */}
-          <div className="pt-2">
+        {/* Sticky Bottom Button (Steps 1-3 only) */}
+        {step < 4 && (
+          <div className="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-slate-100 px-5 py-4">
             <button
-              type="submit"
-              className="w-full py-3.5 px-4 bg-[#06C755] hover:bg-[#05b34c] active:scale-[0.99] text-white font-semibold rounded-2xl text-base shadow-sm shadow-emerald-200 transition-all flex items-center justify-center gap-2 cursor-pointer"
+              onClick={handleNext}
+              className="w-full bg-linear-to-r from-[#3b82f6] to-[#1e40af] text-white font-semibold py-4 rounded-2xl shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 active:scale-[0.98] transition-all duration-200 text-lg flex items-center justify-center gap-2 cursor-pointer"
             >
-              <span>ยืนยันการลงทะเบียน</span>
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2.5"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
+              <span>ถัดไป</span>
+              <i className="fas fa-arrow-right"></i>
             </button>
-
-            <p className="flex items-center justify-center gap-1 text-[11px] text-slate-400 mt-3.5">
-              <span>🔒</span> ข้อมูลปลอดภัยและเชื่อมต่อกับระบบน้ำประปาปันน้ำ
-            </p>
           </div>
-        </form>
+        )}
       </div>
     </div>
   );
