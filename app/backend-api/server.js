@@ -17,7 +17,7 @@ const app = express();
 // กำหนดพอร์ตจาก environment variable หรือใช้ค่าเริ่มต้น 5000
 const {
   NODE_ENV,
-  PORT,
+  PORT = 3000, // กำหนดค่าเริ่มต้นเป็น 5000 เผื่อกรณีใน Env ไม่ได้ใส่ไว้
   CORS_ORIGIN = "*",
   BODY_LIMIT = "10mb",
   RATE_LIMIT_WINDOW_MS,
@@ -97,34 +97,34 @@ import { prisma } from "./src/packages/lib/prisma.js";
 app.use(routes);
 
 // Health check endpoint
-app.get('/health', async (req, res) => {
-  const startedAt = Date.now()
+app.get("/health", async (req, res) => {
+  const startedAt = Date.now();
 
   try {
-    await prisma.$queryRaw`SELECT 1`
+    await prisma.$queryRaw`SELECT 1`;
 
     return res.status(200).json({
-      status: 'ok',
-      database: 'connected',
+      status: "ok",
+      database: "connected",
       uptime: process.uptime(),
       responseTimeMs: Date.now() - startedAt,
       timestamp: new Date().toISOString(),
-    })
+    });
   } catch (error) {
-    logger.error('Database health check failed', {
+    logger.error("Database health check failed", {
       message: error?.message,
       code: error?.code,
       meta: error?.meta,
-    })
+    });
 
     return res.status(503).json({
-      status: 'error',
-      database: 'disconnected',
+      status: "error",
+      database: "disconnected",
       responseTimeMs: Date.now() - startedAt,
       timestamp: new Date().toISOString(),
-    })
+    });
   }
-})
+});
 
 // Use error middleware
 app.use(errorMiddleware);
@@ -145,17 +145,18 @@ app.use((_, res) => {
 });
 
 // =================================================================================
-// เริ่มต้นเซิร์ฟเวอร์ (สำหรับการรัน Local หรือ Dev)
-if (import.meta.main) {
+// เริ่มต้นเซิร์ฟเวอร์ (ทำงานเฉพาะเมื่อรันในเครื่องตนเอง หรือไม่ใช่ระบบ Serverless Production ของ Vercel)
+if (import.meta.main || !isProduction) {
   const server = app.listen(config.port);
 
   // กำหนด base URL
   const baseUrl = isProduction
     ? `https://fitting-allegedly-chicken.ngrok-free.app`
     : `http://localhost:${config.port}`;
+
   // แสดงข้อความเมื่อเซิร์ฟเวอร์เริ่มทำงาน
   server.on("listening", () => {
-    console.log(`🚀 Server running in ${NODE_ENV} mode`);
+    console.log(`🚀 Server running in ${NODE_ENV || "development"} mode`);
     console.log(`🌐 Local: ${baseUrl}`);
     console.log(`🛠️  Health Check: ${baseUrl}/health`);
     console.log(`🔧 Press Ctrl+C to stop the server`);
@@ -164,7 +165,7 @@ if (import.meta.main) {
   // จัดการข้อผิดพลาดของเซิร์ฟเวอร์
   server.on("error", (err) => {
     if (err?.code === "EADDRINUSE") {
-      console.error(`❌ Port ${PORT} is already in use`);
+      console.error(`❌ Port ${config.port} is already in use`);
       console.error(
         `→ To fix: stop the process using the port or run with a different PORT (e.g. PORT=3001)`,
       );
@@ -177,7 +178,6 @@ if (import.meta.main) {
 
   // ตัวจัดการปิดเซิร์ฟเวอร์อย่างปลอดภัยเมื่อเกิดข้อผิดพลาดที่ไม่คาดคิด
   process.on("unhandledRejection", (reason) => {
-    // If this is an operational createHttpError, log and continue (don't crash the process)
     if (reason && typeof reason === "object") {
       const isOperational =
         reason.isOperational === true || reason instanceof createHttpError;
@@ -197,6 +197,7 @@ if (import.meta.main) {
       process.exit(1);
     }
   });
+
   process.on("uncaughtException", (err) => {
     console.error("Uncaught Exception:", err);
     if (server?.close) {
@@ -206,3 +207,6 @@ if (import.meta.main) {
     }
   });
 }
+
+// ✨ สิ่งสำคัญที่สุด: ทำการ Export ตัวแปรแอปพลิเคชันออกไปเพื่อให้ Vercel นำไปรันเป็น Serverless Function ได้อย่างสมบูรณ์
+export default app;
