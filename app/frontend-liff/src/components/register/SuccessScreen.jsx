@@ -1,6 +1,6 @@
 import { villages, zones } from '../../constants/registerData';
 
-export default function SuccessScreen({ data }) {
+export default function SuccessScreen({ data, user }) {
   const getVillageName = (id) =>
     villages.find((v) => v.id === id)?.name || '-';
   const getZoneName = (id) => zones[id] || '-';
@@ -26,6 +26,17 @@ export default function SuccessScreen({ data }) {
             สรุปข้อมูลที่ลงทะเบียน
           </h3>
           <div className="space-y-3">
+            {user && (
+              <div className="flex justify-between border-b border-slate-100 pb-2">
+                <span className="text-sm text-slate-400">บัญชี LINE</span>
+                <span className="text-sm font-medium text-slate-800 flex items-center gap-1.5">
+                  {user.pictureUrl && (
+                    <img src={user.pictureUrl} alt="" className="w-5 h-5 rounded-full object-cover border border-emerald-500" />
+                  )}
+                  <span>{user.displayName}</span>
+                </span>
+              </div>
+            )}
             <div className="flex justify-between border-b border-slate-100 pb-2">
               <span className="text-sm text-slate-400">ชื่อ-นามสกุล</span>
               <span className="text-sm font-medium text-slate-800">

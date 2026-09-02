@@ -10,14 +10,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../ui/button";
 
-export default function WelcomeScreen({ onStart }) {
+export default function WelcomeScreen({ onStart, user }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-6 animate-fade-in-up">
       <div className="w-full max-w-sm">
         {/* Logo & Title */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <div className="h-38 w-auto mx-auto rounded-3xl flex items-center justify-center">
-            <img src={PANNAM_ICON} className="w-56 h-56 "></img>
+            <img src={PANNAM_ICON} className="w-56 h-56 " alt="PANNAM" />
           </div>
           <h1 className="text-3xl font-bold text-slate-800 mb-3">
             ยินดีต้อนรับสู่
@@ -30,6 +30,34 @@ export default function WelcomeScreen({ onStart }) {
             ลงทะเบียนเพื่อเริ่มใช้งาน
           </p>
         </div>
+
+        {/* LINE User Profile Badge */}
+        {user && (
+          <div className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100 mb-6 flex items-center gap-3">
+            {user.pictureUrl ? (
+              <img
+                src={user.pictureUrl}
+                alt={user.displayName}
+                className="w-11 h-11 rounded-full object-cover border-2 border-emerald-500 shrink-0"
+              />
+            ) : (
+              <div className="w-11 h-11 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-base shrink-0">
+                {user.displayName?.charAt(0) || 'L'}
+              </div>
+            )}
+            <div className="flex-1 min-w-0 text-left">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="text-[11px] text-slate-400 font-medium">
+                  เข้าสู่ระบบ LINE แล้ว
+                </span>
+              </div>
+              <p className="text-sm font-semibold text-slate-800 truncate">
+                {user.displayName || 'ผู้ใช้งาน LINE'}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Preparation Info Card */}
         <div className="bg-white rounded-2xl p-6 shadow-lg shadow-slate-200 mb-8">

@@ -110,6 +110,16 @@ input, select, textarea {
   background: #94a3b8;
 }
 
+@utility scrollbar-hidden {
+  /* ซ่อนสำหรับ Chrome, Safari และ Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* ซ่อนสำหรับ IE, Edge และ Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: 'Noto Sans Thai', 'Inter Variable', sans-serif;
