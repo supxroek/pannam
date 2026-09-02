@@ -1,22 +1,25 @@
 import { useState, useEffect } from 'react';
-import InputField from '../ui/InputField';
-import SelectField from '../ui/SelectField';
 import { thaiMonths } from '../../constants/registerData';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import {
   Field,
-  FieldDescription,
+  FieldGroup,
   FieldLabel,
-} from "@/components/ui/field"
+  FieldDescription,
+} from '@/components/ui/field';
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
-} from "@/components/ui/input-group"
+} from '@/components/ui/input-group';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+} from '@/components/ui/select';
 import { UserRound } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Input } from '../ui/input';
 
 export default function Step1PersonalInfo({ data, onChange, errors }) {
   const [day, setDay] = useState(data.birthDay || '');
@@ -43,81 +46,134 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
   const days = Array.from({ length: 31 }, (_, i) => i + 1);
   const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
 
+  const selectedMonthName = month !== '' && month !== undefined ? thaiMonths[parseInt(month)] : undefined;
+
+  const hasFirstNameError = !!errors.firstName;
+  const hasLastNameError = !!errors.lastName;
+  const hasBirthError = !!(errors.birthDay || errors.birthMonth || errors.birthYear);
+
   return (
     <div className="animate-slide-in">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-800 mb-2">ข้อมูลส่วนตัว</h2>
-        <p className="text-slate-500 text-sm">กรอกชื่อ-นามสกุล และวันเกิดของคุณ</p>
+        <h2 className="text-2xl font-bold text-foreground mb-2">ข้อมูลส่วนตัว</h2>
+        <p className="text-muted-foreground text-sm">กรอกชื่อ-นามสกุล และวันเกิดของคุณ</p>
       </div>
 
-      <Field>
-        <FieldLabel htmlFor="firtname">ชื่อจริง</FieldLabel>
-        {/* <Input id="input-invalid" placeholder="Error" aria-invalid />*/}
-        <InputGroup>
-          <InputGroupInput id="firtname" placeholder="ชื่อจริง"  />
-          <InputGroupAddon align="inline-start">
-            <UserRound className="text-muted-foreground" />
-          </InputGroupAddon>
-        </InputGroup>
-        <FieldDescription className="hidden text-amber-700">
-          กรอกชื่อจริง
-        </FieldDescription>
-      </Field>
-
-      {/* <div className="space-y-5">
-        <InputField
-          label="ชื่อจริง"
-          placeholder="กรอกชื่อจริง"
-          value={data.firstName || ''}
-          onChange={(e) => onChange('firstName', e.target.value)}
-          error={errors.firstName}
-          icon="fa-user"
-          maxLength={50}
-        />
-        <InputField
-          label="นามสกุล"
-          placeholder="กรอกนามสกุล"
-          value={data.lastName || ''}
-          onChange={(e) => onChange('lastName', e.target.value)}
-          error={errors.lastName}
-          icon="fa-user"
-          maxLength={50}
-        />
-        <div>
-          <label className="block text-sm font-medium text-slate-600 mb-1.5">
-            วัน/เดือน/ปี เกิด
-          </label>
-          <div className="grid grid-cols-3 gap-3">
-            <SelectField
-              placeholder="วัน"
-              options={days.map((d) => ({ id: d, name: String(d) }))}
-              value={day ? parseInt(day) : ''}
-              onChange={(v) => setDay(String(v))}
-              error={errors.birthDay}
+      <FieldGroup>
+        {/* ชื่อจริง */}
+        <Field data-invalid={hasFirstNameError || undefined}>
+          <FieldLabel htmlFor="firstName">ชื่อจริง</FieldLabel>
+          <InputGroup>
+            <InputGroupAddon align="inline-start">
+              <UserRound className="text-muted-foreground" />
+            </InputGroupAddon>
+            <InputGroupInput
+              id="firstName"
+              placeholder="กรอกชื่อจริง"
+              value={data.firstName || ''}
+              onChange={(e) => onChange('firstName', e.target.value)}
+              maxLength={50}
+              aria-invalid={hasFirstNameError || undefined}
             />
-            <SelectField
-              placeholder="เดือน"
-              options={thaiMonths.map((m, i) => ({ id: i, name: m }))}
-              value={month !== '' ? parseInt(month) : ''}
-              onChange={(v) => setMonth(String(v))}
-              error={errors.birthMonth}
-            />
-            <SelectField
-              placeholder="ปี พ.ศ."
-              options={years.map((y) => ({ id: y, name: String(y + 543) }))}
-              value={year ? parseInt(year) : ''}
-              onChange={(v) => setYear(String(v))}
-              error={errors.birthYear}
-            />
-          </div>
-          {(errors.birthDay || errors.birthMonth || errors.birthYear) && (
-            <p className="mt-1.5 text-sm text-red-500 flex items-center gap-1">
-              <FontAwesomeIcon icon={faCircleExclamation} className="text-xs" />
-              กรุณาระบุวันเดือนปีเกิดให้ครบถ้วน
-            </p>
+          </InputGroup>
+          {hasFirstNameError && (
+            <FieldDescription className="text-destructive">
+              {errors.firstName}
+            </FieldDescription>
           )}
-        </div>
-      </div>*/}
+        </Field>
+
+        {/* นามสกุล */}
+        <Field data-invalid={hasLastNameError || undefined}>
+          <FieldLabel htmlFor="lastName">นามสกุล</FieldLabel>
+          <InputGroup>
+            <InputGroupAddon align="inline-start">
+              <UserRound className="text-muted-foreground" />
+            </InputGroupAddon>
+            <InputGroupInput
+              id="lastName"
+              placeholder="กรอกนามสกุล"
+              value={data.lastName || ''}
+              onChange={(e) => onChange('lastName', e.target.value)}
+              maxLength={50}
+              aria-invalid={hasLastNameError || undefined}
+            />
+          </InputGroup>
+          {hasLastNameError && (
+            <FieldDescription className="text-destructive">
+              {errors.lastName}
+            </FieldDescription>
+          )}
+        </Field>
+
+        {/* วัน/เดือน/ปี เกิด */}
+        <Field data-invalid={hasBirthError || undefined}>
+          <FieldLabel>วัน/เดือน/ปี เกิด</FieldLabel>
+          <div className="grid grid-cols-3 gap-3">
+            {/* วัน */}
+            <Select
+              value={day ? String(day) : undefined}
+              onValueChange={(v) => setDay(v)}
+            >
+              <SelectTrigger className="w-full" aria-invalid={!!errors.birthDay || undefined}>
+                <SelectValue placeholder="วัน" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {days.map((d) => (
+                    <SelectItem key={d} value={String(d)}>
+                      {d}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            {/* เดือน */}
+            <Select
+              value={month !== '' ? String(month) : undefined}
+              onValueChange={(v) => setMonth(v)}
+            >
+              <SelectTrigger className="w-full" aria-invalid={!!errors.birthMonth || undefined}>
+                <SelectValue placeholder="เดือน">{selectedMonthName}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {thaiMonths.map((m, i) => (
+                    <SelectItem key={i} value={String(i)}>
+                      {m}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            {/* ปี */}
+            <Select
+              value={year ? String(year) : undefined}
+              onValueChange={(v) => setYear(v)}
+            >
+              <SelectTrigger className="w-full" aria-invalid={!!errors.birthYear || undefined}>
+                <SelectValue placeholder="ปี ค.ศ." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {years.map((y) => (
+                    <SelectItem key={y} value={String(y)}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+          {hasBirthError && (
+            <FieldDescription className="text-destructive">
+              กรุณาระบุวันเดือนปีเกิดให้ครบถ้วน
+            </FieldDescription>
+          )}
+        </Field>
+      </FieldGroup>
     </div>
   );
 }
