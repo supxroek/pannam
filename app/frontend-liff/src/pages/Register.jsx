@@ -6,9 +6,10 @@ import Step2ContactInfo from '../components/register/Step2ContactInfo';
 import Step3AddressInfo from '../components/register/Step3AddressInfo';
 import Step4Review from '../components/register/Step4Review';
 import SuccessScreen from '../components/register/SuccessScreen';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { Button } from '@/components/ui/button';
 
-const stepTitles = ['ข้อมูลส่วนตัว', 'ข้อมูลติดต่อ', 'ที่อยู่', 'ตรวจสอบ'];
-const stepSubTitles = ['กรอกชื่อ-นามสกุล และวันเกิดของคุณ', 'กรอกเลขบัตรประชาชนและเบอร์โทรศัพท์', 'เลือกหมู่บ้านและระบุที่อยู่ของคุณ', 'กรุณาตรวจสอบความถูกต้องก่อนยืนยัน']
 const TOTAL_FORM_STEPS = 4;
 
 export default function Register() {
@@ -79,7 +80,7 @@ export default function Register() {
   };
 
   const handleBack = () => {
-    if (step > 1) setStep((prev) => prev - 1);
+    if (step > 0) setStep((prev) => prev - 1);
   };
 
   const handleGoToStep = (targetStep) => {
@@ -123,29 +124,28 @@ export default function Register() {
       <div className="flex-1 flex flex-col max-w-md mx-auto w-full bg-white min-h-screen shadow-xl">
         {/* Sticky Header */}
         <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm px-5 pt-4 pb-3">
-          <div className="flex items-center gap-3 mb-3">
-            {step > 0 && (
-              <button
-                onClick={handleBack}
-                className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-slate-100 active:scale-95 transition-all cursor-pointer"
-              >
-                <i className="fas fa-arrow-left"></i>
-              </button>
-            )}
+          <div className="flex items-center gap-3">
+
             <div className="flex-1">
               <StepIndicator
                 currentStep={step - 1}
                 totalSteps={TOTAL_FORM_STEPS}
               />
-              <p className="text-xs text-slate-400 font-medium">
-                ขั้นตอนที่ {step} จาก {TOTAL_FORM_STEPS}
-              </p>
-              <h1 className="text-lg font-bold text-slate-800">
-                {stepTitles[step - 1]}
-              </h1>
-              <p className='text-slate-500 text-sm'>
-                {stepSubTitles[step - 1]}
-              </p>
+
+              <div className="flex items-center gap-4">
+                {step > 0 && (
+                  <Button
+                    onClick={handleBack}
+                    variant='secondary'
+                    className="w-10 h-9"
+                  >
+                    <FontAwesomeIcon icon={faArrowLeft} className="text-xs" />
+                  </Button>
+                )}
+                <p className="text-sm text-slate-400 font-medium">
+                  ขั้นตอนที่ {step} จาก {TOTAL_FORM_STEPS}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -188,13 +188,13 @@ export default function Register() {
         {/* Sticky Bottom Button (Steps 1-3 only) */}
         {step < 4 && (
           <div className="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-slate-100 px-5 py-4">
-            <button
+            <Button
               onClick={handleNext}
-              className="w-full bg-linear-to-r from-[#3b82f6] to-[#1e40af] text-white font-semibold py-4 rounded-2xl shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 active:scale-[0.98] transition-all duration-200 text-lg flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full text-white font-semibold py-6 rounded-2xl shadow-lg hover:scale-98 hover:ring-2 hover:ring-blue-900 text-lg flex items-center justify-center gap-2"
             >
               <span>ถัดไป</span>
-              <i className="fas fa-arrow-right"></i>
-            </button>
+              <FontAwesomeIcon icon={faArrowRight} className="text-xs" />
+            </Button>
           </div>
         )}
       </div>

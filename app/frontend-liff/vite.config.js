@@ -12,4 +12,10 @@ export default defineConfig({
       "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
+  server: {
+    host: true,
+    allowedHosts: [
+      "http://laptop-4cksqgun.tailc35acc.ts.net",
+    ]
+  }
 });

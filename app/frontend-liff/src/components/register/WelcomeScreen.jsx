@@ -12,7 +12,7 @@ import { Button } from "../ui/button";
 
 export default function WelcomeScreen({ onStart }) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-8 animate-fade-in-up">
+    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-6 animate-fade-in-up">
       <div className="w-full max-w-sm">
         {/* Logo & Title */}
         <div className="text-center mb-8">

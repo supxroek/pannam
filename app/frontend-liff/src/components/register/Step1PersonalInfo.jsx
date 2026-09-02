@@ -2,6 +2,21 @@ import { useState, useEffect } from 'react';
 import InputField from '../ui/InputField';
 import SelectField from '../ui/SelectField';
 import { thaiMonths } from '../../constants/registerData';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import {
+  Field,
+  FieldDescription,
+  FieldLabel,
+} from "@/components/ui/field"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
+import { UserRound } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Input } from '../ui/input';
 
 export default function Step1PersonalInfo({ data, onChange, errors }) {
   const [day, setDay] = useState(data.birthDay || '');
@@ -30,11 +45,26 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
 
   return (
     <div className="animate-slide-in">
-      {/* <div className="mb-6">
+      <div className="mb-6">
         <h2 className="text-2xl font-bold text-slate-800 mb-2">ข้อมูลส่วนตัว</h2>
         <p className="text-slate-500 text-sm">กรอกชื่อ-นามสกุล และวันเกิดของคุณ</p>
-      </div>*/}
-      <div className="space-y-5">
+      </div>
+
+      <Field>
+        <FieldLabel htmlFor="firtname">ชื่อจริง</FieldLabel>
+        {/* <Input id="input-invalid" placeholder="Error" aria-invalid />*/}
+        <InputGroup>
+          <InputGroupInput id="firtname" placeholder="ชื่อจริง"  />
+          <InputGroupAddon align="inline-start">
+            <UserRound className="text-muted-foreground" />
+          </InputGroupAddon>
+        </InputGroup>
+        <FieldDescription className="hidden text-amber-700">
+          กรอกชื่อจริง
+        </FieldDescription>
+      </Field>
+
+      {/* <div className="space-y-5">
         <InputField
           label="ชื่อจริง"
           placeholder="กรอกชื่อจริง"
@@ -82,12 +112,12 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
           </div>
           {(errors.birthDay || errors.birthMonth || errors.birthYear) && (
             <p className="mt-1.5 text-sm text-red-500 flex items-center gap-1">
-              <i className="fas fa-circle-exclamation text-xs"></i>
+              <FontAwesomeIcon icon={faCircleExclamation} className="text-xs" />
               กรุณาระบุวันเดือนปีเกิดให้ครบถ้วน
             </p>
           )}
         </div>
-      </div>
+      </div>*/}
     </div>
   );
 }
