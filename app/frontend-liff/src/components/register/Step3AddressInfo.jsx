@@ -39,7 +39,7 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
             value={data.village ? String(data.village) : undefined}
             onValueChange={(v) => onChange('village', parseInt(v))}
           >
-            <SelectTrigger className="w-full" aria-invalid={!!errors.village || undefined}>
+            <SelectTrigger className="w-full h-10!" aria-invalid={!!errors.village || undefined}>
               <SelectValue placeholder="เลือกหมู่บ้าน">{selectedVillageName}</SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -62,7 +62,7 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
         {/* บ้านเลขที่ */}
         <Field data-invalid={!!errors.houseNumber || undefined}>
           <FieldLabel htmlFor="houseNumber">บ้านเลขที่</FieldLabel>
-          <InputGroup>
+          <InputGroup className="h-10">
             <InputGroupAddon align="inline-start">
               <Hash className="text-muted-foreground" />
             </InputGroupAddon>
@@ -91,7 +91,7 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
             value={data.zone !== undefined && data.zone !== '' ? String(data.zone) : undefined}
             onValueChange={(v) => onChange('zone', parseInt(v))}
           >
-            <SelectTrigger className="w-full" aria-invalid={!!errors.zone || undefined}>
+            <SelectTrigger className="w-full h-10!" aria-invalid={!!errors.zone || undefined}>
               <SelectValue placeholder="เลือกโซน">{selectedZoneName}</SelectValue>
             </SelectTrigger>
             <SelectContent>

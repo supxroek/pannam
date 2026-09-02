@@ -41,7 +41,7 @@ export default function Step4Review({ data, onBack, onSubmit, loading }) {
               ข้อมูลส่วนตัว
             </CardTitle>
             <CardAction>
-              <Button variant="ghost" size="sm" onClick={() => onBack(0)}>
+              <Button variant="ghost" size="sm" onClick={() => onBack(0)} className="text-blue-500 font-semibold">
                 <PenLine data-icon="inline-start" />
                 แก้ไข
               </Button>
@@ -76,7 +76,7 @@ export default function Step4Review({ data, onBack, onSubmit, loading }) {
               ข้อมูลติดต่อ
             </CardTitle>
             <CardAction>
-              <Button variant="ghost" size="sm" onClick={() => onBack(1)}>
+              <Button variant="ghost" size="sm" onClick={() => onBack(1)} className="text-blue-500 font-semibold">
                 <PenLine data-icon="inline-start" />
                 แก้ไข
               </Button>
@@ -109,7 +109,7 @@ export default function Step4Review({ data, onBack, onSubmit, loading }) {
               ข้อมูลที่อยู่
             </CardTitle>
             <CardAction>
-              <Button variant="ghost" size="sm" onClick={() => onBack(2)}>
+              <Button variant="ghost" size="sm" onClick={() => onBack(2)} className="text-blue-500 font-semibold">
                 <PenLine data-icon="inline-start" />
                 แก้ไข
               </Button>
@@ -142,8 +142,8 @@ export default function Step4Review({ data, onBack, onSubmit, loading }) {
         </Card>
 
         {/* Info Notice */}
-        <Alert>
-          <Info />
+        <Alert className="bg-amber-50 rounded-xl p-4 mb-8 border border-amber-100">
+          <Info className='text-amber-500!' />
           <AlertTitle>โปรดทราบ</AlertTitle>
           <AlertDescription>
             เมื่อกดยืนยัน ข้อมูลของคุณจะถูกส่งไปยังระบบ PANNAM
@@ -153,10 +153,9 @@ export default function Step4Review({ data, onBack, onSubmit, loading }) {
 
         {/* Submit Button */}
         <Button
-          size="lg"
           onClick={onSubmit}
           disabled={loading}
-          className="w-full py-4 rounded-2xl text-lg shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 active:scale-[0.98] transition-all duration-200"
+          className="w-full text-white font-semibold py-6 rounded-2xl shadow-lg hover:scale-98 hover:ring-2 hover:ring-blue-900 text-lg flex items-center justify-center gap-2"
         >
           {loading ? (
             <>

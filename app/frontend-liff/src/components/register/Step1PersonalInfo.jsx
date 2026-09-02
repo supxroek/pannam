@@ -63,7 +63,7 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
         {/* ชื่อจริง */}
         <Field data-invalid={hasFirstNameError || undefined}>
           <FieldLabel htmlFor="firstName">ชื่อจริง</FieldLabel>
-          <InputGroup>
+          <InputGroup className="h-10">
             <InputGroupAddon align="inline-start">
               <UserRound className="text-muted-foreground" />
             </InputGroupAddon>
@@ -86,7 +86,7 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
         {/* นามสกุล */}
         <Field data-invalid={hasLastNameError || undefined}>
           <FieldLabel htmlFor="lastName">นามสกุล</FieldLabel>
-          <InputGroup>
+          <InputGroup className="h-10">
             <InputGroupAddon align="inline-start">
               <UserRound className="text-muted-foreground" />
             </InputGroupAddon>
@@ -115,7 +115,7 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
               value={day ? String(day) : undefined}
               onValueChange={(v) => setDay(v)}
             >
-              <SelectTrigger className="w-full" aria-invalid={!!errors.birthDay || undefined}>
+              <SelectTrigger className="w-full h-10!" aria-invalid={!!errors.birthDay || undefined}>
                 <SelectValue placeholder="วัน" />
               </SelectTrigger>
               <SelectContent>
@@ -134,7 +134,7 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
               value={month !== '' ? String(month) : undefined}
               onValueChange={(v) => setMonth(v)}
             >
-              <SelectTrigger className="w-full" aria-invalid={!!errors.birthMonth || undefined}>
+              <SelectTrigger className="w-full h-10!" aria-invalid={!!errors.birthMonth || undefined}>
                 <SelectValue placeholder="เดือน">{selectedMonthName}</SelectValue>
               </SelectTrigger>
               <SelectContent>
@@ -153,7 +153,7 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
               value={year ? String(year) : undefined}
               onValueChange={(v) => setYear(v)}
             >
-              <SelectTrigger className="w-full" aria-invalid={!!errors.birthYear || undefined}>
+              <SelectTrigger className="w-full h-10!" aria-invalid={!!errors.birthYear || undefined}>
                 <SelectValue placeholder="ปี ค.ศ." />
               </SelectTrigger>
               <SelectContent>

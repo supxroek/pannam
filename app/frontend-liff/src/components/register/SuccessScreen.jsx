@@ -1,17 +1,20 @@
-import { villages } from '../../constants/registerData';
+import { villages, zones } from '../../constants/registerData';
 
-export default function SuccessScreen({ data, onReset }) {
+export default function SuccessScreen({ data }) {
+  const getVillageName = (id) =>
+    villages.find((v) => v.id === id)?.name || '-';
+  const getZoneName = (id) => zones[id] || '-';
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-8 animate-fade-in-up">
+    <div className="flex flex-col items-center justify-center min-h-screen px-6 py-6 animate-fade-in-up">
       <div className="w-full max-w-sm text-center">
         {/* Success Icon */}
-        <div className="w-24 h-24 mx-auto mb-6 bg-linear-to-br from-[#4ade80] to-[#16a34a] rounded-full flex items-center justify-center shadow-xl shadow-green-200">
+        <div className="w-20 h-20 mx-auto mb-6 bg-linear-to-br from-[#4ade80] to-[#16a34a] rounded-full flex items-center justify-center shadow-lg shadow-green-200">
           <i className="fas fa-check text-white text-4xl"></i>
         </div>
         <h1 className="text-3xl font-bold text-slate-800 mb-3">
           ลงทะเบียนสำเร็จ!
         </h1>
-        <p className="text-slate-500 text-base leading-relaxed mb-8">
+        <p className="text-slate-500 text-sm leading-relaxed mb-8">
           ข้อมูลของคุณถูกส่งเรียบร้อยแล้ว
           <br />
           กรุณารอการอนุมัติจากผู้ดูแลระบบ
@@ -43,10 +46,12 @@ export default function SuccessScreen({ data, onReset }) {
             </div>
             <div className="flex justify-between">
               <span className="text-sm text-slate-400">ที่อยู่</span>
-              <span className="text-sm font-medium text-slate-800 text-right">
-                {villages.find((v) => v.id === data.village)?.name}
-                <br />
+              <span className="text-sm font-medium text-slate-800 text-right  text-balance">
                 บ้านเลขที่ {data.houseNumber}
+                &nbsp;
+                โซน {getZoneName(data.zone)}
+                &nbsp;
+                {getVillageName(data.village)}
               </span>
             </div>
           </div>
@@ -67,12 +72,12 @@ export default function SuccessScreen({ data, onReset }) {
         </div>
 
         {/* Reset Button */}
-        <button
+        {/* <button
           onClick={onReset}
           className="w-full bg-white border-2 border-slate-200 text-slate-600 font-semibold py-4 rounded-2xl hover:border-[#60a5fa] hover:text-[#1e40af] active:scale-[0.98] transition-all duration-200 text-lg cursor-pointer"
         >
           ลงทะเบียนใหม่
-        </button>
+        </button>*/}
       </div>
     </div>
   );

@@ -126,13 +126,6 @@ export default function WelcomeScreen({ onStart }) {
         </div>
 
         {/* Start Button */}
-        {/* <button
-          onClick={onStart}
-          className="w-full bg-linear-to-r from-[#3b82f6] to-[#1e40af] text-white font-semibold py-4 rounded-2xl shadow-lg shadow-blue-200 hover:shadow-xl hover:shadow-blue-300 active:scale-[0.98] transition-all duration-200 text-lg flex items-center justify-center gap-2 cursor-pointer"
-        >
-          <span>เริ่มลงทะเบียน</span>
-          <FontAwesomeIcon icon={faArrowRight} className="text-white text-sm" />
-        </button>*/}
         <Button
           onClick={onStart}
           className="w-full text-white font-semibold py-6 rounded-2xl shadow-lg hover:scale-98 hover:ring-2 hover:ring-blue-900 text-lg flex items-center justify-center gap-2"

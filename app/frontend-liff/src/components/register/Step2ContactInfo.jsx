@@ -49,7 +49,7 @@ export default function Step2ContactInfo({ data, onChange, errors }) {
         {/* เลขบัตรประชาชน */}
         <Field data-invalid={!!idCardError || undefined}>
           <FieldLabel htmlFor="idCard">หมายเลขบัตรประชาชน</FieldLabel>
-          <InputGroup>
+          <InputGroup className="h-10">
             <InputGroupAddon align="inline-start">
               <IdCard className="text-muted-foreground" />
             </InputGroupAddon>
@@ -84,7 +84,7 @@ export default function Step2ContactInfo({ data, onChange, errors }) {
         {/* เบอร์โทรศัพท์ */}
         <Field data-invalid={!!phoneErr || undefined}>
           <FieldLabel htmlFor="phone">เบอร์โทรศัพท์มือถือ</FieldLabel>
-          <InputGroup>
+          <InputGroup className="h-10">
             <InputGroupAddon align="inline-start">
               <Phone className="text-muted-foreground" />
             </InputGroupAddon>

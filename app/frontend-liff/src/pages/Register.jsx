@@ -95,28 +95,28 @@ export default function Register() {
     }, 2000);
   };
 
-  const handleReset = () => {
-    setFormData({
-      firstName: '',
-      lastName: '',
-      birthDay: '',
-      birthMonth: '',
-      birthYear: '',
-      idCard: '',
-      phone: '',
-      village: '',
-      houseNumber: '',
-      zone: '',
-    });
-    setErrors({});
-    setStep(0);
-  };
+  // const handleReset = () => {
+  //   setFormData({
+  //     firstName: '',
+  //     lastName: '',
+  //     birthDay: '',
+  //     birthMonth: '',
+  //     birthYear: '',
+  //     idCard: '',
+  //     phone: '',
+  //     village: '',
+  //     houseNumber: '',
+  //     zone: '',
+  //   });
+  //   setErrors({});
+  //   setStep(0);
+  // };
 
   // Step 0: Welcome Screen
   if (step === 0) return <WelcomeScreen onStart={() => setStep(1)} />;
 
   // Step 5: Success Screen
-  if (step === 5) return <SuccessScreen data={formData} onReset={handleReset} />;
+  if (step === 5) return <SuccessScreen data={formData} />;
 
   // Steps 1-4: Form Steps
   return (
@@ -151,7 +151,7 @@ export default function Register() {
         </div>
 
         {/* Form Content */}
-        <div className="flex-1 px-5 py-4 overflow-y-auto">
+        <div className="flex-1 px-5 py-4 overflow-y-hidden">
           <div className="animate-slide-in">
             {step === 1 && (
               <Step1PersonalInfo
