@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "dotenvx run -- node server.js",
-    "dev": "dotenvx run -- nodemon server.js"
+    "dev": "dotenvx run -- nodemon server.js",
+    "build": "dotenvx run -- pnpm prisma generate"
   },
   "keywords": [],
   "author": "",
