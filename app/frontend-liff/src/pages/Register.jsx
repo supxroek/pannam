@@ -16,11 +16,16 @@ import { useLiffAuth } from '@/hooks/useLiffAuth';
 import { LINE_LIFF_ID_REGISTER } from '@/constants/line-liff';
 import { registerMember } from '@/services/api';
 
+import { TEST_useLiffAuth } from '@/constants/registerData';
+
 const TOTAL_FORM_STEPS = 4;
 
 export default function Register() {
   // จัดการ LIFF Auth: user, loading, error, retry
-  const { user, loading, error } = useLiffAuth(LINE_LIFF_ID_REGISTER);
+  // const { user, loading, error } = useLiffAuth(LINE_LIFF_ID_REGISTER);
+
+  // สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
+  const { users: user, loading, error } = TEST_useLiffAuth();
 
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
@@ -67,8 +72,6 @@ export default function Register() {
       if (!formData.village) newErrors.village = 'กรุณาเลือกหมู่บ้าน';
       if (!formData.houseNumber?.trim())
         newErrors.houseNumber = 'กรุณากรอกบ้านเลขที่';
-      if (formData.zone === '' || formData.zone === undefined)
-        newErrors.zone = 'กรุณาเลือกโซน';
     }
 
     setErrors(newErrors);
@@ -104,7 +107,7 @@ export default function Register() {
       setSubmitError('');
 
       // ดึง token ล่าสุดจาก liff หรือ user state
-      const idToken = liff.getIDToken() || user?.idToken;
+      const idToken = user?.idToken || liff.getIDToken();
 
       if (!idToken) {
         throw new Error('ไม่พบข้อมูลการเข้าสู่ระบบ LINE กรุณาลองใหม่อีกครั้ง');

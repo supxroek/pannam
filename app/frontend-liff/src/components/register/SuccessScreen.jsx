@@ -1,4 +1,7 @@
-import { villages, zones } from '../../constants/registerData';
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
+import { villages, zones } from "../../constants/registerData";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Balloon } from "lucide-react";
 
 export default function SuccessScreen({ data, user }) {
   const getVillageName = (id) =>
@@ -9,7 +12,10 @@ export default function SuccessScreen({ data, user }) {
       <div className="w-full max-w-sm text-center">
         {/* Success Icon */}
         <div className="w-20 h-20 mx-auto mb-6 bg-linear-to-br from-[#4ade80] to-[#16a34a] rounded-full flex items-center justify-center shadow-lg shadow-green-200">
-          <i className="fas fa-check text-white text-4xl"></i>
+          <FontAwesomeIcon
+            icon={faCheck}
+            className="text-white text-4xl"
+          ></FontAwesomeIcon>
         </div>
         <h1 className="text-3xl font-bold text-slate-800 mb-3">
           ลงทะเบียนสำเร็จ!
@@ -31,7 +37,11 @@ export default function SuccessScreen({ data, user }) {
                 <span className="text-sm text-slate-400">บัญชี LINE</span>
                 <span className="text-sm font-medium text-slate-800 flex items-center gap-1.5">
                   {user.pictureUrl && (
-                    <img src={user.pictureUrl} alt="" className="w-5 h-5 rounded-full object-cover border border-emerald-500" />
+                    <img
+                      src={user.pictureUrl}
+                      alt=""
+                      className="w-5 h-5 rounded-full object-cover border border-emerald-500"
+                    />
                   )}
                   <span>{user.displayName}</span>
                 </span>
@@ -59,8 +69,7 @@ export default function SuccessScreen({ data, user }) {
               <span className="text-sm text-slate-400">ที่อยู่</span>
               <span className="text-sm font-medium text-slate-800 text-right  text-balance">
                 บ้านเลขที่ {data.houseNumber}
-                &nbsp;
-                โซน {getZoneName(data.zone)}
+                &nbsp; โซน {getZoneName(data.zone)}
                 &nbsp;
                 {getVillageName(data.village)}
               </span>
@@ -71,24 +80,18 @@ export default function SuccessScreen({ data, user }) {
         {/* Processing Time Info */}
         <div className="bg-blue-50 rounded-xl p-4 mb-8 border border-blue-100">
           <div className="flex items-start gap-3">
-            <i className="fas fa-clock text-[#2563eb] mt-0.5"></i>
+            <Balloon className="text-[#2563eb] mt-0.5" />
             <div className="text-left">
-              <p className="text-sm font-medium text-[#1e3a8a]">ระยะเวลาดำเนินการ</p>
+              <p className="text-sm font-medium text-[#1e3a8a]">
+                ยินดีต้อนรับสู่ครอบครัวปันน้ำค่ะ! 🎉
+              </p>
               <p className="text-xs text-[#1e40af] mt-1">
-                การอนุมัติใช้เวลาประมาณ 1-2 วันทำการ
-                คุณจะได้รับการแจ้งเตือนผ่าน LINE เมื่ออนุมัติเสร็จสิ้น
+                บัญชีของคุณพร้อมใช้งานแล้ว
+                สามารถปิดหน้าจอนี้เพื่อไปเพลิดเพลินกับบริการปันน้ำได้ทันทีเลยนะคะ
               </p>
             </div>
           </div>
         </div>
-
-        {/* Reset Button */}
-        {/* <button
-          onClick={onReset}
-          className="w-full bg-white border-2 border-slate-200 text-slate-600 font-semibold py-4 rounded-2xl hover:border-[#60a5fa] hover:text-[#1e40af] active:scale-[0.98] transition-all duration-200 text-lg cursor-pointer"
-        >
-          ลงทะเบียนใหม่
-        </button>*/}
       </div>
     </div>
   );
