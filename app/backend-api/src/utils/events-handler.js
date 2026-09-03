@@ -247,7 +247,7 @@ class EventsHandler {
   async handleFollow(event) {
     try {
       // ส่ง flex message เมื่อผู้ใช้ทำการ follow หลังจากสติกเกอร์
-      await lineProvider.replyOrPush(event, followmeFlex());
+      // await lineProvider.replyOrPush(event, followmeFlex()); //ยังไม่ส่งในตอนนี้
     } catch (error) {
       console.error("Failed to send flex message:", error.message);
       await lineProvider.replyOrPush(event, {
