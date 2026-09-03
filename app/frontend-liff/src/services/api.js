@@ -22,7 +22,7 @@ export async function registerMember(formData, idToken) {
     throw new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่");
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/members/register`, {
+  const response = await fetch(`${API_BASE_URL}/api/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

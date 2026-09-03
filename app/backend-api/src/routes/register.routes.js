@@ -9,6 +9,6 @@ const router = express.Router();
  * @desc    ลงทะเบียนสมาชิกใหม่ผ่าน LINE LIFF (ตรวจสอบ ID Token ก่อน)
  * @access  Protected (LINE ID Token)
  */
-router.post("/register", verifyLineToken, handleRegister);
+router.post("/", verifyLineToken, handleRegister);
 
 export default router;
