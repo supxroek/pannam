@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { formatIdCard, formatPhone } from '../../constants/registerData';
+import formatIdCard from '@/utils/formatIdCard';
+import formatPhone from '@/utils/formatPhone';
+
 import {
   Field,
   FieldGroup,

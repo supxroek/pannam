@@ -45,7 +45,7 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
             <SelectContent>
               <SelectGroup>
                 {villages.map((v) => (
-                  <SelectItem key={v.id} value={String(v.id)}>
+                  <SelectItem key={v.id} value={String(v.id)} className='px-2.5 py-2.5'>
                     {v.name}
                   </SelectItem>
                 ))}
@@ -86,18 +86,23 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
 
         {/* โซน */}
         <Field data-invalid={!!errors.zone || undefined}>
-          <FieldLabel>โซน</FieldLabel>
+          <FieldLabel>โซน (ไม่จำเป็นต้องระบุ)</FieldLabel>
           <Select
             value={data.zone !== undefined && data.zone !== '' ? String(data.zone) : undefined}
-            onValueChange={(v) => onChange('zone', parseInt(v))}
+            onValueChange={(v) => onChange('zone', v ? parseInt(v) : undefined)}
           >
             <SelectTrigger className="w-full h-10!" aria-invalid={!!errors.zone || undefined}>
-              <SelectValue placeholder="เลือกโซน">{selectedZoneName}</SelectValue>
+              <SelectValue placeholder="เลือกโซน (ระบุหรือไม่ระบุก็ได้)">
+                {data.zone !== undefined && data.zone !== null && data.zone !== '' ? selectedZoneName : "ไม่ได้เลือก"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
+                <SelectItem value="" className='px-2.5 py-2.5 text-muted-foreground'>
+                  -- ไม่ระบุโซน --
+                </SelectItem>
                 {zones.map((z, i) => (
-                  <SelectItem key={i} value={String(i)}>
+                  <SelectItem key={i} value={String(i)} className='px-2.5 py-2.5'>
                     {z}
                   </SelectItem>
                 ))}

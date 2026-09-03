@@ -121,7 +121,7 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
               <SelectContent>
                 <SelectGroup>
                   {days.map((d) => (
-                    <SelectItem key={d} value={String(d)}>
+                    <SelectItem key={d} value={String(d)} className='px-2.5 py-2.5'>
                       {d}
                     </SelectItem>
                   ))}
@@ -140,7 +140,7 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
               <SelectContent>
                 <SelectGroup>
                   {thaiMonths.map((m, i) => (
-                    <SelectItem key={i} value={String(i)}>
+                    <SelectItem key={i} value={String(i)} className='px-2.5 py-2.5'>
                       {m}
                     </SelectItem>
                   ))}
@@ -159,7 +159,7 @@ export default function Step1PersonalInfo({ data, onChange, errors }) {
               <SelectContent>
                 <SelectGroup>
                   {years.map((y) => (
-                    <SelectItem key={y} value={String(y)}>
+                    <SelectItem key={y} value={String(y)} className='px-2.5 py-2.5'>
                       {y}
                     </SelectItem>
                   ))}
