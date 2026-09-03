@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { Toaster } from "@/components/ui/toast";
 
 export default function Default() {
   return (
@@ -8,6 +9,7 @@ export default function Default() {
           <Outlet />
         </main>
       </div>
+      <Toaster />
     </>
   );
 }

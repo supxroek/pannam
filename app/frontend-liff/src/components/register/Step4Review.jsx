@@ -17,10 +17,9 @@ import {
   PenLine,
   Check,
   Info,
-  AlertCircle,
 } from 'lucide-react';
 
-export default function Step4Review({ data, onBack, onSubmit, loading, error }) {
+export default function Step4Review({ data, onBack, onSubmit, loading }) {
   const getVillageName = (id) =>
     villages.find((v) => v.id === id)?.name || '-';
   const getZoneName = (id) => zones[id] || '-';
@@ -151,15 +150,6 @@ export default function Step4Review({ data, onBack, onSubmit, loading, error }) 
             เพื่อตรวจสอบและอนุมัติการใช้งาน
           </AlertDescription>
         </Alert>
-
-        {/* Error Notice */}
-        {error && (
-          <Alert variant="destructive" className="rounded-xl p-4 mb-2">
-            <AlertCircle className="size-4" />
-            <AlertTitle>การลงทะเบียนไม่สำเร็จ</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
 
         {/* Submit Button */}
         <Button
