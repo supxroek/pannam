@@ -11,8 +11,10 @@ import LiffErrorScreen from '@/components/register/LiffErrorScreen';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@/components/ui/button';
+import liff from '@line/liff';
 import { useLiffAuth } from '@/hooks/useLiffAuth';
 import { LINE_LIFF_ID_REGISTER } from '@/constants/line-liff';
+import { registerMember } from '@/services/api';
 
 const TOTAL_FORM_STEPS = 4;
 
@@ -35,6 +37,7 @@ export default function Register() {
   });
   const [errors, setErrors] = useState({});
   const [loadingState, setLoadingState] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const validateStep = (stepIndex) => {
     const newErrors = {};
@@ -91,15 +94,32 @@ export default function Register() {
   };
 
   const handleGoToStep = (targetStep) => {
+    setSubmitError('');
     setStep(targetStep + 1);
   };
 
-  const handleSubmit = () => {
-    setLoadingState(true);
-    setTimeout(() => {
-      setLoadingState(false);
+  const handleSubmit = async () => {
+    try {
+      setLoadingState(true);
+      setSubmitError('');
+
+      // ดึง token ล่าสุดจาก liff หรือ user state
+      const idToken = liff.getIDToken() || user?.idToken;
+
+      if (!idToken) {
+        throw new Error('ไม่พบข้อมูลการเข้าสู่ระบบ LINE กรุณาลองใหม่อีกครั้ง');
+      }
+
+      await registerMember(formData, idToken);
       setStep(5);
-    }, 2000);
+    } catch (err) {
+      console.error('Registration failed:', err);
+      setSubmitError(
+        err.message || 'เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง',
+      );
+    } finally {
+      setLoadingState(false);
+    }
   };
 
   // 1. สถานะกำลังโหลด: ขณะกำลังเริ่มต้น หรือขณะกำลังจะ redirect ไปหน้า Login LINE
@@ -203,6 +223,7 @@ export default function Register() {
                 onBack={handleGoToStep}
                 onSubmit={handleSubmit}
                 loading={loadingState}
+                error={submitError}
               />
             )}
           </div>

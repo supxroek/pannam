@@ -11,3 +11,6 @@ export const LINE_DEFAULT_LIFF_ID = "2011170175-";
 
 export const LINE_LIFF_ID_REGISTERED = "8NcxrC2N";
 export const LINE_LIFF_ID_RECORDED_WATER = "GqFt7abM";
+
+export const LINE_LIFF_CHANNEL_ID =
+  process.env.LINE_LIFF_CHANNEL_ID || "2011170175";
