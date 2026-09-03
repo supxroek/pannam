@@ -2,13 +2,7 @@ import {
   LINE_DEFAULT_LIFF_URL,
   LINE_LIFF_ID_REGISTERED,
 } from "../../config/line.config.js";
-import {
-  flex,
-  bubble,
-  box,
-  text,
-  button,
-} from "./common.flex.js";
+import { flex, bubble, box, text, button } from "./common.flex.js";
 
 // Flex Register - สำหรับแจ้งเตือนให้ผู้ใช้ลงทะเบียนสมาชิกก่อนเข้าใช้งาน
 export default function registerFlex() {
