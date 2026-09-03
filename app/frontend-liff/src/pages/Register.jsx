@@ -15,17 +15,19 @@ import liff from '@line/liff';
 import { useLiffAuth } from '@/hooks/useLiffAuth';
 import { LINE_LIFF_ID_REGISTER } from '@/constants/line-liff';
 import { registerMember } from '@/services/api';
+import { toast } from '@/components/ui/toast';
 
-import { TEST_useLiffAuth } from '@/constants/registerData';
+// สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
+// import { TEST_useLiffAuth } from '@/constants/registerData';
 
 const TOTAL_FORM_STEPS = 4;
 
 export default function Register() {
   // จัดการ LIFF Auth: user, loading, error, retry
-  // const { user, loading, error } = useLiffAuth(LINE_LIFF_ID_REGISTER);
+  const { user, loading, error } = useLiffAuth(LINE_LIFF_ID_REGISTER);
 
   // สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
-  const { users: user, loading, error } = TEST_useLiffAuth();
+  // const { users: user, loading, error } = TEST_useLiffAuth();
 
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({
@@ -42,7 +44,6 @@ export default function Register() {
   });
   const [errors, setErrors] = useState({});
   const [loadingState, setLoadingState] = useState(false);
-  const [submitError, setSubmitError] = useState('');
 
   const validateStep = (stepIndex) => {
     const newErrors = {};
@@ -71,7 +72,7 @@ export default function Register() {
     if (stepIndex === 2) {
       if (!formData.village) newErrors.village = 'กรุณาเลือกหมู่บ้าน';
       if (!formData.houseNumber?.trim())
-        newErrors.houseNumber = 'กรุณากรอกบ้านเลขที่';
+        newErrors.houseNumber = 'กรุณาเลือกหรือระบุบ้านเลขที่';
     }
 
     setErrors(newErrors);
@@ -97,14 +98,12 @@ export default function Register() {
   };
 
   const handleGoToStep = (targetStep) => {
-    setSubmitError('');
     setStep(targetStep + 1);
   };
 
   const handleSubmit = async () => {
     try {
       setLoadingState(true);
-      setSubmitError('');
 
       // ดึง token ล่าสุดจาก liff หรือ user state
       const idToken = user?.idToken || liff.getIDToken();
@@ -117,9 +116,13 @@ export default function Register() {
       setStep(5);
     } catch (err) {
       console.error('Registration failed:', err);
-      setSubmitError(
-        err.message || 'เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง',
-      );
+      const errorMsg =
+        err.message || 'เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง';
+      toast.add({
+        title: 'การลงทะเบียนไม่สำเร็จ',
+        description: errorMsg,
+        type: 'error',
+      });
     } finally {
       setLoadingState(false);
     }
@@ -226,7 +229,6 @@ export default function Register() {
                 onBack={handleGoToStep}
                 onSubmit={handleSubmit}
                 loading={loadingState}
-                error={submitError}
               />
             )}
           </div>
