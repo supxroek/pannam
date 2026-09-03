@@ -1,9 +1,38 @@
+import { useState, useEffect } from "react";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { villages, zones } from "../../constants/registerData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Balloon } from "lucide-react";
+import { Balloon, Clock } from "lucide-react";
+import liff from "@line/liff";
+import { Button } from "@/components/ui/button";
 
 export default function SuccessScreen({ data, user }) {
+  const [countdown, setCountdown] = useState(5);
+
+  const handleClose = () => {
+    try {
+      if (liff.isInClient()) {
+        liff.closeWindow();
+      } else {
+        window.close();
+      }
+    } catch (err) {
+      console.warn("Unable to close window:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (countdown <= 0) {
+      handleClose();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [countdown]);
   const getVillageName = (id) =>
     villages.find((v) => v.id === id)?.name || '-';
   const getZoneName = (id) => zones[id] || '-';
@@ -78,19 +107,38 @@ export default function SuccessScreen({ data, user }) {
         </div>
 
         {/* Processing Time Info */}
-        <div className="bg-blue-50 rounded-xl p-4 mb-8 border border-blue-100">
+        <div className="bg-blue-50 rounded-xl p-4 mb-4 border border-blue-100">
           <div className="flex items-start gap-3">
-            <Balloon className="text-[#2563eb] mt-0.5" />
+            <Balloon className="text-[#2563eb] mt-0.5 shrink-0" />
             <div className="text-left">
               <p className="text-sm font-medium text-[#1e3a8a]">
                 ยินดีต้อนรับสู่ครอบครัวปันน้ำค่ะ! 🎉
               </p>
               <p className="text-xs text-[#1e40af] mt-1">
-                บัญชีของคุณพร้อมใช้งานแล้ว
-                สามารถปิดหน้าจอนี้เพื่อไปเพลิดเพลินกับบริการปันน้ำได้ทันทีเลยนะคะ
+                บัญชีของคุณพร้อมใช้งานแล้ว สามารถปิดหน้าจอนี้เพื่อไปเพลิดเพลินกับบริการปันน้ำได้ทันทีเลยนะคะ
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Countdown & Close Action */}
+        <div className="flex flex-col items-center gap-3">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 text-slate-600 text-xs font-medium">
+            <Clock className="size-3.5 text-slate-500 animate-spin" style={{ animationDuration: '3s' }} />
+            <span>
+              {countdown > 0
+                ? `กำลังปิดหน้าต่างอัตโนมัติใน ${countdown} วินาที...`
+                : "กำลังปิดหน้าต่าง..."}
+            </span>
+          </div>
+
+          <Button
+            onClick={handleClose}
+            variant="outline"
+            className="w-full py-5 rounded-xl border-slate-200 text-slate-700 font-medium hover:bg-slate-50 cursor-pointer"
+          >
+            ปิดหน้าจอนี้ทันที
+          </Button>
         </div>
       </div>
     </div>
