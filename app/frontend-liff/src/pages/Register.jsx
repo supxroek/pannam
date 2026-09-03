@@ -164,7 +164,7 @@ export default function Register() {
                       <span className="size-2 rounded-full bg-emerald-500 shrink-0"></span>
                     )}
                     <span className="text-[11px] font-medium text-slate-600 truncate">
-                      {user.displayName} and {user.idToken}
+                      {user.displayName}
                     </span>
                   </div>
                 )}
