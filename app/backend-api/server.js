@@ -63,10 +63,16 @@ if (config.trustProxy) {
 }
 
 // กำหนดค่า CORS (อ้างอิงค่าจาก config กลาง)
-config.corsOrigin =
-  config.corsOrigin === "*"
-    ? { origin: true }
-    : { origin: config.corsOrigin.split(",").map((s) => s.trim()) };
+// กำหนดค่า CORS ปล่อยผ่านทุก Origin หากเป็น "*" หรือตัดแบ่งกรณีใส่หลาย URL
+const corsOptions = {
+  // origin: config.corsOrigin === "*" ? true : config.corsOrigin.split(",").map(s => s.trim()),
+  origin: (origin, callback) => {
+    // ปล่อยผ่านทุก Origin ที่ยิงเข้ามา เพื่อแก้ปัญหา HTTPS ยิงหา Local HTTP บล็อก
+    callback(null, true);
+  },
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
 
 // ตั้งค่า rate limiting (จาก config กลาง)
 const limiter = rateLimit({
@@ -80,7 +86,7 @@ const limiter = rateLimit({
 // ตั้งค่า middleware
 app
   .use(helmet())
-  .use(cors(config.corsOrigin))
+  .use(cors(corsOptions))
   .use(express.json({ limit: config.bodyLimit }))
   .use(express.urlencoded({ extended: true, limit: config.bodyLimit }))
   .use((req, _, next) => {
