@@ -35,7 +35,7 @@ export default function followmeFlex() {
           bullet("🪪 ข้อมูลบัตรประชาชน"),
           bullet("📞 เบอร์โทรศัพท์"),
           bullet("🏠 ข้อมูลที่อยู่"),
-          separator({ margin: "lg" }),
+          // separator({ margin: "lg" }),
           button({
             action: {
               type: "uri",
