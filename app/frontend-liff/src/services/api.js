@@ -8,7 +8,7 @@
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   (import.meta.env.PROD
-    ? "https://pannam-api.vercel.app"
+    ? "http://localhost:3000" // Production: https://pannam-api.vercel.app
     : "http://localhost:3000");
 
 /**
