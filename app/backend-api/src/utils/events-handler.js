@@ -2,8 +2,8 @@
 
 import lineProvider from "../providers/line.provider.js";
 import intentMatcher from "./intent-matcher.js";
-import followmeFlex from "../packages/templates/flex/follow.flex.js";
-import registerFlex from "../packages/templates/flex/register.flex.js";
+import followmeFlex from "../templates/flex/follow.flex.js";
+import registerFlex from "../templates/flex/register.flex.js";
 
 // ============================================================
 // ลงทะเบียน Intents

@@ -92,7 +92,7 @@ app
 // =================================================================================
 // เรียกใช้ routes ทั้งหมดจาก src/app.js
 import routes from "./src/app.js";
-import { prisma } from "./src/packages/lib/prisma.js";
+import { prisma } from "./src/lib/prisma.js";
 
 app.use(routes);
 

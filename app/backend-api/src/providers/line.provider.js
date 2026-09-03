@@ -1,7 +1,7 @@
 import * as line from "@line/bot-sdk";
 import axios from "axios";
 import { config } from "../config/line.config.js";
-import { prisma } from "../packages/lib/prisma.js";
+import { prisma } from "../lib/prisma.js";
 
 // const { LINE_RICH_MENU_ID } = process.env;
 

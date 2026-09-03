@@ -1,7 +1,7 @@
 import {
   LINE_DEFAULT_LIFF_URL,
   LINE_LIFF_ID_REGISTERED,
-} from "../../../config/line.config.js";
+} from "../../config/line.config.js";
 import {
   flex,
   bubble,
