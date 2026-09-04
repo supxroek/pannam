@@ -94,40 +94,6 @@ class LineProvider {
     return !!member; // ลบ Hard code "userId" ออก เมื่อใช้งานจริง
   }
 
-  // async checkMemberStatus(source) {
-  //   if (!source?.userId) return;
-  //   const member = await employeeModelV2.findActiveByLineUserId({
-  //     where: { userId: source.userId },
-  //   });
-  //   if (member) {
-  //     // หากเป็นสมาชิกที่ยังใช้งานอยู่ ให้ Link Rich Menu สำหรับสมาชิก
-  //     try {
-  //       await this.linkRichMenu(source.userId, LINE_RICH_MENU_ID);
-  //       console.log(
-  //         `เชื่อมต่อ Rich Menu สำหรับสมาชิกกับผู้ใช้ ${source.userId} เรียบร้อยแล้ว`,
-  //       );
-  //     } catch (error) {
-  //       console.error(
-  //         `ไม่สามารถเชื่อมต่อ Rich Menu กับผู้ใช้ ${source.userId} ได้:`,
-  //         error,
-  //       );
-  //     }
-  //   } else {
-  //     // หากไม่ใช่สมาชิกที่ยังใช้งานอยู่ ให้ Unlink Rich Menu สำหรับสมาชิก
-  //     try {
-  //       await this.unlinkRichMenu(source.userId);
-  //       console.log(
-  //         `ยกเลิกการเชื่อมต่อ Rich Menu สำหรับสมาชิกกับผู้ใช้ ${source.userId} เรียบร้อยแล้ว`,
-  //       );
-  //     } catch (error) {
-  //       console.error(
-  //         `ไม่สามารถยกเลิกการเชื่อมต่อ Rich Menu กับผู้ใช้ ${source.userId} ได้:`,
-  //         error,
-  //       );
-  //     }
-  //   }
-  // }
-
   async linkRichMenu(userId, richMenuId) {
     return await this.client.linkRichMenuIdToUser(userId, richMenuId);
   }

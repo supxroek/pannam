@@ -1,6 +1,6 @@
 import express from "express";
 import { verifyLineToken } from "../middlewares/verify-line-token.js";
-import { handleRegister } from "../controllers/register.controller.js";
+import { handleRegister } from "../controllers/member.controller.js";
 
 const router = express.Router();
 
@@ -9,6 +9,6 @@ const router = express.Router();
  * @desc    ลงทะเบียนสมาชิกใหม่ผ่าน LINE LIFF (ตรวจสอบ ID Token ก่อน)
  * @access  Protected (LINE ID Token)
  */
-router.post("/", verifyLineToken, handleRegister);
+router.post("/register", verifyLineToken, handleRegister);
 
 export default router;

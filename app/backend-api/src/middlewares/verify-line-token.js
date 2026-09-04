@@ -1,6 +1,6 @@
 import axios from "axios";
 import createHttpError from "http-errors";
-import { LINE_LIFF_CHANNEL_ID } from "../config/line.config.js";
+import { LINE_DEFAULT_LIFF_ID } from "../config/line.config.js";
 
 /**
  * Middleware สำหรับตรวจสอบความถูกต้องของ LINE LIFF ID Token
@@ -34,7 +34,7 @@ export async function verifyLineToken(req, res, next) {
     // ตรวจสอบ Token กับ LINE OAuth endpoint
     const params = new URLSearchParams();
     params.append("id_token", token);
-    params.append("client_id", LINE_LIFF_CHANNEL_ID);
+    params.append("client_id", LINE_DEFAULT_LIFF_ID);
 
     const response = await axios.post(
       "https://api.line.me/oauth2/v2.1/verify",
