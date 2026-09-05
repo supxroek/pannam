@@ -1,8 +1,6 @@
 import createHttpError from "http-errors";
 import dayjs from "../utils/dayjs.js";
 import { registerMember } from "../services/member.service.js";
-import lineProvider from "../providers/line.provider.js";
-import welcomeFlex from "../templates/flex/welcome.flex.js";
 
 const ZONES_LIST = ["A", "B", "C", "D", "E", "F"];
 
@@ -94,40 +92,6 @@ export async function handleRegister(req, res, next) {
 
     // 3. ส่งต่อให้ service จัดการบันทึกข้อมูลลงฐานข้อมูลผ่าน Transaction
     const result = await registerMember(registrationData);
-
-    // 4. ส่ง Flex Message ต้อนรับสมาชิกใหม่เข้า LINE Chat
-    try {
-      if (result.user?.lineUserId) {
-        const welcomeMessage = welcomeFlex({
-          name: result.user.fullName || result.user.displayName,
-        });
-        await lineProvider.push(result.user.lineUserId, welcomeMessage);
-        console.log(`📤 ส่งข้อความต้อนรับไปยัง LINE User (${result.user.lineUserId}) สำเร็จ`);
-      }
-    } catch (lineError) {
-      console.error(
-        "❌ ไม่สามารถส่งข้อความ Flex ต้อนรับผ่าน LINE ได้:",
-        lineError.message,
-      );
-    }
-
-    // 5. แสดงผลสรุปใน console
-    console.log("\n=======================================================");
-    console.log("📝 [LIFF REGISTRATION] ลงทะเบียนสมาชิกสำเร็จ");
-    console.log("=======================================================");
-    console.log("👤 ผู้ใช้งาน (users):");
-    console.log(`   - User ID:      ${result.user.id}`);
-    console.log(`   - LINE User ID: ${result.user.lineUserId}`);
-    console.log(`   - ชื่อ-นามสกุล:    ${result.user.fullName}`);
-    console.log(`   - เลขบัตร ปชช:   ${result.user.nationalId}`);
-    console.log(`   - เบอร์โทรศัพท์:   ${result.user.phoneNumber}`);
-    console.log("🏡 ที่อยู่และสิทธิ์ (properties & user_villages):");
-    console.log(`   - รหัสหมู่บ้าน:   ${result.village.id}`);
-    console.log(`   - บ้านเลขที่:     ${result.property.houseNumber}`);
-    console.log(`   - โซน:           ${result.property.zone || "-"}`);
-    console.log(`   - สิทธิ์ (Role):  ${result.membership.role}`);
-    console.log(`   - สถานะ:        ${result.membership.status}`);
-    console.log("=======================================================\n");
 
     return res.status(201).json({
       success: true,

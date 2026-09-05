@@ -1,5 +1,8 @@
 // src/services/api.js
 
+import liff from "@line/liff";
+import welcomeFlex from "../templates/flex/welcome.flex";
+
 /**
  * กำหนด Base URL ของ API Backend
  * สามารถตั้งค่าผ่าน .env ด้วย VITE_API_BASE_URL ได้
@@ -39,6 +42,24 @@ export async function registerMember(formData, idToken) {
       data.error?.message ||
       `เกิดข้อผิดพลาดในการลงทะเบียน (รหัส: ${response.status})`;
     throw new Error(errorMessage);
+  }
+
+  try {
+    // ดึงชื่อของผู้ใช้จากข้อมูลที่ได้จาก API
+    const { fullName } = data.user;
+
+    // เช็คว่าแอปถูกเปิดในระบบแอปพลิเคชัน LINE (Chat room) หรือไม่
+    if (liff.isInClient() && liff.isApiAvailable("sendMessages")) {
+      await liff.sendMessages([welcomeFlex({ name: fullName })]);
+
+      console.log("🎉 [LIFF] ส่ง Flex Message ต้อนรับผ่านห้องแชทสำเร็จ");
+    } else {
+      console.warn(
+        "⚠️ ไม่สามารถส่งข้อความได้เนื่องจากไม่ได้เปิดใช้งานบน LINE Client",
+      );
+    }
+  } catch (error) {
+    console.error("💥 [LIFF SendMessage Error]:", error);
   }
 
   return data;
