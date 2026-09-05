@@ -36,6 +36,8 @@ export async function registerMember(formData, idToken) {
 
   const data = await response.json().catch(() => ({}));
 
+  console.log("🎉 [LIFF] สมัครสมาชิกสำเร็จ", data);
+
   if (!response.ok) {
     const errorMessage =
       data.message ||
@@ -46,19 +48,11 @@ export async function registerMember(formData, idToken) {
 
   try {
     // ดึงชื่อของผู้ใช้จากข้อมูลที่ได้จาก API
-    const { fullName } = data.user;
-
-    const activeLiff = window.liff;
+    const { user } = data;
 
     // เช็คว่าแอปถูกเปิดในระบบแอปพลิเคชัน LINE (Chat room) หรือไม่
-    if (activeLiff.isInClient() && activeLiff.isApiAvailable("sendMessages")) {
-      // await liff.sendMessages([
-      //   {
-      //     type: "text",
-      //     text: "Hello, World!",
-      //   },
-      // ]);
-      await activeLiff.sendMessages([welcomeFlex({ name: fullName })]);
+    if (liff.isInClient() && liff.isApiAvailable("sendMessages")) {
+      await liff.sendMessages([welcomeFlex({ name: user?.fullName || "คุณสมาชิก" })]);
 
       console.log("🎉 [LIFF] ส่ง Flex Message ต้อนรับผ่านห้องแชทสำเร็จ");
     } else {
