@@ -1,7 +1,6 @@
 // src/services/api.js
 
 import liff from "@line/liff";
-import welcomeFlex from "../templates/flex/welcome.flex";
 
 /**
  * กำหนด Base URL ของ API Backend
@@ -47,29 +46,26 @@ export async function registerMember(formData, idToken) {
   }
 
   try {
-    // ดึงชื่อของผู้ใช้จากข้อมูลที่ได้จาก API
-    const { user } = data;
+    const activeLiff = window.liff || liff;
 
-    const activeLiff = window.liff;
-
-    // เช็คว่าแอปถูกเปิดในระบบแอปพลิเคชัน LINE (Chat room) หรือไม่
-    if (activeLiff.isInClient() && activeLiff.isApiAvailable("sendMessages")) {
+    // เช็คว่าแอปถูกเปิดในระบบแอปพลิเคชัน LINE (Chat room) และรองรับ sendMessages หรือไม่
+    if (activeLiff && activeLiff.isInClient() && activeLiff.isApiAvailable("sendMessages")) {
       await activeLiff.sendMessages([
-        welcomeFlex({ name: user?.fullName || "คุณสมาชิก" }),
+        {
+          type: "text",
+          text: "ลงทะเบียนเรียบร้อย 🎉",
+        },
       ]);
 
-      console.log("🎉 [LIFF] ส่ง Flex Message ต้อนรับผ่านห้องแชทสำเร็จ");
-
-      setTimeout(() => {
-        activeLiff.closeWindow();
-      }, 8000);
+      console.log("🎉 [LIFF] ส่งข้อความแจ้งลงทะเบียนเรียบร้อยไปยังห้องแชทแล้ว");
     } else {
       console.warn(
-        "⚠️ ไม่สามารถส่งข้อความได้เนื่องจากไม่ได้เปิดใช้งานบน LINE Client",
+        "⚠️ ไม่สามารถส่งข้อความได้เนื่องจากไม่ได้เปิดใช้งานบน LINE Client หรือไม่รองรับ sendMessages",
       );
     }
   } catch (error) {
-    console.error("💥 [LIFF SendMessage Error]:", error);
+    console.warn("⚠️ [LIFF SendMessage Notice]:", error?.message || error);
+    // ไม่ throw error เพื่อให้หน้าเว็บเปลี่ยนไปแสดงผลหน้า SuccessScreen ได้ตามปกติ
   }
 
   return data;
