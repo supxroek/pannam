@@ -48,15 +48,17 @@ export async function registerMember(formData, idToken) {
     // ดึงชื่อของผู้ใช้จากข้อมูลที่ได้จาก API
     const { fullName } = data.user;
 
+    const activeLiff = window.liff;
+
     // เช็คว่าแอปถูกเปิดในระบบแอปพลิเคชัน LINE (Chat room) หรือไม่
-    if (liff.isInClient() && liff.isApiAvailable("sendMessages")) {
-      await liff.sendMessages([
-        {
-          type: "text",
-          text: "Hello, World!",
-        },
-      ]);
-      await liff.sendMessages([welcomeFlex({ name: fullName })]);
+    if (activeLiff.isInClient() && activeLiff.isApiAvailable("sendMessages")) {
+      // await liff.sendMessages([
+      //   {
+      //     type: "text",
+      //     text: "Hello, World!",
+      //   },
+      // ]);
+      await activeLiff.sendMessages([welcomeFlex({ name: fullName })]);
 
       console.log("🎉 [LIFF] ส่ง Flex Message ต้อนรับผ่านห้องแชทสำเร็จ");
     } else {
