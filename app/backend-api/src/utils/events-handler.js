@@ -2,7 +2,6 @@
 
 import lineProvider from "../providers/line.provider.js";
 import intentMatcher from "./intent-matcher.js";
-import followmeFlex from "../templates/flex/follow.flex.js";
 import registerFlex from "../templates/flex/register.flex.js";
 import welcomeFlex from "../templates/flex/welcome.flex.js";
 import { prisma } from "../lib/prisma.js";
@@ -103,7 +102,7 @@ intentMatcher.register("HISTORY", {
 // จดค่าน้ำ
 intentMatcher.register("RECORD_WATER", {
   description: "จดค่าน้ำ",
-  keywords: ["จดค่าน้ำ", "บันทึก", "บันทึกการใช้น้ำ", "จดน้ำ",],
+  keywords: ["จดค่าน้ำ", "บันทึก", "บันทึกการใช้น้ำ", "จดน้ำ"],
   optionalKeywords: ["บันทึก", "จด", "เพิ่ม", "เขียน"],
   patterns: [
     "บันทึก.*การใช้น้ำ",
@@ -127,8 +126,25 @@ intentMatcher.register("RECORD_WATER", {
 // ขอความช่วยเหลือ
 intentMatcher.register("HELP", {
   description: "ขอความช่วยเหลือ",
-  keywords: ["ช่วยเหลือ", "ช่วย", "help", "สอน", "วิธี", "ใช้ยังไง", "ทำยังไง", "ทำ"],
-  optionalKeywords: ["ด้วย", "หน่อย", "ที", "ได้ไหม", "ยังไง", "คู่มือ", "อะไร"],
+  keywords: [
+    "ช่วยเหลือ",
+    "ช่วย",
+    "help",
+    "สอน",
+    "วิธี",
+    "ใช้ยังไง",
+    "ทำยังไง",
+    "ทำ",
+  ],
+  optionalKeywords: [
+    "ด้วย",
+    "หน่อย",
+    "ที",
+    "ได้ไหม",
+    "ยังไง",
+    "คู่มือ",
+    "อะไร",
+  ],
   patterns: ["ช่วย.*ด้วย", "สอน.*หน่อย", "ใช้งาน.*ยังไง", "ทำ.*อะไร"],
   weight: 1.0,
   execute: async (event) => {
@@ -197,20 +213,27 @@ intentMatcher.register("GOODBYE", {
 intentMatcher.register("REGISTER_SUCCESS", {
   description: "ต้อนรับสมาชิกใหม่เมื่อลงทะเบียนสำเร็จ",
   keywords: [
+    "ลงทะเบียนสมาชิกสำเร็จ",
+    "ยืนยันข้อมูลถูกต้อง",
+    "ยืนยันข้อมูล",
+    "ยืนยันการลงทะเบียน",
+    "ยืนยันการสมัคร",
+    "ข้อมูลถูกต้อง",
     "ลงทะเบียนเรียบร้อย",
     "สมัครสมาชิกสำเร็จ",
     "ลงทะเบียนสำเร็จ",
     "สมัครเรียบร้อย",
   ],
-  optionalKeywords: ["แล้ว", "ค่ะ", "ครับ"],
+  optionalKeywords: ["แล้ว", "ค่ะ", "ครับ", "ถูกต้อง"],
   patterns: [
     "ลงทะเบียน.*(เรียบร้อย|สำเร็จ)",
     "สมัคร.*(เรียบร้อย|สำเร็จ)",
+    "ยืนยัน.*(ข้อมูล|ลงทะเบียน|สมัคร|ถูกต้อง)",
   ],
   weight: 2.0,
   execute: async (event) => {
     const userId = event.source?.userId;
-    let displayName = "คุณสมาชิก";
+    let displayName = "สมาชิก";
 
     if (userId) {
       try {
@@ -221,14 +244,50 @@ intentMatcher.register("REGISTER_SUCCESS", {
           displayName = user.fullName;
         }
       } catch (err) {
-        console.warn("Could not fetch user name for welcome flex:", err.message);
+        console.warn(
+          "Could not fetch user name for welcome flex:",
+          err.message,
+        );
       }
     }
 
-    await lineProvider.replyOrPush(
-      event,
-      welcomeFlex({ name: displayName }),
-    );
+    // Quick Reply ปุ่มลัดสำหรับเลือกทำรายการ
+    const quickReply = {
+      items: [
+        {
+          type: "action",
+          action: {
+            type: "message",
+            label: "เช็คค่าน้ำ 💧",
+            text: "เช็คค่าน้ำ",
+          },
+        },
+        {
+          type: "action",
+          action: {
+            type: "message",
+            label: "ประวัติการใช้น้ำ 📊",
+            text: "ประวัติ",
+          },
+        },
+        {
+          type: "action",
+          action: {
+            type: "message",
+            label: "แจ้งปัญหา 🛠️",
+            text: "แจ้งปัญหา",
+          },
+        },
+      ],
+    };
+
+    const flexMessage = welcomeFlex({ name: displayName });
+    const replyPayload = {
+      ...flexMessage,
+      quickReply,
+    };
+
+    await lineProvider.replyOrPush(event, replyPayload);
   },
 });
 
@@ -257,16 +316,22 @@ class EventsHandler {
     if (source?.userId) {
       await lineProvider.showLoadingAnimation(source.userId);
 
-      // ตรวจสอบว่าเป็นข้อความแจ้งเตือนการลงทะเบียนสำเร็จหรือไม่
+      // ตรวจสอบว่าเป็นข้อความแจ้งเตือนการลงทะเบียนสำเร็จ หรือ ยืนยันข้อมูลถูกต้อง หรือไม่
       const text = message?.type === "text" ? message.text.trim() : "";
       const isRegisterMessage = [
+        "ลงทะเบียนสมาชิกสำเร็จ",
+        "ยืนยันข้อมูลถูกต้อง",
+        "ยืนยันข้อมูล",
+        "ยืนยันการลงทะเบียน",
+        "ยืนยันการสมัคร",
+        "ข้อมูลถูกต้อง",
         "ลงทะเบียนเรียบร้อย",
         "สมัครสมาชิกสำเร็จ",
         "ลงทะเบียนสำเร็จ",
         "สมัครเรียบร้อย",
       ].some((k) => text.includes(k));
 
-      // ตรวจสอบสมาชิก -> หากไม่ใช่สมาชิก และไม่ใช่ข้อความแจ้งลงทะเบียน ให้ส่งข้อความแจ้งเตือนเสมอ
+      // ตรวจสอบสมาชิก -> หากไม่ใช่สมาชิก ให้ส่งข้อความแจ้งเตือนเสมอ
       if (!isRegisterMessage) {
         const isMember = await lineProvider.isMember(source.userId);
         if (!isMember) {
