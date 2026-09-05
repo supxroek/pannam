@@ -96,7 +96,7 @@ export async function registerMember(formData, idToken) {
         `🪪 เลขบัตร ปชช.: ${maskedId}`,
         `📱 เบอร์โทรศัพท์: ${maskedPhone}`,
         `📍 หมู่บ้าน: ${villageName}`,
-        addressDisplay ? `🏡 ที่อยู่: ${addressDisplay}\n\n` : "",
+        addressDisplay ? `🏡 ที่อยู่: ${addressDisplay}\n` : "",
         "💧 บัญชีของคุณพร้อมใช้งานแล้วค่ะ",
         "แตะเลือกทำรายการผ่านปุ่มเมนูด้านล่างได้เลยนะคะ ✨",
       ]
@@ -104,67 +104,40 @@ export async function registerMember(formData, idToken) {
         .join("\n");
 
       // Quick Reply ปุ่มลัดสำหรับเลือกทำรายการ
+      const quickReply = {
+        items: [
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "เช็คค่าน้ำ 💧",
+              text: "เช็คค่าน้ำ",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "ประวัติการใช้น้ำ 📊",
+              text: "ประวัติ",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "แจ้งปัญหา 🛠️",
+              text: "แจ้งปัญหา",
+            },
+          },
+        ],
+      };
 
       await liff.sendMessages([
         {
           type: "text",
           text: summaryText,
-          quickReply: {
-            // items: [
-            //   {
-            //     type: "action",
-            //     action: {
-            //       type: "message",
-            //       label: "เช็คค่าน้ำ 💧",
-            //       text: "เช็คค่าน้ำ",
-            //     },
-            //   },
-            //   {
-            //     type: "action",
-            //     action: {
-            //       type: "message",
-            //       label: "ประวัติการใช้น้ำ 📊",
-            //       text: "ประวัติ",
-            //     },
-            //   },
-            //   {
-            //     type: "action",
-            //     action: {
-            //       type: "message",
-            //       label: "แจ้งปัญหา 🛠️",
-            //       text: "แจ้งปัญหา",
-            //     },
-            //   },
-            // ],
-
-            items: [
-              {
-                type: "action", // 3
-                imageUrl: "https://example.com/sushi.png",
-                action: {
-                  type: "message",
-                  label: "Sushi",
-                  text: "Sushi",
-                },
-              },
-              {
-                type: "action",
-                imageUrl: "https://example.com/tempura.png",
-                action: {
-                  type: "message",
-                  label: "Tempura",
-                  text: "Tempura",
-                },
-              },
-              {
-                type: "action", // 4
-                action: {
-                  type: "location",
-                  label: "Send location",
-                },
-              },
-            ],
-          },
+          quickReply,
         },
       ]);
 
