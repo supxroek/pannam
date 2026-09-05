@@ -11,7 +11,7 @@ import welcomeFlex from "../templates/flex/welcome.flex";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   (import.meta.env.PROD
-    ? "https://pannam-api.vercel.app" // Production: https://pannam-api.vercel.app
+    ? "https://fitting-allegedly-chicken.ngrok-free.app" // Production: https://pannam-api.vercel.app
     : "http://localhost:3000");
 
 /**
