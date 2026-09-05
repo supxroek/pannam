@@ -47,10 +47,15 @@ export async function registerMember(formData, idToken) {
     const contextType = liff.getContext()?.type;
     if (contextType && contextType !== "none" && contextType !== "external") {
       // แปลงชื่อหมู่บ้าน และโซน
-      const villageObj = villages.find((v) => v.id === Number(formData.village));
+      const villageObj = villages.find(
+        (v) => v.id === Number(formData.village),
+      );
       const villageName = villageObj?.name || formData.village || "-";
       const zoneIdx = Number(formData.zone);
-      const zoneName = !isNaN(zoneIdx) && zones[zoneIdx] ? zones[zoneIdx] : (formData.zone || "-");
+      const zoneName =
+        !isNaN(zoneIdx) && zones[zoneIdx]
+          ? zones[zoneIdx]
+          : formData.zone || "-";
 
       // Masking ข้อมูลส่วนตัว
       const cleanId = String(formData.idCard || "").replace(/[^0-9]/g, "");
@@ -58,18 +63,19 @@ export async function registerMember(formData, idToken) {
         cleanId.length === 13
           ? `${cleanId.slice(0, 1)}-${cleanId.slice(1, 5)}-XXXXX-${cleanId.slice(10, 12)}-${cleanId.slice(12)}`
           : cleanId
-          ? `${cleanId.slice(0, 4)}XXXXX${cleanId.slice(-2)}`
-          : "-";
+            ? `${cleanId.slice(0, 4)}XXXXX${cleanId.slice(-2)}`
+            : "-";
 
       const cleanPhone = String(formData.phone || "").replace(/[^0-9]/g, "");
       const maskedPhone =
         cleanPhone.length === 10
           ? `${cleanPhone.slice(0, 3)}-XXX-${cleanPhone.slice(6)}`
           : cleanPhone.length === 9
-          ? `${cleanPhone.slice(0, 2)}-XXX-${cleanPhone.slice(5)}`
-          : formData.phone || "-";
+            ? `${cleanPhone.slice(0, 2)}-XXX-${cleanPhone.slice(5)}`
+            : formData.phone || "-";
 
-      const fullName = `${formData.firstName || ""} ${formData.lastName || ""}`.trim();
+      const fullName =
+        `${formData.firstName || ""} ${formData.lastName || ""}`.trim();
       const zoneDisplay =
         zoneName && zoneName !== "-"
           ? String(zoneName).startsWith("โซน")
@@ -85,14 +91,12 @@ export async function registerMember(formData, idToken) {
 
       // ข้อความสรุปข้อมูลลงทะเบียนจัดรูปแบบสวยงาม
       const summaryText = [
-        "🎉 ลงทะเบียนสมาชิกสำเร็จ",
-        "━━━━━━━━━━━━━━━━━━",
+        "🎉 ลงทะเบียนสมาชิกสำเร็จ\n",
         `👤 ชื่อ-นามสกุล: คุณ${fullName || "สมาชิก"}`,
         `🪪 เลขบัตร ปชช.: ${maskedId}`,
         `📱 เบอร์โทรศัพท์: ${maskedPhone}`,
         `📍 หมู่บ้าน: ${villageName}`,
-        addressDisplay ? `🏡 ที่อยู่: ${addressDisplay}` : "",
-        "━━━━━━━━━━━━━━━━━━",
+        addressDisplay ? `🏡 ที่อยู่: ${addressDisplay}\n\n` : "",
         "💧 บัญชีของคุณพร้อมใช้งานแล้วค่ะ",
         "แตะเลือกทำรายการผ่านปุ่มเมนูด้านล่างได้เลยนะคะ ✨",
       ]
@@ -100,44 +104,73 @@ export async function registerMember(formData, idToken) {
         .join("\n");
 
       // Quick Reply ปุ่มลัดสำหรับเลือกทำรายการ
-      const quickReply = {
-        items: [
-          {
-            type: "action",
-            action: {
-              type: "message",
-              label: "เช็คค่าน้ำ 💧",
-              text: "เช็คค่าน้ำ",
-            },
-          },
-          {
-            type: "action",
-            action: {
-              type: "message",
-              label: "ประวัติการใช้น้ำ 📊",
-              text: "ประวัติ",
-            },
-          },
-          {
-            type: "action",
-            action: {
-              type: "message",
-              label: "แจ้งปัญหา 🛠️",
-              text: "แจ้งปัญหา",
-            },
-          },
-        ],
-      };
 
       await liff.sendMessages([
         {
           type: "text",
           text: summaryText,
-          quickReply,
+          quickReply: {
+            // items: [
+            //   {
+            //     type: "action",
+            //     action: {
+            //       type: "message",
+            //       label: "เช็คค่าน้ำ 💧",
+            //       text: "เช็คค่าน้ำ",
+            //     },
+            //   },
+            //   {
+            //     type: "action",
+            //     action: {
+            //       type: "message",
+            //       label: "ประวัติการใช้น้ำ 📊",
+            //       text: "ประวัติ",
+            //     },
+            //   },
+            //   {
+            //     type: "action",
+            //     action: {
+            //       type: "message",
+            //       label: "แจ้งปัญหา 🛠️",
+            //       text: "แจ้งปัญหา",
+            //     },
+            //   },
+            // ],
+
+            items: [
+              {
+                type: "action", // 3
+                imageUrl: "https://example.com/sushi.png",
+                action: {
+                  type: "message",
+                  label: "Sushi",
+                  text: "Sushi",
+                },
+              },
+              {
+                type: "action",
+                imageUrl: "https://example.com/tempura.png",
+                action: {
+                  type: "message",
+                  label: "Tempura",
+                  text: "Tempura",
+                },
+              },
+              {
+                type: "action", // 4
+                action: {
+                  type: "location",
+                  label: "Send location",
+                },
+              },
+            ],
+          },
         },
       ]);
 
-      console.log("🎉 [LIFF] ส่งสรุปข้อมูลลงทะเบียนพร้อม Quick Reply ไปยังห้องแชทแล้ว");
+      console.log(
+        "🎉 [LIFF] ส่งสรุปข้อมูลลงทะเบียนพร้อม Quick Reply ไปยังห้องแชทแล้ว",
+      );
     } else {
       console.warn(
         "⚠️ ไม่สามารถส่งข้อความได้เนื่องจากไม่ได้เปิดใช้งานบน LINE Client หรือไม่รองรับ sendMessages (contextType:",
