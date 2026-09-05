@@ -93,12 +93,44 @@ app
     logger.debug(`${req.method} ${req.url}`);
     next();
   })
+  .use((req, _, next) => {
+    // ปรับปรุง URL ในกรณีรันบน Serverless Proxy (เช่น Vercel rewrite เป็น /server.js)
+    if (req.url.startsWith("/server.js")) {
+      const original =
+        req.headers["x-forwarded-uri"] ||
+        req.headers["x-matched-path"] ||
+        req.headers["x-original-url"] ||
+        req.headers["x-rewrite-url"] ||
+        "";
+      if (original) {
+        req.url = original;
+      } else {
+        req.url = req.url.replace(/^\/server\.js/, "") || "/";
+      }
+    }
+    next();
+  })
   .use(limiter);
 
 // =================================================================================
 // เรียกใช้ routes ทั้งหมดจาก src/app.js
 import routes from "./src/app.js";
 import { prisma } from "./src/lib/prisma.js";
+
+// Root endpoint สำหรับตรวจสอบสถานะ API
+app.get("/", (_, res) => {
+  res.status(200).json({
+    name: "PANNAM API",
+    status: "online",
+    message: "ยินดีต้อนรับสู่ระบบปันน้ำ API 💧",
+    endpoints: {
+      health: "/health",
+      cowSay: "/cow-say",
+      register: "POST /api/member/register",
+      webhooks: "POST /api/webhooks",
+    },
+  });
+});
 
 app.use(routes);
 
@@ -132,9 +164,6 @@ app.get("/health", async (req, res) => {
   }
 });
 
-// Use error middleware
-app.use(errorMiddleware);
-
 // ทดสอบ API ด้วย cow say
 app.get("/cow-say", (_, res) => {
   const cowMessage = say.say({
@@ -145,9 +174,16 @@ app.get("/cow-say", (_, res) => {
   res.type("text").send(cowMessage);
 });
 
+// Use error middleware
+app.use(errorMiddleware);
+
 // จัดการเส้นทางที่ไม่พบด้วยการส่ง 404
-app.use((_, res) => {
-  res.status(404).json({ message: "ไม่พบเส้นทางที่ร้องขอ" });
+app.use((req, res) => {
+  res.status(404).json({
+    message: "ไม่พบเส้นทางที่ร้องขอ",
+    method: req.method,
+    path: req.url,
+  });
 });
 
 // =================================================================================
