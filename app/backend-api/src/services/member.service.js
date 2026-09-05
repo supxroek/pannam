@@ -181,11 +181,9 @@ export async function registerMember(data) {
           phoneNumber: personal.phoneNumber || null,
         },
         village: {
-          id: village.id,
           address: village.address,
         },
         property: {
-          id: address.village,
           houseNumber: address.houseNumber,
           zone: address.zone,
         },
