@@ -49,144 +49,144 @@ export async function registerMember(data) {
         throw error;
       }
 
-      // // 4. บันทึกข้อมูลผู้ใช้ใหม่ลงในตาราง users
-      // const newUser = await tx.user.create({
-      //   data: {
-      //     lineUserId: line.userId,
-      //     lineProfileUrl: line.pictureUrl || null,
-      //     fullName: personal.fullName,
-      //     birthdate: personal.birthdate || null,
-      //     nationalId: personal.nationalId || null,
-      //     phoneNumber: personal.phoneNumber || null,
-      //     isGlobalAdmin: false,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //   },
-      // });
-
-      // // 5. บันทึกสิทธิ์ผู้ใช้กับหมู่บ้านในตาราง user_villages (Role: RESIDENT, Status: ACTIVE)
-      // const userVillage = await tx.userVillage.create({
-      //   data: {
-      //     userId: newUser.id,
-      //     villageId: village.id,
-      //     role: "RESIDENT",
-      //     status: "ACTIVE",
-      //     createdAt: new Date(),
-      //   },
-      // });
-
-      // // 6. จัดการข้อมูลบ้านเลขที่ในตาราง properties
-      // // เนื่องจากมี unique([village_id, house_number]) จึงใช้ upsert เพื่อรองรับทั้งบ้านที่มีอยู่เดิมและบ้านใหม่
-      // const property = await tx.property.upsert({
-      //   where: {
-      //     villageId_houseNumber: {
-      //       villageId: village.id,
-      //       houseNumber: address.houseNumber,
-      //     },
-      //   },
-      //   update: {
-      //     ...(address.zone ? { zone: address.zone } : {}),
-      //     updatedAt: new Date(),
-      //   },
-      //   create: {
-      //     villageId: village.id,
-      //     houseNumber: address.houseNumber,
-      //     zone: address.zone || null,
-      //     status: "ACTIVE",
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //   },
-      // });
-
-      // // 7. ผูกสิทธิ์คนเข้ากับบ้านเลขที่ในตาราง user_properties
-      // const userProperty = await tx.userProperty.upsert({
-      //   where: {
-      //     userId_propertyId: {
-      //       userId: newUser.id,
-      //       propertyId: property.id,
-      //     },
-      //   },
-      //   update: {
-      //     updatedAt: new Date(),
-      //   },
-      //   create: {
-      //     userId: newUser.id,
-      //     propertyId: property.id,
-      //     createdAt: new Date(),
-      //     updatedAt: new Date(),
-      //   },
-      // });
-
-      // // 8. บันทึกประวัติการสมัครสมาชิกลงในตาราง audit_logs (ถ้ามีตารางรองรับ)
-      // try {
-      //   await tx.auditLog.create({
-      //     data: {
-      //       villageId: village.id,
-      //       userId: newUser.id,
-      //       action: "REGISTER",
-      //       tableName: "users",
-      //       recordId: newUser.id,
-      //       newData: {
-      //         userId: newUser.id,
-      //         lineUserId: newUser.lineUserId,
-      //         fullName: newUser.fullName,
-      //         propertyId: property.id,
-      //         houseNumber: property.houseNumber,
-      //         zone: property.zone,
-      //         role: userVillage.role,
-      //       },
-      //       createdAt: new Date(),
-      //     },
-      //   });
-      // } catch (logError) {
-      //   // Audit log ล้มเหลวไม่ทำให้ transaction หลักเสีย
-      //   console.warn("Audit log creation skipped:", logError.message);
-      // }
-
-      return {
-        // user: {
-        //   id: newUser.id,
-        //   lineUserId: newUser.lineUserId,
-        //   displayName: line.displayName,
-        //   pictureUrl: newUser.lineProfileUrl,
-        //   fullName: newUser.fullName,
-        //   birthdate: newUser.birthdate,
-        //   nationalId: newUser.nationalId,
-        //   phoneNumber: newUser.phoneNumber,
-        // },
-        // village: {
-        //   id: village.id,
-        //   address: village.address,
-        // },
-        // property: {
-        //   id: property.id,
-        //   houseNumber: property.houseNumber,
-        //   zone: property.zone,
-        //   status: property.status,
-        // },
-        // membership: {
-        //   role: userVillage.role,
-        //   status: userVillage.status,
-        // },
-
-        
-        // ใช้สำหรับทดสอบ
-        user: {
+      // 4. บันทึกข้อมูลผู้ใช้ใหม่ลงในตาราง users
+      const newUser = await tx.user.create({
+        data: {
           lineUserId: line.userId,
-          displayName: line.displayName,
-          pictureUrl: line.pictureUrl || null,
+          lineProfileUrl: line.pictureUrl || null,
           fullName: personal.fullName,
           birthdate: personal.birthdate || null,
           nationalId: personal.nationalId || null,
           phoneNumber: personal.phoneNumber || null,
+          isGlobalAdmin: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+
+      // 5. บันทึกสิทธิ์ผู้ใช้กับหมู่บ้านในตาราง user_villages (Role: RESIDENT, Status: ACTIVE)
+      const userVillage = await tx.userVillage.create({
+        data: {
+          userId: newUser.id,
+          villageId: village.id,
+          role: "RESIDENT",
+          status: "ACTIVE",
+          createdAt: new Date(),
+        },
+      });
+
+      // 6. จัดการข้อมูลบ้านเลขที่ในตาราง properties
+      // เนื่องจากมี unique([village_id, house_number]) จึงใช้ upsert เพื่อรองรับทั้งบ้านที่มีอยู่เดิมและบ้านใหม่
+      const property = await tx.property.upsert({
+        where: {
+          villageId_houseNumber: {
+            villageId: village.id,
+            houseNumber: address.houseNumber,
+          },
+        },
+        update: {
+          ...(address.zone ? { zone: address.zone } : {}),
+          updatedAt: new Date(),
+        },
+        create: {
+          villageId: village.id,
+          houseNumber: address.houseNumber,
+          zone: address.zone || null,
+          status: "ACTIVE",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+
+      // 7. ผูกสิทธิ์คนเข้ากับบ้านเลขที่ในตาราง user_properties
+      const userProperty = await tx.userProperty.upsert({
+        where: {
+          userId_propertyId: {
+            userId: newUser.id,
+            propertyId: property.id,
+          },
+        },
+        update: {
+          updatedAt: new Date(),
+        },
+        create: {
+          userId: newUser.id,
+          propertyId: property.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+
+      // 8. บันทึกประวัติการสมัครสมาชิกลงในตาราง audit_logs (ถ้ามีตารางรองรับ)
+      try {
+        await tx.auditLog.create({
+          data: {
+            villageId: village.id,
+            userId: newUser.id,
+            action: "REGISTER",
+            tableName: "users",
+            recordId: newUser.id,
+            newData: {
+              userId: newUser.id,
+              lineUserId: newUser.lineUserId,
+              fullName: newUser.fullName,
+              propertyId: property.id,
+              houseNumber: property.houseNumber,
+              zone: property.zone,
+              role: userVillage.role,
+            },
+            createdAt: new Date(),
+          },
+        });
+      } catch (logError) {
+        // Audit log ล้มเหลวไม่ทำให้ transaction หลักเสีย
+        console.warn("Audit log creation skipped:", logError.message);
+      }
+
+      return {
+        user: {
+          id: newUser.id,
+          lineUserId: newUser.lineUserId,
+          displayName: line.displayName,
+          pictureUrl: newUser.lineProfileUrl,
+          fullName: newUser.fullName,
+          birthdate: newUser.birthdate,
+          nationalId: newUser.nationalId,
+          phoneNumber: newUser.phoneNumber,
         },
         village: {
+          id: village.id,
           address: village.address,
         },
         property: {
-          houseNumber: address.houseNumber,
-          zone: address.zone,
+          id: property.id,
+          houseNumber: property.houseNumber,
+          zone: property.zone,
+          status: property.status,
         },
+        membership: {
+          role: userVillage.role,
+          status: userVillage.status,
+        },
+
+        
+        // // ใช้สำหรับทดสอบ
+        // user: {
+        //   lineUserId: line.userId,
+        //   displayName: line.displayName,
+        //   pictureUrl: line.pictureUrl || null,
+        //   fullName: personal.fullName,
+        //   birthdate: personal.birthdate || null,
+        //   nationalId: personal.nationalId || null,
+        //   phoneNumber: personal.phoneNumber || null,
+        // },
+        // village: {
+        //   address: village.address,
+        // },
+        // property: {
+        //   houseNumber: address.houseNumber,
+        //   zone: address.zone,
+        // },
       };
     });
 
