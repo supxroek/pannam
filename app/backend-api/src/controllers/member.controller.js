@@ -93,6 +93,8 @@ export async function handleRegister(req, res, next) {
     // 3. ส่งต่อให้ service จัดการบันทึกข้อมูลลงฐานข้อมูลผ่าน Transaction
     const result = await registerMember(registrationData);
 
+    console.log("🎉 [MemberController] สมัครสมาชิกสำเร็จ", result);
+
     return res.status(201).json({
       success: true,
       message: "สมัครสมาชิกเรียบร้อยแล้ว",

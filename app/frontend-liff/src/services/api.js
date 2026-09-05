@@ -1,6 +1,7 @@
-// src/services/api.js
-
 import liff from "@line/liff";
+import confirmRegisterFlex from "../templates/flex/confirmRegister.flex.js";
+import { villages, zones } from "../constants/registerData.js";
+import { LINE_LIFF_ID_REGISTER } from "../constants/line-liff.js";
 
 /**
  * กำหนด Base URL ของ API Backend
@@ -35,8 +36,6 @@ export async function registerMember(formData, idToken) {
 
   const data = await response.json().catch(() => ({}));
 
-  console.log("🎉 [LIFF] สมัครสมาชิกสำเร็จ", data);
-
   if (!response.ok) {
     const errorMessage =
       data.message ||
@@ -47,22 +46,36 @@ export async function registerMember(formData, idToken) {
 
   try {
     // เช็คว่าแอปถูกเปิดในระบบแอปพลิเคชัน LINE (Chat room) และรองรับ sendMessages หรือไม่
-    if (liff.getContext().type !== "none" && liff.getContext().type !== "external") {
-      await liff.sendMessages([
-        {
-          type: "text",
-          text: "ลงทะเบียนเรียบร้อย 🎉",
-        },
-      ]);
+    const contextType = liff.getContext()?.type;
+    if (contextType && contextType !== "none" && contextType !== "external") {
+      // แปลงชื่อหมู่บ้าน และโซน
+      const villageObj = villages.find((v) => v.id === Number(formData.village));
+      const villageName = villageObj?.name || formData.village || "-";
+      const zoneIdx = Number(formData.zone);
+      const zoneName = !isNaN(zoneIdx) && zones[zoneIdx] ? zones[zoneIdx] : (formData.zone || "-");
 
-      console.log("🎉 [LIFF] ส่งข้อความแจ้งลงทะเบียนเรียบร้อยไปยังห้องแชทแล้ว");
+      const confirmMessage = confirmRegisterFlex({
+        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+        nationalId: formData.idCard,
+        phone: formData.phone,
+        villageName,
+        houseNumber: formData.houseNumber,
+        zone: zoneName,
+        liffUrl: `https://liff.line.me/${LINE_LIFF_ID_REGISTER}`,
+      });
+
+      await liff.sendMessages([confirmMessage]);
+
+      console.log("🎉 [LIFF] ส่ง Flex Message ยืนยันข้อมูลไปยังห้องแชทแล้ว");
     } else {
       console.warn(
-        "⚠️ ไม่สามารถส่งข้อความได้เนื่องจากไม่ได้เปิดใช้งานบน LINE Client หรือไม่รองรับ sendMessages",
+        "⚠️ ไม่สามารถส่งข้อความได้เนื่องจากไม่ได้เปิดใช้งานบน LINE Client หรือไม่รองรับ sendMessages (contextType:",
+        contextType,
+        ")",
       );
     }
   } catch (error) {
-    console.warn("⚠️ [LIFF SendMessage Notice]:", error?.message || error);
+    console.error("💥 [LIFF SendMessage Error]:", error);
     // ไม่ throw error เพื่อให้หน้าเว็บเปลี่ยนไปแสดงผลหน้า SuccessScreen ได้ตามปกติ
   }
 

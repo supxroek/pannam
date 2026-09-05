@@ -4,6 +4,8 @@ import lineProvider from "../providers/line.provider.js";
 import intentMatcher from "./intent-matcher.js";
 import followmeFlex from "../templates/flex/follow.flex.js";
 import registerFlex from "../templates/flex/register.flex.js";
+import welcomeFlex from "../templates/flex/welcome.flex.js";
+import { prisma } from "../lib/prisma.js";
 
 // ============================================================
 // ลงทะเบียน Intents
@@ -191,6 +193,45 @@ intentMatcher.register("GOODBYE", {
   },
 });
 
+// ต้อนรับสมาชิกใหม่เมื่อลงทะเบียนสำเร็จ
+intentMatcher.register("REGISTER_SUCCESS", {
+  description: "ต้อนรับสมาชิกใหม่เมื่อลงทะเบียนสำเร็จ",
+  keywords: [
+    "ลงทะเบียนเรียบร้อย",
+    "สมัครสมาชิกสำเร็จ",
+    "ลงทะเบียนสำเร็จ",
+    "สมัครเรียบร้อย",
+  ],
+  optionalKeywords: ["แล้ว", "ค่ะ", "ครับ"],
+  patterns: [
+    "ลงทะเบียน.*(เรียบร้อย|สำเร็จ)",
+    "สมัคร.*(เรียบร้อย|สำเร็จ)",
+  ],
+  weight: 2.0,
+  execute: async (event) => {
+    const userId = event.source?.userId;
+    let displayName = "คุณสมาชิก";
+
+    if (userId) {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { lineUserId: userId },
+        });
+        if (user?.fullName) {
+          displayName = user.fullName;
+        }
+      } catch (err) {
+        console.warn("Could not fetch user name for welcome flex:", err.message);
+      }
+    }
+
+    await lineProvider.replyOrPush(
+      event,
+      welcomeFlex({ name: displayName }),
+    );
+  },
+});
+
 // 🔧 Fallback intent (ต้อง register ท้ายสุด)
 intentMatcher.register("UNKNOWN_FALLBACK", {
   description: "Fallback เมื่อไม่ match intent ใดเลย",
@@ -216,11 +257,22 @@ class EventsHandler {
     if (source?.userId) {
       await lineProvider.showLoadingAnimation(source.userId);
 
-      // ตรวจสอบสมาชิก -> หากไม่ใช่สมาชิก ให้ส่งข้อความแจ้งเตือนเสมอ
-      const isMember = await lineProvider.isMember(source.userId);
-      if (!isMember) {
-        await lineProvider.replyOrPush(event, registerFlex());
-        return; // จบการทำงาน
+      // ตรวจสอบว่าเป็นข้อความแจ้งเตือนการลงทะเบียนสำเร็จหรือไม่
+      const text = message?.type === "text" ? message.text.trim() : "";
+      const isRegisterMessage = [
+        "ลงทะเบียนเรียบร้อย",
+        "สมัครสมาชิกสำเร็จ",
+        "ลงทะเบียนสำเร็จ",
+        "สมัครเรียบร้อย",
+      ].some((k) => text.includes(k));
+
+      // ตรวจสอบสมาชิก -> หากไม่ใช่สมาชิก และไม่ใช่ข้อความแจ้งลงทะเบียน ให้ส่งข้อความแจ้งเตือนเสมอ
+      if (!isRegisterMessage) {
+        const isMember = await lineProvider.isMember(source.userId);
+        if (!isMember) {
+          await lineProvider.replyOrPush(event, registerFlex());
+          return; // จบการทำงาน
+        }
       }
     }
 
