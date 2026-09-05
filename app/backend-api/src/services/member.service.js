@@ -185,7 +185,7 @@ export async function registerMember(data) {
           address: village.address,
         },
         property: {
-          id: address.id,
+          id: address.village,
           houseNumber: address.houseNumber,
           zone: address.zone,
         },
