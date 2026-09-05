@@ -103,41 +103,10 @@ export async function registerMember(formData, idToken) {
         .filter(Boolean)
         .join("\n");
 
-      // Quick Reply ปุ่มลัดสำหรับเลือกทำรายการ
-      const quickReply = {
-        items: [
-          {
-            type: "action",
-            action: {
-              type: "message",
-              label: "เช็คค่าน้ำ 💧",
-              text: "เช็คค่าน้ำ",
-            },
-          },
-          {
-            type: "action",
-            action: {
-              type: "message",
-              label: "ประวัติการใช้น้ำ 📊",
-              text: "ประวัติ",
-            },
-          },
-          {
-            type: "action",
-            action: {
-              type: "message",
-              label: "แจ้งปัญหา 🛠️",
-              text: "แจ้งปัญหา",
-            },
-          },
-        ],
-      };
-
       await liff.sendMessages([
         {
           type: "text",
           text: summaryText,
-          quickReply,
         },
       ]);
 
