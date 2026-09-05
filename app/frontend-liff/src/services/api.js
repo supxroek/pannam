@@ -1,7 +1,5 @@
 import liff from "@line/liff";
-import confirmRegisterFlex from "../templates/flex/confirmRegister.flex.js";
 import { villages, zones } from "../constants/registerData.js";
-import { LINE_LIFF_ID_REGISTER } from "../constants/line-liff.js";
 
 /**
  * กำหนด Base URL ของ API Backend
@@ -54,19 +52,92 @@ export async function registerMember(formData, idToken) {
       const zoneIdx = Number(formData.zone);
       const zoneName = !isNaN(zoneIdx) && zones[zoneIdx] ? zones[zoneIdx] : (formData.zone || "-");
 
-      const confirmMessage = confirmRegisterFlex({
-        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
-        nationalId: formData.idCard,
-        phone: formData.phone,
-        villageName,
-        houseNumber: formData.houseNumber,
-        zone: zoneName,
-        liffUrl: `https://liff.line.me/${LINE_LIFF_ID_REGISTER}`,
-      });
+      // Masking ข้อมูลส่วนตัว
+      const cleanId = String(formData.idCard || "").replace(/[^0-9]/g, "");
+      const maskedId =
+        cleanId.length === 13
+          ? `${cleanId.slice(0, 1)}-${cleanId.slice(1, 5)}-XXXXX-${cleanId.slice(10, 12)}-${cleanId.slice(12)}`
+          : cleanId
+          ? `${cleanId.slice(0, 4)}XXXXX${cleanId.slice(-2)}`
+          : "-";
 
-      await liff.sendMessages([confirmMessage]);
+      const cleanPhone = String(formData.phone || "").replace(/[^0-9]/g, "");
+      const maskedPhone =
+        cleanPhone.length === 10
+          ? `${cleanPhone.slice(0, 3)}-XXX-${cleanPhone.slice(6)}`
+          : cleanPhone.length === 9
+          ? `${cleanPhone.slice(0, 2)}-XXX-${cleanPhone.slice(5)}`
+          : formData.phone || "-";
 
-      console.log("🎉 [LIFF] ส่ง Flex Message ยืนยันข้อมูลไปยังห้องแชทแล้ว");
+      const fullName = `${formData.firstName || ""} ${formData.lastName || ""}`.trim();
+      const zoneDisplay =
+        zoneName && zoneName !== "-"
+          ? String(zoneName).startsWith("โซน")
+            ? zoneName
+            : `โซน ${zoneName}`
+          : "";
+      const addressDisplay = [
+        formData.houseNumber ? `บ้านเลขที่ ${formData.houseNumber}` : "",
+        zoneDisplay,
+      ]
+        .filter(Boolean)
+        .join(" ");
+
+      // ข้อความสรุปข้อมูลลงทะเบียนจัดรูปแบบสวยงาม
+      const summaryText = [
+        "🎉 ลงทะเบียนสมาชิกสำเร็จ",
+        "━━━━━━━━━━━━━━━━━━",
+        `👤 ชื่อ-นามสกุล: คุณ${fullName || "สมาชิก"}`,
+        `🪪 เลขบัตร ปชช.: ${maskedId}`,
+        `📱 เบอร์โทรศัพท์: ${maskedPhone}`,
+        `📍 หมู่บ้าน: ${villageName}`,
+        addressDisplay ? `🏡 ที่อยู่: ${addressDisplay}` : "",
+        "━━━━━━━━━━━━━━━━━━",
+        "💧 บัญชีของคุณพร้อมใช้งานแล้วค่ะ",
+        "แตะเลือกทำรายการผ่านปุ่มเมนูด้านล่างได้เลยนะคะ ✨",
+      ]
+        .filter(Boolean)
+        .join("\n");
+
+      // Quick Reply ปุ่มลัดสำหรับเลือกทำรายการ
+      const quickReply = {
+        items: [
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "เช็คค่าน้ำ 💧",
+              text: "เช็คค่าน้ำ",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "ประวัติการใช้น้ำ 📊",
+              text: "ประวัติ",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "แจ้งปัญหา 🛠️",
+              text: "แจ้งปัญหา",
+            },
+          },
+        ],
+      };
+
+      await liff.sendMessages([
+        {
+          type: "text",
+          text: summaryText,
+          quickReply,
+        },
+      ]);
+
+      console.log("🎉 [LIFF] ส่งสรุปข้อมูลลงทะเบียนพร้อม Quick Reply ไปยังห้องแชทแล้ว");
     } else {
       console.warn(
         "⚠️ ไม่สามารถส่งข้อความได้เนื่องจากไม่ได้เปิดใช้งานบน LINE Client หรือไม่รองรับ sendMessages (contextType:",
