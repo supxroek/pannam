@@ -50,6 +50,12 @@ export async function registerMember(formData, idToken) {
 
     // เช็คว่าแอปถูกเปิดในระบบแอปพลิเคชัน LINE (Chat room) หรือไม่
     if (liff.isInClient() && liff.isApiAvailable("sendMessages")) {
+      await liff.sendMessages([
+        {
+          type: "text",
+          text: "Hello, World!",
+        },
+      ]);
       await liff.sendMessages([welcomeFlex({ name: fullName })]);
 
       console.log("🎉 [LIFF] ส่ง Flex Message ต้อนรับผ่านห้องแชทสำเร็จ");
