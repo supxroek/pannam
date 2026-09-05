@@ -46,11 +46,9 @@ export async function registerMember(formData, idToken) {
   }
 
   try {
-    const activeLiff = window.liff || liff;
-
     // เช็คว่าแอปถูกเปิดในระบบแอปพลิเคชัน LINE (Chat room) และรองรับ sendMessages หรือไม่
-    if (activeLiff && activeLiff.isInClient() && activeLiff.isApiAvailable("sendMessages")) {
-      await activeLiff.sendMessages([
+    if (liff.getContext().type !== "none" && liff.getContext().type !== "external") {
+      await liff.sendMessages([
         {
           type: "text",
           text: "ลงทะเบียนเรียบร้อย 🎉",
