@@ -54,9 +54,15 @@ export async function registerMember(formData, idToken) {
 
     // เช็คว่าแอปถูกเปิดในระบบแอปพลิเคชัน LINE (Chat room) หรือไม่
     if (activeLiff.isInClient() && activeLiff.isApiAvailable("sendMessages")) {
-      await activeLiff.sendMessages([welcomeFlex({ name: user?.fullName || "คุณสมาชิก" })]);
+      await activeLiff.sendMessages([
+        welcomeFlex({ name: user?.fullName || "คุณสมาชิก" }),
+      ]);
 
       console.log("🎉 [LIFF] ส่ง Flex Message ต้อนรับผ่านห้องแชทสำเร็จ");
+
+      setTimeout(() => {
+        activeLiff.closeWindow();
+      }, 8000);
     } else {
       console.warn(
         "⚠️ ไม่สามารถส่งข้อความได้เนื่องจากไม่ได้เปิดใช้งานบน LINE Client",
