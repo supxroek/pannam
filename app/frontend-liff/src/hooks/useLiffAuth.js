@@ -1,7 +1,7 @@
-// src/hooks/useLiffAuth.js
 import { useState, useEffect, useRef } from 'react';
 import liff from '@line/liff';
 import { initLiff, getLiffUserProfile, forceReLogin } from '../lib/liff';
+import { TEST_useLiffAuth } from '../constants/registerData';
 
 // ระยะเวลาตรวจสอบ token (ทุก 5 นาที)
 const TOKEN_CHECK_INTERVAL = 5 * 60 * 1000;
@@ -25,12 +25,19 @@ const TOKEN_CHECK_INTERVAL = 5 * 60 * 1000;
  * @param {string} liffId - LIFF ID ประจำหน้านั้นๆ
  */
 export function useLiffAuth(liffId) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const isMock =
+    import.meta.env.DEV && import.meta.env.VITE_USE_MOCK_AUTH === 'true';
+
+  const [user, setUser] = useState(() => (isMock ? TEST_useLiffAuth().users : null));
+  const [loading, setLoading] = useState(() => (isMock ? false : true));
   const [error, setError] = useState(null);
   const tokenCheckRef = useRef(null);
 
   useEffect(() => {
+    if (isMock) {
+      return;
+    }
+
     async function setupLiff() {
       try {
         setError(null);

@@ -85,18 +85,33 @@ export default function Register() {
   // ควบคุมการทำงานของ preloadVillages ให้ทำเพียงครั้งเดียว (ป้องกัน Infinite Loop จากการ re-render)
   const hasFetchedVillagesRef = useRef(false);
 
+  const userIdToken = user?.idToken;
+
+  // ดึง ID Token อย่างปลอดภัยโดยไม่เกิด Exception จาก LIFF SDK
+  const getSafeIdToken = useCallback(() => {
+    if (userIdToken) return userIdToken;
+    try {
+      if (typeof liff !== 'undefined' && liff.id && liff.isLoggedIn()) {
+        return liff.getIDToken();
+      }
+    } catch (e) {
+      console.warn('ไม่สามารถดึง idToken จาก liff ได้:', e);
+    }
+    return null;
+  }, [userIdToken]);
+
   // Preload ข้อมูลหมู่บ้านล่วงหน้าเมื่อผู้ใช้เข้าสู่ระบบ
   useEffect(() => {
-    // หากเคยเรียกแล้ว หรือกำลังเรียกอยู่ ให้ข้ามทันที
+    if (!user) return; // รอจนกว่าจะยืนยันตัวตนผ่าน LIFF เสร็จสิ้น
     if (hasFetchedVillagesRef.current) return;
-    hasFetchedVillagesRef.current = true;
 
     let isMounted = true;
-    const idToken = user?.idToken || liff.getIDToken();
+    const idToken = getSafeIdToken();
 
     async function preloadVillages() {
       // 1. หากไม่มี idToken ให้บันทึก error log, แจ้งเตือนผู้ใช้ทันที และหยุดทำงาน
       if (!idToken) {
+        hasFetchedVillagesRef.current = true;
         console.error('ไม่พบ LINE ID Token สำหรับดึงข้อมูลหมู่บ้าน');
         if (isMounted) {
           toast.add({
@@ -107,6 +122,8 @@ export default function Register() {
         }
         return;
       }
+
+      hasFetchedVillagesRef.current = true;
 
       try {
         setLoadingVillages(true);
@@ -145,7 +162,7 @@ export default function Register() {
     return () => {
       isMounted = false;
     };
-  }, [user?.idToken]);
+  }, [getSafeIdToken, user]);
 
   // อัปเดตข้อมูลฟอร์มและบันทึกลง sessionStorage เสมอ
   const handleChange = useCallback((field, value) => {
@@ -211,8 +228,8 @@ export default function Register() {
     try {
       setLoadingState(true);
 
-      // ดึง token ล่าสุดจาก liff หรือ user state
-      const idToken = user?.idToken || liff.getIDToken();
+      // ดึง token ล่าสุดอย่างปลอดภัย
+      const idToken = getSafeIdToken();
 
       if (!idToken) {
         const tokenErr = new Error('ไม่พบข้อมูลการเข้าสู่ระบบ LINE กรุณาลองใหม่อีกครั้ง');
@@ -417,7 +434,7 @@ export default function Register() {
                 errors={errors}
                 villages={villages}
                 loadingVillages={loadingVillages}
-                idToken={user?.idToken || liff.getIDToken()}
+                idToken={getSafeIdToken()}
               />
             )}
             {step === 4 && (
