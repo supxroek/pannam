@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import StepIndicator from '@/components/ui/StepIndicator';
 import WelcomeScreen from '@/components/register/WelcomeScreen';
 import Step1PersonalInfo from '@/components/register/Step1PersonalInfo';
@@ -14,7 +14,8 @@ import { Button } from '@/components/ui/button';
 import liff from '@line/liff';
 import { useLiffAuth } from '@/hooks/useLiffAuth';
 import { LINE_LIFF_ID_REGISTER } from '@/constants/line-liff';
-import { registerMember } from '@/services/api';
+import { registerMember, fetchVillages } from '@/services/api';
+import { parseApiError } from '@/utils/api-error';
 import { toast } from '@/components/ui/toast';
 import { validateFormStep } from '@/schemas/register.schema';
 import { forceReLogin } from '@/lib/liff';
@@ -45,6 +46,10 @@ export default function Register() {
   // const { users: user, loading, error } = TEST_useLiffAuth();
 
   const [step, setStep] = useState(0);
+
+  // ข้อมูลหมู่บ้านที่ดึงมาจาก API Backend
+  const [villages, setVillages] = useState([]);
+  const [loadingVillages, setLoadingVillages] = useState(false);
 
   // กู้คืนข้อมูลฟอร์มจาก sessionStorage (ถ้ามีร่างที่เคยกรอกไว้)
   const [formData, setFormData] = useState(() => {
@@ -77,6 +82,72 @@ export default function Register() {
   const [sessionExpiredOpen, setSessionExpiredOpen] = useState(false);
   const [userExistsOpen, setUserExistsOpen] = useState(false);
 
+  // ควบคุมการทำงานของ preloadVillages ให้ทำเพียงครั้งเดียว (ป้องกัน Infinite Loop จากการ re-render)
+  const hasFetchedVillagesRef = useRef(false);
+
+  // Preload ข้อมูลหมู่บ้านล่วงหน้าเมื่อผู้ใช้เข้าสู่ระบบ
+  useEffect(() => {
+    // หากเคยเรียกแล้ว หรือกำลังเรียกอยู่ ให้ข้ามทันที
+    if (hasFetchedVillagesRef.current) return;
+    hasFetchedVillagesRef.current = true;
+
+    let isMounted = true;
+    const idToken = user?.idToken || liff.getIDToken();
+
+    async function preloadVillages() {
+      // 1. หากไม่มี idToken ให้บันทึก error log, แจ้งเตือนผู้ใช้ทันที และหยุดทำงาน
+      if (!idToken) {
+        console.error('ไม่พบ LINE ID Token สำหรับดึงข้อมูลหมู่บ้าน');
+        setSessionExpiredOpen(true);
+        if (isMounted) {
+          toast.add({
+            title: 'ไม่พบข้อมูลการเข้าสู่ระบบ',
+            description: 'ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่อีกครั้ง',
+            type: 'error',
+          });
+        }
+        return;
+      }
+
+      try {
+        setLoadingVillages(true);
+        const list = await fetchVillages(idToken);
+        if (isMounted && list && list.length > 0) {
+          setVillages(list);
+        }
+      } catch (err) {
+        // 2. บันทึก log ความล้มเหลวด้วย console.error เพื่อตรวจสอบตอนเกิดบั๊ก
+        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลหมู่บ้านจากเซิร์ฟเวอร์:', err);
+
+        // แสดงการแจ้งเตือนทันทีว่าเกิดข้อผิดพลาด
+        if (isMounted) {
+          const apiError = parseApiError(err);
+          if (apiError.isTokenExpired || apiError.isTokenInvalid) {
+            setSessionExpiredOpen(true);
+          } else {
+            toast.add({
+              title: 'โหลดข้อมูลหมู่บ้านไม่สำเร็จ',
+              description:
+                apiError.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์',
+              type: 'error',
+            });
+          }
+        }
+      } finally {
+        // 3. สั่งปิดสถานะ Loading ในบล็อก finally อย่างปลอดภัยเพื่อป้องกัน Memory Leak
+        if (isMounted) {
+          setLoadingVillages(false);
+        }
+      }
+    }
+
+    preloadVillages();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.idToken]);
+
   // อัปเดตข้อมูลฟอร์มและบันทึกลง sessionStorage เสมอ
   const handleChange = useCallback((field, value) => {
     setFormData((prev) => {
@@ -85,7 +156,7 @@ export default function Register() {
         sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(updated));
       } catch (error) {
         // ignore storage quota errors
-        console.error("Failed to save draft:", error);
+        console.warn('เกิดข้อผิดพลาดในการบันทึกข้อมูล:', error);
       }
       return updated;
     });
@@ -116,7 +187,7 @@ export default function Register() {
     setStep(targetStep + 1);
   };
 
-  // ส่งข้อมูลสมัครสมาชิกไปยัง Backend พร้อมจัดการ Error Responses
+  // ส่งข้อมูลสมัครสมาชิกไปยัง Backend พร้อมจัดการ Error Responses ด้วย ApiError
   const handleSubmit = async () => {
     // 1. Final Validation ด้วย Zod ทุกขั้นตอน
     const { isValid, errors: fullErrors } = validateFormStep(99, formData);
@@ -150,40 +221,40 @@ export default function Register() {
         throw tokenErr;
       }
 
-      await registerMember(formData, idToken);
+      await registerMember(formData, idToken, villages);
 
       // สำเร็จ: ล้าง draft ออกจาก sessionStorage และไปหน้าขอบคุณ
       try {
         sessionStorage.removeItem(DRAFT_STORAGE_KEY);
       } catch (error) {
-        console.error('Failed to remove draft:', error);
+        // ignore
+        console.warn('เกิดข้อผิดพลาดในการล้างข้อมูล draft:', error);
       }
       setStep(5);
     } catch (err) {
       console.error('Registration failed:', err);
 
-      // จัดการ Error ตาม Code ที่ Backend ส่งกลับมา
-      const errCode = err.code;
+      const apiError = parseApiError(err);
 
-      // 1. กรณี Token หมดอายุ หรือไม่ถูกต้อง: ให้บันทึก draft และแจ้งเตือนผู้ใช้เพื่อ Login ใหม่
-      if (errCode === 'TOKEN_EXPIRED' || errCode === 'TOKEN_INVALID') {
+      // 1. กรณี Token หมดอายุ หรือไม่ถูกต้อง: บันทึก draft และแจ้งเตือนผู้ใช้เพื่อ Login ใหม่
+      if (apiError.isTokenExpired || apiError.isTokenInvalid) {
         try {
           sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(formData));
         } catch (error) {
-          console.error('Failed to save draft:', error);
+          console.warn('เกิดข้อผิดพลาดในการบันทึกข้อมูล draft:', error);
         }
         setSessionExpiredOpen(true);
         return;
       }
 
       // 2. กรณี LINE userId ซ้ำในระบบ: แสดง Modal แจ้งเตือนว่ามีบัญชีแล้ว
-      if (errCode === 'USER_ALREADY_EXISTS') {
+      if (apiError.isUserExists) {
         setUserExistsOpen(true);
         return;
       }
 
       // 3. กรณีเลขบัตร ปชช. ซ้ำในระบบ: เด้งกลับไป Step 2 พร้อมไฮไลต์แจ้งเตือนใต้ช่อง idCard
-      if (errCode === 'IDCARD_ALREADY_EXISTS') {
+      if (apiError.isIdCardExists) {
         setStep(2);
         setErrors((prev) => ({
           ...prev,
@@ -198,18 +269,18 @@ export default function Register() {
       }
 
       // 4. กรณี Validation Error จาก Backend
-      if (errCode === 'VALIDATION_ERROR' && err.errors) {
-        setErrors(err.errors);
-        if (err.errors.firstName || err.errors.lastName || err.errors.birthDay || err.errors.birthMonth || err.errors.birthYear) {
+      if (apiError.isValidationError && apiError.errors) {
+        setErrors(apiError.errors);
+        if (apiError.errors.firstName || apiError.errors.lastName || apiError.errors.birthDay || apiError.errors.birthMonth || apiError.errors.birthYear) {
           setStep(1);
-        } else if (err.errors.idCard || err.errors.phone) {
+        } else if (apiError.errors.idCard || apiError.errors.phone) {
           setStep(2);
-        } else if (err.errors.village || err.errors.houseNumber) {
+        } else if (apiError.errors.village || apiError.errors.houseNumber) {
           setStep(3);
         }
         toast.add({
           title: 'ข้อมูลไม่ถูกต้อง',
-          description: err.message || 'กรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง',
+          description: apiError.message || 'กรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง',
           type: 'error',
         });
         return;
@@ -218,7 +289,7 @@ export default function Register() {
       // ข้อผิดพลาดทั่วไปอื่นๆ
       toast.add({
         title: 'การลงทะเบียนไม่สำเร็จ',
-        description: err.message || 'เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง',
+        description: apiError.message || 'เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง',
         type: 'error',
       });
     } finally {
@@ -232,7 +303,7 @@ export default function Register() {
     try {
       forceReLogin();
     } catch (error) {
-      console.error('Failed to re-login:', error);
+      console.warn('เกิดข้อผิดพลาดในการ Login ใหม่:', error);
       window.location.reload();
     }
   };
@@ -247,7 +318,7 @@ export default function Register() {
         setStep(0);
       }
     } catch (error) {
-      console.error('Failed to close window:', error);
+      console.warn('เกิดข้อผิดพลาดในการปิดหน้าต่าง:', error);
       setStep(0);
     }
   };
@@ -345,6 +416,9 @@ export default function Register() {
                 data={formData}
                 onChange={handleChange}
                 errors={errors}
+                villages={villages}
+                loadingVillages={loadingVillages}
+                idToken={user?.idToken || liff.getIDToken()}
               />
             )}
             {step === 4 && (

@@ -1,4 +1,4 @@
-import createHttpError from "http-errors";
+import AppError from "../utils/app-error.js";
 import dayjs from "../utils/dayjs.js";
 import { registerMember } from "../services/member.service.js";
 import { registerSchema } from "../validations/register.schema.js";
@@ -24,10 +24,7 @@ export async function handleRegister(req, res, next) {
       });
 
       const firstErrorMsg = Object.values(fieldErrors)[0] || "ข้อมูลที่ส่งมาไม่ถูกต้อง";
-      const validationError = createHttpError(400, firstErrorMsg);
-      validationError.code = "VALIDATION_ERROR";
-      validationError.errors = fieldErrors;
-      return next(validationError);
+      return next(AppError.validation(fieldErrors, firstErrorMsg));
     }
 
     const {
@@ -105,20 +102,13 @@ export async function handleRegister(req, res, next) {
       error.code === "IDCARD_ALREADY_EXISTS"
     ) {
       const target = error.meta?.target;
-      let code = error.code || "CONFLICT";
-      let message = error.message;
-
-      if (target?.includes("line_user_id") || code === "USER_ALREADY_EXISTS") {
-        code = "USER_ALREADY_EXISTS";
-        message = "บัญชี LINE นี้ได้ทำการลงทะเบียนในระบบแล้ว";
-      } else if (target?.includes("national_id") || code === "IDCARD_ALREADY_EXISTS") {
-        code = "IDCARD_ALREADY_EXISTS";
-        message = "เลขประจำตัวประชาชนนี้ถูกลงทะเบียนในระบบแล้ว";
+      if (target?.includes("line_user_id") || error.code === "USER_ALREADY_EXISTS") {
+        return next(AppError.userAlreadyExists());
       }
-
-      const conflictError = createHttpError(409, message);
-      conflictError.code = code;
-      return next(conflictError);
+      if (target?.includes("national_id") || error.code === "IDCARD_ALREADY_EXISTS") {
+        return next(AppError.idCardAlreadyExists());
+      }
+      return next(AppError.conflict(error.message));
     }
 
     next(error);

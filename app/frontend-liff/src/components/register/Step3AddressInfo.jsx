@@ -1,5 +1,7 @@
-import { useState, useMemo } from "react";
-import { villages, zones, existingHouses } from "../../constants/registerData";
+import { useState, useMemo, useEffect } from "react";
+import { villages as defaultVillages, zones } from "../../constants/registerData";
+import { fetchVillageProperties } from "@/services/api";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Field,
   FieldGroup,
@@ -29,39 +31,89 @@ import {
   X,
   Info,
   RotateCcw,
+  Loader2,
 } from "lucide-react";
 
-export default function Step3AddressInfo({ data, onChange, errors }) {
+export default function Step3AddressInfo({
+  data,
+  onChange,
+  errors,
+  villages = [],
+  loadingVillages = false,
+  idToken = "",
+}) {
   // โหมดการเลือกบ้าน: 'search' (ค้นหาในระบบ) หรือ 'create' (เพิ่มบ้านใหม่)
   const [mode, setMode] = useState(data.isNewHouse ? "create" : "search");
   const [searchQuery, setSearchQuery] = useState("");
 
-  const selectedVillageName = villages.find((v) => v.id === data.village)?.name;
+  // รายการบ้านเลขที่ที่ดึงมาจาก API สำหรับหมู่บ้านที่เลือก
+  const [properties, setProperties] = useState([]);
+  const [loadingProperties, setLoadingProperties] = useState(false);
+
+  // ใช้รายชื่อหมู่บ้านจาก API ถ้ามี หากไม่มีให้ fallback ไปที่ค่าเริ่มต้น
+  const activeVillages = useMemo(() => {
+    if (villages && villages.length > 0) {
+      return villages;
+    }
+    return defaultVillages;
+  }, [villages]);
+
+  const selectedVillage = activeVillages.find((v) => v.id === data.village);
+  const selectedVillageName = selectedVillage?.name || selectedVillage?.address;
+
   const selectedZoneName =
     data.zone !== undefined && data.zone !== "" && data.zone !== null
-      ? zones[data.zone]
+      ? (typeof data.zone === "number" && zones[data.zone] ? zones[data.zone] : String(data.zone))
       : undefined;
 
-  // กรองบ้านเลขที่ในระบบเฉพาะของหมู่บ้านที่เลือก
-  const housesInSelectedVillage = useMemo(() => {
-    if (!data.village) return [];
-    return existingHouses.filter((h) => h.villageId === data.village);
-  }, [data.village]);
+  // ดึงรายการบ้านเลขที่จริงจาก Backend เมื่อเลือกหมู่บ้าน
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadProperties() {
+      if (!data.village || !idToken) {
+        setProperties([]);
+        return;
+      }
+
+      try {
+        setLoadingProperties(true);
+        const dataList = await fetchVillageProperties(data.village, idToken);
+        if (isMounted) {
+          setProperties(dataList || []);
+        }
+      } catch (err) {
+        console.warn("ไม่สามารถดึงข้อมูลบ้านเลขที่จากเซิร์ฟเวอร์ได้:", err);
+        if (isMounted) {
+          setProperties([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoadingProperties(false);
+        }
+      }
+    }
+
+    loadProperties();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [data.village, idToken]);
 
   // ผลลัพธ์การค้นหาบ้านเลขที่
   const filteredHouses = useMemo(() => {
-    if (!searchQuery.trim()) return housesInSelectedVillage;
+    if (!searchQuery.trim()) return properties;
     const q = searchQuery.trim().toLowerCase();
-    return housesInSelectedVillage.filter((h) =>
-      h.houseNumber.toLowerCase().includes(q),
+    return properties.filter((h) =>
+      String(h.houseNumber || "").toLowerCase().includes(q)
     );
-  }, [housesInSelectedVillage, searchQuery]);
+  }, [properties, searchQuery]);
 
   // เมื่อเปลี่ยนหมู่บ้าน เคลียร์ค่าบ้านเดิมถ้าไม่ได้อยู่ในหมู่บ้านนี้
   const handleVillageChange = (v) => {
-    const villageId = parseInt(v);
+    const villageId = parseInt(v, 10);
     onChange("village", villageId);
-    // เคลียร์บ้านเลขที่เมื่อสลับหมู่บ้าน
     onChange("houseNumber", "");
     onChange("zone", undefined);
     onChange("isNewHouse", false);
@@ -71,7 +123,7 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
   // เมื่อเลือกบ้านที่มีอยู่ในระบบ
   const handleSelectExistingHouse = (house) => {
     onChange("houseNumber", house.houseNumber);
-    onChange("zone", house.zone);
+    onChange("zone", house.zone || undefined);
     onChange("isNewHouse", false);
   };
 
@@ -117,24 +169,31 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
           <Select
             value={data.village ? String(data.village) : undefined}
             onValueChange={handleVillageChange}
+            disabled={loadingVillages}
           >
             <SelectTrigger
               className="w-full h-11! text-base"
               aria-invalid={!!errors.village || undefined}
             >
-              <SelectValue placeholder="-- เลือกหมู่บ้านของคุณ --">
+              <SelectValue
+                placeholder={
+                  loadingVillages
+                    ? "กำลังโหลดข้อมูลหมู่บ้าน..."
+                    : "-- เลือกหมู่บ้านของคุณ --"
+                }
+              >
                 {selectedVillageName}
               </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                {villages.map((v) => (
+                {activeVillages.map((v) => (
                   <SelectItem
                     key={v.id}
                     value={String(v.id)}
                     className="px-3 py-2.5 text-sm"
                   >
-                    {v.name}
+                    {v.name || v.address}
                   </SelectItem>
                 ))}
               </SelectGroup>
@@ -263,43 +322,66 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
                       )}
                     </InputGroup>
 
-                    {/* รายการผลลัพธ์บ้านในระบบ */}
-                    {filteredHouses.length > 0 ? (
+                    {/* สถานะกำลังโหลดข้อมูลบ้านเลขที่จากระบบ */}
+                    {loadingProperties ? (
+                      <div className="rounded-xl border border-slate-200 bg-white p-3 space-y-2.5 shadow-xs">
+                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                          <Loader2 className="size-3.5 animate-spin text-blue-600" />
+                          <span>กำลังดึงข้อมูลบ้านเลขที่จากระบบ...</span>
+                        </div>
+                        <Skeleton className="h-9 w-full rounded-lg" />
+                        <Skeleton className="h-9 w-full rounded-lg" />
+                        <Skeleton className="h-9 w-full rounded-lg" />
+                      </div>
+                    ) : filteredHouses.length > 0 ? (
+                      /* รายการผลลัพธ์บ้านในระบบ */
                       <div className="rounded-xl border border-slate-200 bg-white p-2 shadow-xs max-h-56 overflow-y-auto space-y-1">
                         <div className="px-2 py-1 text-[11px] font-medium text-slate-400 uppercase tracking-wider flex items-center justify-between">
                           <span>บ้านเลขที่ในระบบ ({filteredHouses.length})</span>
                           <span className="text-slate-400 text-[10px]">แตะเพื่อเลือก</span>
                         </div>
 
-                        {filteredHouses.map((house) => (
-                          <button
-                            key={house.id}
-                            type="button"
-                            onClick={() => handleSelectExistingHouse(house)}
-                            className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors hover:bg-blue-50/80 active:bg-blue-100 group cursor-pointer border border-transparent hover:border-blue-200"
-                          >
-                            <div className="flex items-center gap-2.5">
-                              <Home className="size-4 text-slate-400 group-hover:text-blue-600" />
-                              <span className="font-semibold text-slate-800 group-hover:text-blue-700">
-                                {house.houseNumber}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              {house.zone !== undefined && (
-                                <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md group-hover:bg-blue-100/70 group-hover:text-blue-700">
-                                  โซน {zones[house.zone]}
+                        {filteredHouses.map((house) => {
+                          const zoneLabel = house.zone
+                            ? typeof house.zone === "number" && zones[house.zone]
+                              ? `โซน ${zones[house.zone]}`
+                              : String(house.zone).startsWith("โซน")
+                                ? house.zone
+                                : `โซน ${house.zone}`
+                            : null;
+
+                          return (
+                            <button
+                              key={house.id}
+                              type="button"
+                              onClick={() => handleSelectExistingHouse(house)}
+                              className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-left transition-colors hover:bg-blue-50/80 active:bg-blue-100 group cursor-pointer border border-transparent hover:border-blue-200"
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <Home className="size-4 text-slate-400 group-hover:text-blue-600" />
+                                <span className="font-semibold text-slate-800 group-hover:text-blue-700">
+                                  {house.houseNumber}
                                 </span>
-                              )}
-                              <Check className="size-4 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                            </div>
-                          </button>
-                        ))}
+                              </div>
+                              <div className="flex items-center gap-2">
+                                {zoneLabel && (
+                                  <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md group-hover:bg-blue-100/70 group-hover:text-blue-700">
+                                    {zoneLabel}
+                                  </span>
+                                )}
+                                <Check className="size-4 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                              </div>
+                            </button>
+                          );
+                        })}
                       </div>
                     ) : (
                       /* ไม่พบบ้านเลขที่ที่ค้นหา */
                       <div className="rounded-xl border border-dashed border-amber-200 bg-amber-50/60 p-4 text-center">
                         <p className="text-xs text-amber-800 font-medium mb-1">
-                          ไม่พบบ้านเลขที่ &ldquo;{searchQuery}&rdquo; ในระบบของ {selectedVillageName}
+                          {searchQuery
+                            ? `ไม่พบบ้านเลขที่ "${searchQuery}" ในระบบของ ${selectedVillageName}`
+                            : `ยังไม่มีข้อมูลบ้านเลขที่ในระบบของ ${selectedVillageName}`}
                         </p>
                         <p className="text-[11px] text-amber-600 mb-3">
                           หากยังไม่มีบ้านเลขที่นี้ในระบบ สามารถเพิ่มเข้าระบบใหม่ได้ทันทีค่ะ
@@ -312,7 +394,9 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
                           className="bg-white border-amber-300 text-amber-900 hover:bg-amber-100/80 text-xs font-medium cursor-pointer shadow-xs"
                         >
                           <Plus className="size-3.5 mr-1 text-amber-600" />
-                          เพิ่มบ้านเลขที่ &ldquo;{searchQuery}&rdquo; เป็นบ้านใหม่
+                          {searchQuery
+                            ? `เพิ่มบ้านเลขที่ "${searchQuery}" เป็นบ้านใหม่`
+                            : "เพิ่มบ้านเลขที่ใหม่"}
                         </Button>
                       </div>
                     )}
@@ -392,7 +476,7 @@ export default function Step3AddressInfo({ data, onChange, errors }) {
                         : undefined
                     }
                     onValueChange={(v) =>
-                      onChange("zone", v !== "" ? parseInt(v) : undefined)
+                      onChange("zone", v !== "" ? parseInt(v, 10) : undefined)
                     }
                   >
                     <SelectTrigger

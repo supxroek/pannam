@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma.js";
+import AppError from "../utils/app-error.js";
 
 /**
  * Service สำหรับจัดการการสมัครสมาชิก
@@ -20,10 +21,7 @@ export async function registerMember(data) {
         where: { lineUserId: line.userId },
       });
       if (existingUserByLine) {
-        const error = new Error("บัญชี LINE นี้ได้ทำการลงทะเบียนในระบบแล้ว");
-        error.statusCode = 409;
-        error.code = "USER_ALREADY_EXISTS";
-        throw error;
+        throw AppError.userAlreadyExists();
       }
 
       // 2. ตรวจสอบว่าเลขบัตรประชาชนซ้ำกับผู้อื่นหรือไม่ (ถ้ามีการระบุ)
@@ -32,10 +30,7 @@ export async function registerMember(data) {
           where: { nationalId: personal.nationalId },
         });
         if (existingUserByNationalId) {
-          const error = new Error("เลขประจำตัวประชาชนนี้ถูกลงทะเบียนในระบบแล้ว");
-          error.statusCode = 409;
-          error.code = "IDCARD_ALREADY_EXISTS";
-          throw error;
+          throw AppError.idCardAlreadyExists();
         }
       }
 
@@ -46,9 +41,7 @@ export async function registerMember(data) {
       });
       // ถ้าไม่มี record หมู่บ้าน ให้แจ้งข้อผิดพลาด
       if (!village) {
-        const error = new Error(`ไม่พบข้อมูลหมู่บ้านที่ระบุ [รหัส: ${villageId}]`);
-        error.statusCode = 404;
-        throw error;
+        throw AppError.notFound(`ไม่พบข้อมูลหมู่บ้านที่ระบุ [รหัส: ${villageId}]`);
       }
 
       // 4. บันทึกข้อมูลผู้ใช้ใหม่ลงในตาราง users

@@ -1,5 +1,5 @@
 import axios from "axios";
-import createHttpError from "http-errors";
+import AppError from "../utils/app-error.js";
 import { LINE_DEFAULT_LIFF_ID } from "../config/line.config.js";
 
 /**
@@ -23,12 +23,7 @@ export async function verifyLineToken(req, res, next) {
     }
 
     if (!token) {
-      const err = createHttpError(
-        401,
-        "ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบผ่าน LINE LIFF ก่อนทำรายการ",
-      );
-      err.code = "TOKEN_INVALID";
-      return next(err);
+      return next(AppError.tokenInvalid());
     }
 
     // ตรวจสอบ Token กับ LINE OAuth endpoint
@@ -69,19 +64,13 @@ export async function verifyLineToken(req, res, next) {
         (errorDesc.toLowerCase().includes("expired") ||
           errorDesc.toLowerCase().includes("exp"));
 
-      const err = createHttpError(
-        401,
-        isExpired
-          ? "LINE ID Token หมดอายุ กรุณาเข้าสู่ระบบใหม่อีกครั้ง"
-          : `การยืนยันตัวตนกับ LINE ล้มเหลว: ${errorDesc}`,
-      );
-      err.code = isExpired ? "TOKEN_EXPIRED" : "TOKEN_INVALID";
-      return next(err);
+      if (isExpired) {
+        return next(AppError.tokenExpired());
+      }
+      return next(AppError.tokenInvalid(`การยืนยันตัวตนกับ LINE ล้มเหลว: ${errorDesc}`));
     }
 
-    const err = createHttpError(500, `ระบบยืนยันตัวตนขัดข้อง: ${error.message}`);
-    err.code = "INTERNAL_SERVER_ERROR";
-    return next(err);
+    return next(AppError.internal(`ระบบยืนยันตัวตนขัดข้อง: ${error.message}`));
   }
 }
 

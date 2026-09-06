@@ -5,6 +5,7 @@ const router = express.Router();
 // const liffRoutes = require("./modules/api/liff.routes");
 import webhookRoutes from "./routes/bot.routes.js";
 import memberRoutes from "./routes/member.routes.js";
+import villageRoutes from "./routes/village.routes.js";
 
 // Import middlewares
 import lineSignature from "./middlewares/line-signature.js";
@@ -20,5 +21,6 @@ router.use(
 );
 
 router.use(`${API_VERSION}/member`, memberRoutes);
+router.use(`${API_VERSION}/villages`, villageRoutes);
 
 export default router;

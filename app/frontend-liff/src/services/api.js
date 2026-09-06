@@ -1,5 +1,6 @@
 import liff from "@line/liff";
-import { villages, zones } from "../constants/registerData.js";
+import { ApiError } from "../utils/api-error.js";
+import { zones } from "../constants/registerData.js";
 
 /**
  * กำหนด Base URL ของ API Backend
@@ -9,22 +10,94 @@ import { villages, zones } from "../constants/registerData.js";
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
   (import.meta.env.PROD
-    // For production: https://pannam-api.vercel.app
-    // For development: https://fitting-allegedly-chicken.ngrok-free.app
     ? "https://pannam-api.vercel.app"
     : "http://localhost:3000");
+
+/**
+ * ดึงรายชื่อหมู่บ้านทั้งหมดที่เปิดใช้งานจาก Backend
+ * @param {string} idToken - LINE LIFF ID Token
+ * @returns {Promise<Array>} รายการหมู่บ้าน
+ */
+export async function fetchVillages(idToken) {
+  if (!idToken) {
+    throw new ApiError("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่", "TOKEN_INVALID", 401);
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/villages`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${idToken}`,
+    },
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const errorMsg =
+      data.message || `ไม่สามารถดึงข้อมูลหมู่บ้านได้ (รหัส: ${response.status})`;
+    throw new ApiError(
+      errorMsg,
+      data.code || (response.status === 401 ? "TOKEN_INVALID" : "API_ERROR"),
+      response.status,
+      data.errors
+    );
+  }
+
+  return data.data || [];
+}
+
+/**
+ * ดึงรายการบ้านเลขที่ที่มีอยู่ในระบบของหมู่บ้านที่เลือก
+ * @param {number|string} villageId - รหัสหมู่บ้าน
+ * @param {string} idToken - LINE LIFF ID Token
+ * @returns {Promise<Array>} รายการบ้านเลขที่
+ */
+export async function fetchVillageProperties(villageId, idToken) {
+  if (!idToken) {
+    throw new ApiError("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่", "TOKEN_INVALID", 401);
+  }
+  if (!villageId) {
+    return [];
+  }
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/villages/${villageId}/properties`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${idToken}`,
+      },
+    }
+  );
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const errorMsg =
+      data.message || `ไม่สามารถดึงข้อมูลบ้านเลขที่ได้ (รหัส: ${response.status})`;
+    throw new ApiError(
+      errorMsg,
+      data.code || (response.status === 401 ? "TOKEN_INVALID" : "API_ERROR"),
+      response.status,
+      data.errors
+    );
+  }
+
+  return data.data || [];
+}
 
 /**
  * ส่งข้อมูลการลงทะเบียนสมาชิกไปยัง Backend พร้อม LINE ID Token
  * @param {Object} formData ข้อมูลจากแบบฟอร์มการสมัคร
  * @param {string} idToken LINE ID Token ที่ได้จาก LIFF
+ * @param {Array} villageList รายชื่อหมู่บ้านสำหรับนำชื่อมาแสดงผล
  * @returns {Promise<Object>} ผลลัพธ์จาก API
  */
-export async function registerMember(formData, idToken) {
+export async function registerMember(formData, idToken, villageList = []) {
   if (!idToken) {
-    const error = new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่");
-    error.code = "TOKEN_INVALID";
-    throw error;
+    throw new ApiError("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่", "TOKEN_INVALID", 401);
   }
 
   const response = await fetch(`${API_BASE_URL}/api/member/register`, {
@@ -43,11 +116,12 @@ export async function registerMember(formData, idToken) {
       data.message ||
       data.error?.message ||
       `เกิดข้อผิดพลาดในการลงทะเบียน (รหัส: ${response.status})`;
-    const error = new Error(errorMessage);
-    error.code = data.code || (response.status === 401 ? "TOKEN_INVALID" : "API_ERROR");
-    error.statusCode = response.status;
-    error.errors = data.errors || null;
-    throw error;
+    throw new ApiError(
+      errorMessage,
+      data.code || (response.status === 401 ? "TOKEN_INVALID" : "API_ERROR"),
+      response.status,
+      data.errors || null
+    );
   }
 
   try {
@@ -55,10 +129,10 @@ export async function registerMember(formData, idToken) {
     const contextType = liff.getContext()?.type;
     if (contextType && contextType !== "none" && contextType !== "external") {
       // แปลงชื่อหมู่บ้าน และโซน
-      const villageObj = villages.find(
+      const villageObj = villageList.find(
         (v) => v.id === Number(formData.village),
       );
-      const villageName = villageObj?.name || formData.village || "-";
+      const villageName = villageObj?.name || villageObj?.address || formData.village || "-";
       const zoneIdx = Number(formData.zone);
       const zoneName =
         !isNaN(zoneIdx) && zones[zoneIdx]
@@ -137,5 +211,7 @@ export async function registerMember(formData, idToken) {
 }
 
 export default {
+  fetchVillages,
+  fetchVillageProperties,
   registerMember,
 };
