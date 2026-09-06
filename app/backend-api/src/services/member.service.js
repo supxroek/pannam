@@ -22,6 +22,7 @@ export async function registerMember(data) {
       if (existingUserByLine) {
         const error = new Error("บัญชี LINE นี้ได้ทำการลงทะเบียนในระบบแล้ว");
         error.statusCode = 409;
+        error.code = "USER_ALREADY_EXISTS";
         throw error;
       }
 
@@ -33,6 +34,7 @@ export async function registerMember(data) {
         if (existingUserByNationalId) {
           const error = new Error("เลขประจำตัวประชาชนนี้ถูกลงทะเบียนในระบบแล้ว");
           error.statusCode = 409;
+          error.code = "IDCARD_ALREADY_EXISTS";
           throw error;
         }
       }

@@ -32,7 +32,7 @@ const handleJWTExpiredError = () =>
   );
 
 const sendErrorDev = (err, res) => {
-  console.error("ERROR 💥", err); // Log error to console in development
+  console.error("ERROR 💥", err);
   if (err.originalError?.response?.data) {
     console.error(
       "LINE API Error Details:",
@@ -40,40 +40,45 @@ const sendErrorDev = (err, res) => {
     );
   }
   res.status(err.statusCode).json({
-    status: err.status,
-    error: err,
+    success: false,
+    code: err.code || (err.statusCode < 500 ? "CLIENT_ERROR" : "INTERNAL_SERVER_ERROR"),
     message: err.message,
+    errors: err.errors,
     stack: err.stack,
   });
 };
 
 const sendErrorProd = (err, res) => {
-  // ข้อผิดพลาดที่คาดการณ์ได้ : ส่งข้อความข้อผิดพลาดไปยังไคลเอนต์
-  if (err.isOperational) {
+  const isClientError = err.statusCode < 500 || err.isOperational || err.expose;
+  if (isClientError) {
     res.status(err.statusCode).json({
-      status: err.status,
+      success: false,
+      code: err.code || "CLIENT_ERROR",
       message: err.message,
+      errors: err.errors,
     });
   } else {
-    // ข้อผิดพลาดที่ไม่คาดคิด : ไม่เปิดเผยรายละเอียดข้อผิดพลาด
     console.error("ERROR 💥", err);
 
     res.status(500).json({
-      status: "error",
-      message: "เกิดข้อผิดพลาดบางอย่าง!",
+      success: false,
+      code: "INTERNAL_SERVER_ERROR",
+      message: "เกิดข้อผิดพลาดบางอย่างในระบบ กรุณาลองใหม่อีกครั้ง",
     });
   }
 };
 
 const errorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
-  err.status = err.status || "error";
 
   if (process.env.NODE_ENV === "development") {
     sendErrorDev(err, res);
   } else {
     let error = { ...err };
     error.message = err.message;
+    error.statusCode = err.statusCode;
+    error.code = err.code;
+    error.errors = err.errors;
 
     if (err.name === "CastError") error = handleCastErrorDB(error);
     if (err.code === 11000) error = handleDuplicateFieldsDB(error);

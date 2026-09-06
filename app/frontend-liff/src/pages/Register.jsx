@@ -16,71 +16,80 @@ import { useLiffAuth } from '@/hooks/useLiffAuth';
 import { LINE_LIFF_ID_REGISTER } from '@/constants/line-liff';
 import { registerMember } from '@/services/api';
 import { toast } from '@/components/ui/toast';
+import { validateFormStep } from '@/schemas/register.schema';
+import { forceReLogin } from '@/lib/liff';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 // สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
-// import { TEST_useLiffAuth } from '@/constants/registerData';
+import { TEST_useLiffAuth } from '@/constants/registerData';
 
 const TOTAL_FORM_STEPS = 4;
+const DRAFT_STORAGE_KEY = 'pan_nam_registration_draft';
 
 export default function Register() {
-  // จัดการ LIFF Auth: user, loading, error, retry
+  // =========================================================================
+  // การตั้งค่า LIFF Auth:
+  // สำหรับการใช้งานจริง (Production/Staging): ปลดคอมเมนต์ useLiffAuth ด้านล่างนี้
   const { user, loading, error } = useLiffAuth(LINE_LIFF_ID_REGISTER);
-
-  // สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
+  //
+  // สำหรับการพัฒนาใน Local (Mock LIFF):
+  // =========================================================================
   // const { users: user, loading, error } = TEST_useLiffAuth();
 
   const [step, setStep] = useState(0);
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    birthDay: '',
-    birthMonth: '',
-    birthYear: '',
-    idCard: '',
-    phone: '',
-    village: '',
-    houseNumber: '',
-    zone: '',
+
+  // กู้คืนข้อมูลฟอร์มจาก sessionStorage (ถ้ามีร่างที่เคยกรอกไว้)
+  const [formData, setFormData] = useState(() => {
+    try {
+      const savedDraft = sessionStorage.getItem(DRAFT_STORAGE_KEY);
+      if (savedDraft) {
+        return JSON.parse(savedDraft);
+      }
+    } catch (e) {
+      console.warn('ไม่สามารถโหลด draft จาก sessionStorage ได้:', e);
+    }
+    return {
+      firstName: '',
+      lastName: '',
+      birthDay: '',
+      birthMonth: '',
+      birthYear: '',
+      idCard: '',
+      phone: '',
+      village: '',
+      houseNumber: '',
+      zone: '',
+    };
   });
+
   const [errors, setErrors] = useState({});
   const [loadingState, setLoadingState] = useState(false);
 
-  const validateStep = (stepIndex) => {
-    const newErrors = {};
+  // ควบคุมการแสดงผล Modal กรณี Session หมดอายุ หรือ User ซ้ำ
+  const [sessionExpiredOpen, setSessionExpiredOpen] = useState(false);
+  const [userExistsOpen, setUserExistsOpen] = useState(false);
 
-    if (stepIndex === 0) {
-      if (!formData.firstName?.trim())
-        newErrors.firstName = 'กรุณากรอกชื่อจริง';
-      if (!formData.lastName?.trim())
-        newErrors.lastName = 'กรุณากรอกนามสกุล';
-      if (!formData.birthDay) newErrors.birthDay = 'กรุณาระบุวันเกิด';
-      if (formData.birthMonth === '' || formData.birthMonth === undefined)
-        newErrors.birthMonth = 'กรุณาระบุเดือนเกิด';
-      if (!formData.birthYear) newErrors.birthYear = 'กรุณาระบุปีเกิด';
-    }
-
-    if (stepIndex === 1) {
-      const idClean = formData.idCard?.replace(/[^0-9]/g, '') || '';
-      if (!idClean || idClean.length !== 13)
-        newErrors.idCard =
-          'กรุณากรอกเลขบัตรประชาชน 13 หลักให้ครบถ้วน';
-      const phoneClean = formData.phone?.replace(/[^0-9]/g, '') || '';
-      if (!phoneClean || phoneClean.length < 9 || phoneClean.length > 10)
-        newErrors.phone = 'กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง';
-    }
-
-    if (stepIndex === 2) {
-      if (!formData.village) newErrors.village = 'กรุณาเลือกหมู่บ้าน';
-      if (!formData.houseNumber?.trim())
-        newErrors.houseNumber = 'กรุณาเลือกหรือระบุบ้านเลขที่';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
+  // อัปเดตข้อมูลฟอร์มและบันทึกลง sessionStorage เสมอ
   const handleChange = useCallback((field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData((prev) => {
+      const updated = { ...prev, [field]: value };
+      try {
+        sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(updated));
+      } catch (error) {
+        // ignore storage quota errors
+        console.error("Failed to save draft:", error);
+      }
+      return updated;
+    });
+
     setErrors((prev) => {
       const newErrors = { ...prev };
       delete newErrors[field];
@@ -88,8 +97,14 @@ export default function Register() {
     });
   }, []);
 
+  // ไปยังขั้นตอนถัดไป โดยตรวจสอบข้อมูลด้วย Zod
   const handleNext = () => {
-    if (!validateStep(step - 1)) return;
+    const { isValid, errors: validationErrors } = validateFormStep(step - 1, formData);
+    if (!isValid) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
     setStep((prev) => prev + 1);
   };
 
@@ -101,7 +116,28 @@ export default function Register() {
     setStep(targetStep + 1);
   };
 
+  // ส่งข้อมูลสมัครสมาชิกไปยัง Backend พร้อมจัดการ Error Responses
   const handleSubmit = async () => {
+    // 1. Final Validation ด้วย Zod ทุกขั้นตอน
+    const { isValid, errors: fullErrors } = validateFormStep(99, formData);
+    if (!isValid) {
+      setErrors(fullErrors);
+      // พาไปยังขั้นตอนที่มีฟิลด์ผิดพลาดแรก
+      if (fullErrors.firstName || fullErrors.lastName || fullErrors.birthDay || fullErrors.birthMonth || fullErrors.birthYear) {
+        setStep(1);
+      } else if (fullErrors.idCard || fullErrors.phone) {
+        setStep(2);
+      } else if (fullErrors.village || fullErrors.houseNumber) {
+        setStep(3);
+      }
+      toast.add({
+        title: 'ข้อมูลไม่ครบถ้วน',
+        description: 'กรุณากรอกข้อมูลให้ถูกต้องและครบถ้วนตามขั้นตอน',
+        type: 'error',
+      });
+      return;
+    }
+
     try {
       setLoadingState(true);
 
@@ -109,22 +145,110 @@ export default function Register() {
       const idToken = user?.idToken || liff.getIDToken();
 
       if (!idToken) {
-        throw new Error('ไม่พบข้อมูลการเข้าสู่ระบบ LINE กรุณาลองใหม่อีกครั้ง');
+        const tokenErr = new Error('ไม่พบข้อมูลการเข้าสู่ระบบ LINE กรุณาลองใหม่อีกครั้ง');
+        tokenErr.code = 'TOKEN_INVALID';
+        throw tokenErr;
       }
 
       await registerMember(formData, idToken);
+
+      // สำเร็จ: ล้าง draft ออกจาก sessionStorage และไปหน้าขอบคุณ
+      try {
+        sessionStorage.removeItem(DRAFT_STORAGE_KEY);
+      } catch (error) {
+        console.error('Failed to remove draft:', error);
+      }
       setStep(5);
     } catch (err) {
       console.error('Registration failed:', err);
-      const errorMsg =
-        err.message || 'เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง';
+
+      // จัดการ Error ตาม Code ที่ Backend ส่งกลับมา
+      const errCode = err.code;
+
+      // 1. กรณี Token หมดอายุ หรือไม่ถูกต้อง: ให้บันทึก draft และแจ้งเตือนผู้ใช้เพื่อ Login ใหม่
+      if (errCode === 'TOKEN_EXPIRED' || errCode === 'TOKEN_INVALID') {
+        try {
+          sessionStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(formData));
+        } catch (error) {
+          console.error('Failed to save draft:', error);
+        }
+        setSessionExpiredOpen(true);
+        return;
+      }
+
+      // 2. กรณี LINE userId ซ้ำในระบบ: แสดง Modal แจ้งเตือนว่ามีบัญชีแล้ว
+      if (errCode === 'USER_ALREADY_EXISTS') {
+        setUserExistsOpen(true);
+        return;
+      }
+
+      // 3. กรณีเลขบัตร ปชช. ซ้ำในระบบ: เด้งกลับไป Step 2 พร้อมไฮไลต์แจ้งเตือนใต้ช่อง idCard
+      if (errCode === 'IDCARD_ALREADY_EXISTS') {
+        setStep(2);
+        setErrors((prev) => ({
+          ...prev,
+          idCard: 'เลขประจำตัวประชาชนนี้ถูกลงทะเบียนในระบบแล้ว',
+        }));
+        toast.add({
+          title: 'เลขบัตรประชาชนซ้ำในระบบ',
+          description: 'เลขประจำตัวประชาชนนี้ได้ลงทะเบียนแล้ว กรุณาตรวจสอบอีกครั้ง',
+          type: 'error',
+        });
+        return;
+      }
+
+      // 4. กรณี Validation Error จาก Backend
+      if (errCode === 'VALIDATION_ERROR' && err.errors) {
+        setErrors(err.errors);
+        if (err.errors.firstName || err.errors.lastName || err.errors.birthDay || err.errors.birthMonth || err.errors.birthYear) {
+          setStep(1);
+        } else if (err.errors.idCard || err.errors.phone) {
+          setStep(2);
+        } else if (err.errors.village || err.errors.houseNumber) {
+          setStep(3);
+        }
+        toast.add({
+          title: 'ข้อมูลไม่ถูกต้อง',
+          description: err.message || 'กรุณาตรวจสอบข้อมูลที่กรอกอีกครั้ง',
+          type: 'error',
+        });
+        return;
+      }
+
+      // ข้อผิดพลาดทั่วไปอื่นๆ
       toast.add({
         title: 'การลงทะเบียนไม่สำเร็จ',
-        description: errorMsg,
+        description: err.message || 'เกิดข้อผิดพลาดในการส่งข้อมูล โปรดลองใหม่อีกครั้ง',
         type: 'error',
       });
     } finally {
       setLoadingState(false);
+    }
+  };
+
+  // จัดการการ Login ใหม่เมื่อ Token หมดอายุ
+  const handleReLogin = () => {
+    setSessionExpiredOpen(false);
+    try {
+      forceReLogin();
+    } catch (error) {
+      console.error('Failed to re-login:', error);
+      window.location.reload();
+    }
+  };
+
+  // จัดการการปิดหน้าต่างเมื่อ User มีบัญชีอยู่แล้ว
+  const handleCloseLiff = () => {
+    setUserExistsOpen(false);
+    try {
+      if (liff.isInClient()) {
+        liff.closeWindow();
+      } else {
+        setStep(0);
+      }
+    } catch (error) {
+      console.error('Failed to close window:', error);
+      setStep(0);
     }
   };
 
@@ -247,6 +371,40 @@ export default function Register() {
           </div>
         )}
       </div>
+
+      {/* Modal: แจ้งเตือน Token หมดอายุ */}
+      <AlertDialog open={sessionExpiredOpen} onOpenChange={setSessionExpiredOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>เซสชันการเข้าสู่ระบบหมดอายุ</AlertDialogTitle>
+            <AlertDialogDescription>
+              เซสชัน LINE ID Token ของคุณหมดอายุแล้ว เพื่อความปลอดภัย กรุณาเข้าสู่ระบบใหม่อีกครั้ง ระบบได้บันทึกข้อมูลที่คุณกรอกไว้ให้เรียบร้อยแล้วค่ะ
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={handleReLogin} className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+              เข้าสู่ระบบใหม่
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Modal: แจ้งเตือนว่ามีบัญชีแล้ว (User Already Exists) */}
+      <AlertDialog open={userExistsOpen} onOpenChange={setUserExistsOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>บัญชีนี้ลงทะเบียนแล้ว</AlertDialogTitle>
+            <AlertDialogDescription>
+              บัญชี LINE นี้ได้ทำการลงทะเบียนในระบบเรียบร้อยแล้ว ท่านสามารถเข้าทำรายการหรือตรวจสอบข้อมูลผ่านเมนูใน LINE ได้ทันทีค่ะ
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={handleCloseLiff} className="w-full bg-slate-800 hover:bg-slate-900 text-white">
+              ปิดหน้าต่าง
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

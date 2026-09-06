@@ -1,6 +1,7 @@
 import createHttpError from "http-errors";
 import dayjs from "../utils/dayjs.js";
 import { registerMember } from "../services/member.service.js";
+import { registerSchema } from "../validations/register.schema.js";
 
 const ZONES_LIST = ["A", "B", "C", "D", "E", "F"];
 
@@ -10,6 +11,25 @@ const ZONES_LIST = ["A", "B", "C", "D", "E", "F"];
 export async function handleRegister(req, res, next) {
   try {
     const lineUser = req.lineUser;
+
+    // 1. ตรวจสอบข้อมูลด้วย Zod Schema
+    const parseResult = registerSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      const fieldErrors = {};
+      parseResult.error.issues.forEach((issue) => {
+        const fieldName = issue.path[0];
+        if (fieldName && !fieldErrors[fieldName]) {
+          fieldErrors[fieldName] = issue.message;
+        }
+      });
+
+      const firstErrorMsg = Object.values(fieldErrors)[0] || "ข้อมูลที่ส่งมาไม่ถูกต้อง";
+      const validationError = createHttpError(400, firstErrorMsg);
+      validationError.code = "VALIDATION_ERROR";
+      validationError.errors = fieldErrors;
+      return next(validationError);
+    }
+
     const {
       firstName,
       lastName,
@@ -21,36 +41,12 @@ export async function handleRegister(req, res, next) {
       village,
       houseNumber,
       zone,
-    } = req.body;
+    } = parseResult.data;
 
-    // 1. ตรวจสอบข้อมูลบังคับเบื้องต้น
-    if (!firstName?.trim() || !lastName?.trim()) {
-      return next(createHttpError(400, "กรุณากรอกชื่อและนามสกุลให้ครบถ้วน"));
-    }
-    if (!idCard?.trim()) {
-      return next(createHttpError(400, "กรุณากรอกเลขบัตรประชาชน"));
-    }
-    if (!phone?.trim()) {
-      return next(createHttpError(400, "กรุณากรอกเบอร์โทรศัพท์"));
-    }
-    if (!village) {
-      return next(createHttpError(400, "กรุณาเลือกหมู่บ้าน"));
-    }
-    if (!houseNumber?.trim()) {
-      return next(createHttpError(400, "กรุณาระบุบ้านเลขที่"));
-    }
-
-    // 2. ทำความสะอาดและตรวจสอบข้อมูล (Data Sanitization & Validation)
+    // 2. จัดรูปแบบข้อมูล (Data Sanitization & Formatting)
     const fullName = `${firstName.trim()} ${lastName.trim()}`;
-    const cleanedIdCard = idCard.replace(/[^0-9]/g, "");
-    if (cleanedIdCard.length !== 13) {
-      return next(createHttpError(400, "เลขประจำตัวประชาชนต้องมี 13 หลัก"));
-    }
-
-    const cleanedPhone = phone.replace(/[^0-9]/g, "");
-    if (cleanedPhone.length < 9 || cleanedPhone.length > 10) {
-      return next(createHttpError(400, "เบอร์โทรศัพท์ไม่ถูกต้อง (ต้องมี 9-10 หลัก)"));
-    }
+    const cleanedIdCard = idCard; // safeParse transformed to 13 digits
+    const cleanedPhone = phone;   // safeParse transformed to 9-10 digits
 
     // แปลงวันเกิดเป็น JavaScript Date สำหรับบันทึกใน PostgreSQL/Prisma
     const formattedBirthdate = dayjs.formatDateToDatabase(
@@ -101,16 +97,28 @@ export async function handleRegister(req, res, next) {
       data: result,
     });
   } catch (error) {
-    // จัดการข้อผิดพลาดจาก Prisma หรือ Conflict
-    if (error.statusCode === 409 || error.code === "P2002") {
+    // จัดการข้อผิดพลาดเมื่อข้อมูลซ้ำในระบบ (Conflict 409)
+    if (
+      error.statusCode === 409 ||
+      error.code === "P2002" ||
+      error.code === "USER_ALREADY_EXISTS" ||
+      error.code === "IDCARD_ALREADY_EXISTS"
+    ) {
       const target = error.meta?.target;
+      let code = error.code || "CONFLICT";
       let message = error.message;
-      if (target?.includes("line_user_id")) {
+
+      if (target?.includes("line_user_id") || code === "USER_ALREADY_EXISTS") {
+        code = "USER_ALREADY_EXISTS";
         message = "บัญชี LINE นี้ได้ทำการลงทะเบียนในระบบแล้ว";
-      } else if (target?.includes("national_id")) {
+      } else if (target?.includes("national_id") || code === "IDCARD_ALREADY_EXISTS") {
+        code = "IDCARD_ALREADY_EXISTS";
         message = "เลขประจำตัวประชาชนนี้ถูกลงทะเบียนในระบบแล้ว";
       }
-      return next(createHttpError(409, message));
+
+      const conflictError = createHttpError(409, message);
+      conflictError.code = code;
+      return next(conflictError);
     }
 
     next(error);

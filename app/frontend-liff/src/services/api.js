@@ -22,7 +22,9 @@ const API_BASE_URL =
  */
 export async function registerMember(formData, idToken) {
   if (!idToken) {
-    throw new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่");
+    const error = new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่");
+    error.code = "TOKEN_INVALID";
+    throw error;
   }
 
   const response = await fetch(`${API_BASE_URL}/api/member/register`, {
@@ -41,7 +43,11 @@ export async function registerMember(formData, idToken) {
       data.message ||
       data.error?.message ||
       `เกิดข้อผิดพลาดในการลงทะเบียน (รหัส: ${response.status})`;
-    throw new Error(errorMessage);
+    const error = new Error(errorMessage);
+    error.code = data.code || (response.status === 401 ? "TOKEN_INVALID" : "API_ERROR");
+    error.statusCode = response.status;
+    error.errors = data.errors || null;
+    throw error;
   }
 
   try {

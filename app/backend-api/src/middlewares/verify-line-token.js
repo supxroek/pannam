@@ -23,12 +23,12 @@ export async function verifyLineToken(req, res, next) {
     }
 
     if (!token) {
-      return next(
-        createHttpError(
-          401,
-          "ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบผ่าน LINE LIFF ก่อนทำรายการ",
-        ),
+      const err = createHttpError(
+        401,
+        "ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบผ่าน LINE LIFF ก่อนทำรายการ",
       );
+      err.code = "TOKEN_INVALID";
+      return next(err);
     }
 
     // ตรวจสอบ Token กับ LINE OAuth endpoint
@@ -63,14 +63,25 @@ export async function verifyLineToken(req, res, next) {
         error.response.data?.error_description ||
         error.response.data?.error ||
         "Token verification failed";
-      return next(
-        createHttpError(401, `การยืนยันตัวตนกับ LINE ล้มเหลว: ${errorDesc}`),
+
+      const isExpired =
+        typeof errorDesc === "string" &&
+        (errorDesc.toLowerCase().includes("expired") ||
+          errorDesc.toLowerCase().includes("exp"));
+
+      const err = createHttpError(
+        401,
+        isExpired
+          ? "LINE ID Token หมดอายุ กรุณาเข้าสู่ระบบใหม่อีกครั้ง"
+          : `การยืนยันตัวตนกับ LINE ล้มเหลว: ${errorDesc}`,
       );
+      err.code = isExpired ? "TOKEN_EXPIRED" : "TOKEN_INVALID";
+      return next(err);
     }
 
-    return next(
-      createHttpError(500, `ระบบยืนยันตัวตนขัดข้อง: ${error.message}`),
-    );
+    const err = createHttpError(500, `ระบบยืนยันตัวตนขัดข้อง: ${error.message}`);
+    err.code = "INTERNAL_SERVER_ERROR";
+    return next(err);
   }
 }
 
