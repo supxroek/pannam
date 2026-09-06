@@ -98,7 +98,6 @@ export default function Register() {
       // 1. หากไม่มี idToken ให้บันทึก error log, แจ้งเตือนผู้ใช้ทันที และหยุดทำงาน
       if (!idToken) {
         console.error('ไม่พบ LINE ID Token สำหรับดึงข้อมูลหมู่บ้าน');
-        setSessionExpiredOpen(true);
         if (isMounted) {
           toast.add({
             title: 'ไม่พบข้อมูลการเข้าสู่ระบบ',
