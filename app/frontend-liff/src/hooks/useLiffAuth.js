@@ -83,7 +83,7 @@ export function useLiffAuth(liffId) {
         clearInterval(tokenCheckRef.current);
       }
     };
-  }, [liffId]);
+  }, [isMock, liffId]);
 
   // ตรวจสอบ token เป็นระยะ — ถ้าหมดอายุให้ redirect ไป login ใหม่
   useEffect(() => {

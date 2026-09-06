@@ -150,3 +150,24 @@ export const liffLogout = () => {
     window.location.reload();
   }
 };
+
+/**
+ * ดึง ID Token อย่างปลอดภัยโดยไม่ทำให้เกิด Exception
+ * หากส่ง user object เข้ามาจะพิจารณา user.idToken ก่อน
+ * หากไม่มีจะตรวจเช็คว่า liff ถูก init และ login เรียบร้อยแล้วหรือไม่ก่อนเรียก liff.getIDToken()
+ *
+ * @param {Object|null} user - ข้อมูล user จาก useLiffAuth หรือ null
+ * @returns {string|null} - ID Token หรือ null หากไม่มี
+ */
+export const getSafeIdToken = (user = null) => {
+  if (user?.idToken) return user.idToken;
+  try {
+    if (typeof liff !== "undefined" && liff.id && liff.isLoggedIn()) {
+      return liff.getIDToken();
+    }
+  } catch (e) {
+    console.warn("ไม่สามารถดึง idToken จาก liff ได้:", e);
+  }
+  return null;
+};
+

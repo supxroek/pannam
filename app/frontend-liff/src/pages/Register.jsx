@@ -18,7 +18,7 @@ import { registerMember, fetchVillages } from '@/services/api';
 import { parseApiError } from '@/utils/api-error';
 import { toast } from '@/components/ui/toast';
 import { validateFormStep } from '@/schemas/register.schema';
-import { forceReLogin } from '@/lib/liff';
+import { forceReLogin, getSafeIdToken } from '@/lib/liff';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -85,28 +85,13 @@ export default function Register() {
   // ควบคุมการทำงานของ preloadVillages ให้ทำเพียงครั้งเดียว (ป้องกัน Infinite Loop จากการ re-render)
   const hasFetchedVillagesRef = useRef(false);
 
-  const userIdToken = user?.idToken;
-
-  // ดึง ID Token อย่างปลอดภัยโดยไม่เกิด Exception จาก LIFF SDK
-  const getSafeIdToken = useCallback(() => {
-    if (userIdToken) return userIdToken;
-    try {
-      if (typeof liff !== 'undefined' && liff.id && liff.isLoggedIn()) {
-        return liff.getIDToken();
-      }
-    } catch (e) {
-      console.warn('ไม่สามารถดึง idToken จาก liff ได้:', e);
-    }
-    return null;
-  }, [userIdToken]);
-
   // Preload ข้อมูลหมู่บ้านล่วงหน้าเมื่อผู้ใช้เข้าสู่ระบบ
   useEffect(() => {
     if (!user) return; // รอจนกว่าจะยืนยันตัวตนผ่าน LIFF เสร็จสิ้น
     if (hasFetchedVillagesRef.current) return;
 
     let isMounted = true;
-    const idToken = getSafeIdToken();
+    const idToken = getSafeIdToken(user);
 
     async function preloadVillages() {
       // 1. หากไม่มี idToken ให้บันทึก error log, แจ้งเตือนผู้ใช้ทันที และหยุดทำงาน
@@ -162,7 +147,7 @@ export default function Register() {
     return () => {
       isMounted = false;
     };
-  }, [getSafeIdToken, user]);
+  }, [user]);
 
   // อัปเดตข้อมูลฟอร์มและบันทึกลง sessionStorage เสมอ
   const handleChange = useCallback((field, value) => {
@@ -229,7 +214,7 @@ export default function Register() {
       setLoadingState(true);
 
       // ดึง token ล่าสุดอย่างปลอดภัย
-      const idToken = getSafeIdToken();
+      const idToken = getSafeIdToken(user);
 
       if (!idToken) {
         const tokenErr = new Error('ไม่พบข้อมูลการเข้าสู่ระบบ LINE กรุณาลองใหม่อีกครั้ง');
@@ -434,7 +419,7 @@ export default function Register() {
                 errors={errors}
                 villages={villages}
                 loadingVillages={loadingVillages}
-                idToken={getSafeIdToken()}
+                idToken={getSafeIdToken(user)}
               />
             )}
             {step === 4 && (
