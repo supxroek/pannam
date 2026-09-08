@@ -33,8 +33,8 @@ import {
   Info,
   RotateCcw,
   Loader2,
+  House,
 } from "lucide-react";
-import { SearchIcon } from "lucide-react";
 
 export default function Step3AddressInfo({
   data,
@@ -472,7 +472,7 @@ export default function Step3AddressInfo({
                   </FieldLabel>
                   <InputGroup className="h-11 bg-white">
                     <InputGroupAddon>
-                      <SearchIcon className="size-4 text-muted-foreground" />
+                      <House className="size-4 text-muted-foreground" />
                     </InputGroupAddon>
                     <InputGroupInput
                       id="zone"
