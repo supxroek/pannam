@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { villages, zones } from "../../constants/registerData";
+import { villages } from "../../constants/registerData";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Balloon, Clock } from "lucide-react";
 import liff from "@line/liff";
@@ -35,7 +35,6 @@ export default function SuccessScreen({ data, user }) {
   }, [countdown]);
   const getVillageName = (id) =>
     villages.find((v) => v.id === id)?.name || '-';
-  const getZoneName = (id) => zones[id] || '-';
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-6 animate-fade-in-up">
       <div className="w-full max-w-sm text-center">
@@ -98,7 +97,7 @@ export default function SuccessScreen({ data, user }) {
               <span className="text-sm text-slate-400">ที่อยู่</span>
               <span className="text-sm font-medium text-slate-800 text-right  text-balance">
                 บ้านเลขที่ {data.houseNumber}
-                &nbsp; โซน {getZoneName(data.zone)}
+                &nbsp; โซน {data.zone || '-'}
                 &nbsp;
                 {getVillageName(data.village)}
               </span>

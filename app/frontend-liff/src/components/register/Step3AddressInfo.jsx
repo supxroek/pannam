@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
-import { villages as defaultVillages, zones } from "../../constants/registerData";
+import { villages as defaultVillages } from "../../constants/registerData";
 import { fetchVillageProperties } from "@/services/api";
+import { existingHouses } from "@/constants/registerData";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Field,
@@ -33,6 +34,7 @@ import {
   RotateCcw,
   Loader2,
 } from "lucide-react";
+import { SearchIcon } from "lucide-react";
 
 export default function Step3AddressInfo({
   data,
@@ -61,14 +63,8 @@ export default function Step3AddressInfo({
   const selectedVillage = activeVillages.find((v) => v.id === data.village);
   const selectedVillageName = selectedVillage?.name || selectedVillage?.address;
 
-  const selectedZoneName =
-    data.zone !== undefined && data.zone !== "" && data.zone !== null
-      ? (typeof data.zone === "number" && zones[data.zone] ? zones[data.zone] : String(data.zone))
-      : undefined;
-
   // ดึงรายการบ้านเลขที่จริงจาก Backend เมื่อเลือกหมู่บ้าน
   useEffect(() => {
-    let isMounted = true;
 
     async function loadProperties() {
       if (!data.village || !idToken) {
@@ -79,26 +75,19 @@ export default function Step3AddressInfo({
       try {
         setLoadingProperties(true);
         const dataList = await fetchVillageProperties(data.village, idToken);
-        if (isMounted) {
-          setProperties(dataList || []);
-        }
+        setProperties(dataList || []);
+
       } catch (err) {
         console.warn("ไม่สามารถดึงข้อมูลบ้านเลขที่จากเซิร์ฟเวอร์ได้:", err);
-        if (isMounted) {
-          setProperties([]);
-        }
+        // สำหรับ development mode ใช้ mock data แทน
+        const mockProperties = existingHouses.filter((h) => h.villageId === data.village);
+        setProperties(mockProperties);
       } finally {
-        if (isMounted) {
-          setLoadingProperties(false);
-        }
+        setLoadingProperties(false);
       }
     }
 
     loadProperties();
-
-    return () => {
-      isMounted = false;
-    };
   }, [data.village, idToken]);
 
   // ผลลัพธ์การค้นหาบ้านเลขที่
@@ -106,7 +95,9 @@ export default function Step3AddressInfo({
     if (!searchQuery.trim()) return properties;
     const q = searchQuery.trim().toLowerCase();
     return properties.filter((h) =>
-      String(h.houseNumber || "").toLowerCase().includes(q)
+      String(h.houseNumber || "")
+        .toLowerCase()
+        .includes(q),
     );
   }, [properties, searchQuery]);
 
@@ -154,7 +145,9 @@ export default function Step3AddressInfo({
   return (
     <div className="animate-slide-in">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-foreground mb-2">ข้อมูลที่อยู่</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-2">
+          ข้อมูลที่อยู่
+        </h2>
         <p className="text-muted-foreground text-sm">
           เลือกหมู่บ้านและระบุบ้านเลขที่ของคุณ
         </p>
@@ -242,7 +235,9 @@ export default function Step3AddressInfo({
                 </button>
                 <button
                   type="button"
-                  onClick={() => handleSwitchToCreate(searchQuery || data.houseNumber)}
+                  onClick={() =>
+                    handleSwitchToCreate(searchQuery || data.houseNumber)
+                  }
                   className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all cursor-pointer flex items-center gap-1 ${
                     mode === "create"
                       ? "bg-white text-blue-600 shadow-xs"
@@ -277,11 +272,13 @@ export default function Step3AddressInfo({
                           </div>
                           <p className="text-xs text-slate-500 mt-1">
                             {selectedVillageName}
-                            {selectedZoneName && (
-                              <span className="ml-1.5 font-medium text-slate-700">
-                                • โซน {selectedZoneName}
-                              </span>
-                            )}
+                            {data.zone !== undefined &&
+                              data.zone !== "" &&
+                              data.zone !== null && (
+                                <span className="ml-1.5 font-medium text-slate-700">
+                                  • โซน {data.zone}
+                                </span>
+                              )}
                           </p>
                         </div>
                       </div>
@@ -337,18 +334,16 @@ export default function Step3AddressInfo({
                       /* รายการผลลัพธ์บ้านในระบบ */
                       <div className="rounded-xl border border-slate-200 bg-white p-2 shadow-xs max-h-56 overflow-y-auto space-y-1">
                         <div className="px-2 py-1 text-[11px] font-medium text-slate-400 uppercase tracking-wider flex items-center justify-between">
-                          <span>บ้านเลขที่ในระบบ ({filteredHouses.length})</span>
-                          <span className="text-slate-400 text-[10px]">แตะเพื่อเลือก</span>
+                          <span>
+                            บ้านเลขที่ในระบบ ({filteredHouses.length})
+                          </span>
+                          <span className="text-slate-400 text-[10px]">
+                            แตะเพื่อเลือก
+                          </span>
                         </div>
 
                         {filteredHouses.map((house) => {
-                          const zoneLabel = house.zone
-                            ? typeof house.zone === "number" && zones[house.zone]
-                              ? `โซน ${zones[house.zone]}`
-                              : String(house.zone).startsWith("โซน")
-                                ? house.zone
-                                : `โซน ${house.zone}`
-                            : null;
+                          const zone = house.zone ? `โซน ${house.zone}` : null;
 
                           return (
                             <button
@@ -364,9 +359,9 @@ export default function Step3AddressInfo({
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
-                                {zoneLabel && (
+                                {zone && (
                                   <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md group-hover:bg-blue-100/70 group-hover:text-blue-700">
-                                    {zoneLabel}
+                                    {zone}
                                   </span>
                                 )}
                                 <Check className="size-4 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -384,7 +379,8 @@ export default function Step3AddressInfo({
                             : `ยังไม่มีข้อมูลบ้านเลขที่ในระบบของ ${selectedVillageName}`}
                         </p>
                         <p className="text-[11px] text-amber-600 mb-3">
-                          หากยังไม่มีบ้านเลขที่นี้ในระบบ สามารถเพิ่มเข้าระบบใหม่ได้ทันทีค่ะ
+                          หากยังไม่มีบ้านเลขที่นี้ในระบบ
+                          สามารถเพิ่มเข้าระบบใหม่ได้ทันทีค่ะ
                         </p>
                         <Button
                           type="button"
@@ -429,14 +425,19 @@ export default function Step3AddressInfo({
                 <div className="flex items-start gap-2.5 text-xs text-blue-800 bg-blue-100/70 p-2.5 rounded-lg">
                   <Info className="size-4 shrink-0 text-blue-600 mt-0.5" />
                   <div>
-                    <span className="font-semibold">โหมดเพิ่มบ้านใหม่:</span> กรอกบ้านเลขที่ของคุณเพื่อเพิ่มเข้าสู่ระบบ PANNAM
+                    <span className="font-semibold">โหมดเพิ่มบ้านใหม่:</span>{" "}
+                    กรอกบ้านเลขที่ของคุณเพื่อเพิ่มเข้าสู่ระบบ PANNAM
                   </div>
                 </div>
 
                 {/* ช่องกรอกบ้านเลขที่ */}
                 <Field data-invalid={!!errors.houseNumber || undefined}>
-                  <FieldLabel htmlFor="houseNumber" className="text-xs font-semibold">
-                    บ้านเลขที่ที่ต้องการเพิ่ม <span className="text-destructive">*</span>
+                  <FieldLabel
+                    htmlFor="houseNumber"
+                    className="text-xs font-semibold"
+                  >
+                    บ้านเลขที่ที่ต้องการเพิ่ม{" "}
+                    <span className="text-destructive">*</span>
                   </FieldLabel>
                   <InputGroup className="h-11 bg-white">
                     <InputGroupAddon align="inline-start">
@@ -469,48 +470,20 @@ export default function Step3AddressInfo({
                   <FieldLabel className="text-xs font-semibold">
                     โซน (ไม่จำเป็นต้องระบุ)
                   </FieldLabel>
-                  <Select
-                    value={
-                      data.zone !== undefined && data.zone !== "" && data.zone !== null
-                        ? String(data.zone)
-                        : undefined
-                    }
-                    onValueChange={(v) =>
-                      onChange("zone", v !== "" ? parseInt(v, 10) : undefined)
-                    }
-                  >
-                    <SelectTrigger
-                      className="w-full h-11! bg-white text-base"
+                  <InputGroup className="h-11 bg-white">
+                    <InputGroupAddon>
+                      <SearchIcon className="size-4 text-muted-foreground" />
+                    </InputGroupAddon>
+                    <InputGroupInput
+                      id="zone"
+                      placeholder="เช่น 1, 2, 3,..."
+                      value={data.zone || ""}
+                      onChange={(e) => onChange("zone", e.target.value)}
+                      maxLength={10}
+                      className="text-base"
                       aria-invalid={!!errors.zone || undefined}
-                    >
-                      <SelectValue placeholder="เลือกโซน (ระบุหรือไม่ระบุก็ได้)">
-                        {data.zone !== undefined &&
-                        data.zone !== null &&
-                        data.zone !== ""
-                          ? selectedZoneName
-                          : "ไม่ได้เลือก"}
-                      </SelectValue>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem
-                          value=""
-                          className="px-2.5 py-2.5 text-muted-foreground"
-                        >
-                          -- ไม่ระบุโซน --
-                        </SelectItem>
-                        {zones.map((z, i) => (
-                          <SelectItem
-                            key={i}
-                            value={String(i)}
-                            className="px-2.5 py-2.5"
-                          >
-                            โซน {z}
-                          </SelectItem>
-                        ))}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
+                    />
+                  </InputGroup>
                   {errors.zone && (
                     <FieldDescription className="text-destructive">
                       {errors.zone}

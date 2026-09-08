@@ -3,8 +3,6 @@ import dayjs from "../utils/dayjs.js";
 import { registerMember } from "../services/member.service.js";
 import { registerSchema } from "../validations/register.schema.js";
 
-const ZONES_LIST = ["A", "B", "C", "D", "E", "F"];
-
 /**
  * Controller สำหรับจัดการการลงทะเบียนสมาชิกผ่าน LINE LIFF
  */
@@ -52,17 +50,6 @@ export async function handleRegister(req, res, next) {
       birthYear,
     );
 
-    // จัดการข้อมูลโซน (ถ้าส่งมาเป็น index ตัวเลข 0, 1 หรือ string "A")
-    let formattedZone = null;
-    if (zone !== undefined && zone !== null && zone !== "") {
-      const zoneIdx = Number(zone);
-      if (!isNaN(zoneIdx) && ZONES_LIST[zoneIdx]) {
-        formattedZone = ZONES_LIST[zoneIdx];
-      } else {
-        formattedZone = String(zone).trim();
-      }
-    }
-
     // จัดรูปแบบข้อมูลสำหรับส่งให้ service
     const registrationData = {
       line: {
@@ -79,7 +66,7 @@ export async function handleRegister(req, res, next) {
       address: {
         village: parseInt(village, 10),
         houseNumber: houseNumber.trim(),
-        zone: formattedZone,
+        zone: zone.trim(),
       },
     };
 

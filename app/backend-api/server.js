@@ -193,9 +193,9 @@ if (import.meta.main || !isProduction) {
 
   // กำหนด base URL
   const baseUrl = isProduction
-    // For production: https://pannam-api.vercel.app
-    // For development: https://fitting-allegedly-chicken.ngrok-free.app
-    ? `https://pannam-api.vercel.app`
+    ? // For production: https://pannam-api.vercel.app
+      // For development: https://fitting-allegedly-chicken.ngrok-free.app
+      `https://pannam-api.vercel.app`
     : `http://localhost:${config.port}`;
 
   // แสดงข้อความเมื่อเซิร์ฟเวอร์เริ่มทำงาน

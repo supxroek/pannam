@@ -26,9 +26,6 @@ export const villages = [
   { id: 8, name: "หมู่บ้านเขียวขจี" },
 ];
 
-// ข้อมูลโซน
-export const zones = ["A", "B", "C", "D", "E", "F"];
-
 // ข้อมูลบ้านเลขที่ที่มีอยู่ในระบบ (Mock data สำหรับค้นหา)
 export const existingHouses = [
   { id: 1, villageId: 1, houseNumber: "12", zone: 0 },
@@ -40,7 +37,7 @@ export const existingHouses = [
   { id: 7, villageId: 1, houseNumber: "102/4", zone: 4 },
   { id: 8, villageId: 2, houseNumber: "5", zone: 0 },
   { id: 9, villageId: 2, houseNumber: "18/2", zone: 1 },
-  { id: 10, villageId: 2, houseNumber: "33", zone: 2 },
+  { id: 10, villageId: 2, houseNumber: "4/6", zone: 9 },
   { id: 11, villageId: 3, houseNumber: "9", zone: 0 },
   { id: 12, villageId: 3, houseNumber: "14/1", zone: 1 },
   { id: 13, villageId: 3, houseNumber: "55", zone: 2 },

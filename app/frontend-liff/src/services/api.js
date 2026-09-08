@@ -1,6 +1,5 @@
 import liff from "@line/liff";
 import { ApiError } from "../utils/api-error.js";
-import { zones } from "../constants/registerData.js";
 
 /**
  * กำหนด Base URL ของ API Backend
@@ -133,11 +132,6 @@ export async function registerMember(formData, idToken, villageList = []) {
         (v) => v.id === Number(formData.village),
       );
       const villageName = villageObj?.name || villageObj?.address || formData.village || "-";
-      const zoneIdx = Number(formData.zone);
-      const zoneName =
-        !isNaN(zoneIdx) && zones[zoneIdx]
-          ? zones[zoneIdx]
-          : formData.zone || "-";
 
       // Masking ข้อมูลส่วนตัว
       const cleanId = String(formData.idCard || "").replace(/[^0-9]/g, "");
@@ -159,11 +153,7 @@ export async function registerMember(formData, idToken, villageList = []) {
       const fullName =
         `${formData.firstName || ""} ${formData.lastName || ""}`.trim();
       const zoneDisplay =
-        zoneName && zoneName !== "-"
-          ? String(zoneName).startsWith("โซน")
-            ? zoneName
-            : `โซน ${zoneName}`
-          : "";
+        formData.zone ? `โซน ${formData.zone}` : "";
       const addressDisplay = [
         formData.houseNumber ? `บ้านเลขที่ ${formData.houseNumber}` : "",
         zoneDisplay,

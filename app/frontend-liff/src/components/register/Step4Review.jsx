@@ -1,4 +1,4 @@
-import { villages, zones, thaiMonths } from '../../constants/registerData';
+import { villages, thaiMonths } from '../../constants/registerData';
 import {
   Card,
   CardHeader,
@@ -22,7 +22,6 @@ import {
 export default function Step4Review({ data, onBack, onSubmit, loading }) {
   const getVillageName = (id) =>
     villages.find((v) => v.id === id)?.name || '-';
-  const getZoneName = (id) => zones[id] || '-';
   const getMonthName = (idx) => thaiMonths[idx] || '-';
 
   return (
@@ -134,7 +133,7 @@ export default function Step4Review({ data, onBack, onSubmit, loading }) {
               <div className="flex justify-between">
                 <span className="text-sm text-muted-foreground">โซน</span>
                 <span className="text-sm font-medium">
-                  {getZoneName(data.zone)}
+                  {data.zone || '-'}
                 </span>
               </div>
             </div>

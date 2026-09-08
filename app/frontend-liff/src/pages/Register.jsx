@@ -16,6 +16,7 @@ import { useLiffAuth } from '@/hooks/useLiffAuth';
 import { LINE_LIFF_ID_REGISTER } from '@/constants/line-liff';
 import { registerMember, fetchVillages } from '@/services/api';
 import { parseApiError } from '@/utils/api-error';
+import { villages as mockVillages } from '@/constants/registerData';
 import { toast } from '@/components/ui/toast';
 import { validateFormStep } from '@/schemas/register.schema';
 import { forceReLogin, getSafeIdToken } from '@/lib/liff';
@@ -90,7 +91,6 @@ export default function Register() {
     if (!user) return; // รอจนกว่าจะยืนยันตัวตนผ่าน LIFF เสร็จสิ้น
     if (hasFetchedVillagesRef.current) return;
 
-    let isMounted = true;
     const idToken = getSafeIdToken(user);
 
     async function preloadVillages() {
@@ -98,14 +98,11 @@ export default function Register() {
       if (!idToken) {
         hasFetchedVillagesRef.current = true;
         console.error('ไม่พบ LINE ID Token สำหรับดึงข้อมูลหมู่บ้าน');
-        if (isMounted) {
-          toast.add({
-            title: 'ไม่พบข้อมูลการเข้าสู่ระบบ',
-            description: 'ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่อีกครั้ง',
-            type: 'error',
-          });
-        }
-        return;
+        toast.add({
+          title: 'ไม่พบข้อมูลการเข้าสู่ระบบ',
+          description: 'ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่อีกครั้ง',
+          type: 'error',
+        });
       }
 
       hasFetchedVillagesRef.current = true;
@@ -113,40 +110,45 @@ export default function Register() {
       try {
         setLoadingVillages(true);
         const list = await fetchVillages(idToken);
-        if (isMounted && list && list.length > 0) {
+        if (list && list.length > 0) {
           setVillages(list);
         }
       } catch (err) {
         // 2. บันทึก log ความล้มเหลวด้วย console.error เพื่อตรวจสอบตอนเกิดบั๊ก
         console.error('เกิดข้อผิดพลาดในการดึงข้อมูลหมู่บ้านจากเซิร์ฟเวอร์:', err);
+        const apiError = parseApiError(err);
+        toast.add({
+          title: "โหลดข้อมูลหมู่บ้านไม่สำเร็จ",
+          description:
+            apiError.message || "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์",
+          type: "error",
+        });
 
-        // แสดงการแจ้งเตือนทันทีว่าเกิดข้อผิดพลาด
-        if (isMounted) {
-          const apiError = parseApiError(err);
+        // สำหรับนักพัฒนา
+        // สามารถใช้โหมดทดสอบ เพื่อข้ามการดึงข้อมูลจากเซิร์ฟเวอร์
+        // และใช้ข้อมูล Mock เพื่อจำลองการดึงข้อมูล
+        if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+          setVillages(mockVillages);
+        } else {
+          // แสดงการแจ้งเตือนทันทีว่าเกิดข้อผิดพลาด
           if (apiError.isTokenExpired || apiError.isTokenInvalid) {
             setSessionExpiredOpen(true);
           } else {
             toast.add({
-              title: 'โหลดข้อมูลหมู่บ้านไม่สำเร็จ',
+              title: "โหลดข้อมูลหมู่บ้านไม่สำเร็จ",
               description:
-                apiError.message || 'เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์',
-              type: 'error',
+                apiError.message || "เกิดข้อผิดพลาดในการเชื่อมต่อเซิร์ฟเวอร์",
+              type: "error",
             });
           }
         }
       } finally {
         // 3. สั่งปิดสถานะ Loading ในบล็อก finally อย่างปลอดภัยเพื่อป้องกัน Memory Leak
-        if (isMounted) {
-          setLoadingVillages(false);
-        }
+        setLoadingVillages(false);
       }
     }
 
     preloadVillages();
-
-    return () => {
-      isMounted = false;
-    };
   }, [user]);
 
   // อัปเดตข้อมูลฟอร์มและบันทึกลง sessionStorage เสมอ
