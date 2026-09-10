@@ -2,6 +2,7 @@ import AppError from "../utils/app-error.js";
 import dayjs from "../utils/dayjs.js";
 import { registerMember } from "../services/member.service.js";
 import { registerSchema } from "../validations/register.schema.js";
+import lineProvider from "../providers/line.provider.js";
 
 /**
  * Controller สำหรับจัดการการลงทะเบียนสมาชิกผ่าน LINE LIFF
@@ -65,8 +66,8 @@ export async function handleRegister(req, res, next) {
       },
       address: {
         village: parseInt(village, 10),
-        houseNumber: houseNumber.trim(),
-        zone: zone.trim(),
+        houseNumber: (houseNumber || "").trim(),
+        zone: zone ? String(zone).trim() : null,
       },
     };
 
@@ -74,6 +75,15 @@ export async function handleRegister(req, res, next) {
     const result = await registerMember(registrationData);
 
     console.log("🎉 [MemberController] สมัครสมาชิกสำเร็จ", result);
+
+    // ปรับเปลี่ยน Rich Menu ตาม Role ของผู้ใช้ทันที (เช่น ลูกบ้าน RESIDENT)
+    if (lineUser?.userId) {
+      try {
+        await lineProvider.isMember(lineUser.userId);
+      } catch (menuErr) {
+        console.error("Failed to switch rich menu after registration:", menuErr.message);
+      }
+    }
 
     return res.status(201).json({
       success: true,

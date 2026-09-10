@@ -237,6 +237,9 @@ intentMatcher.register("REGISTER_SUCCESS", {
 
     if (userId) {
       try {
+        // อัปเดต Rich Menu ตาม Role ทันที (เช่น RESIDENT -> สำหรับลูกบ้าน)
+        await lineProvider.isMember(userId);
+
         const user = await prisma.user.findUnique({
           where: { lineUserId: userId },
         });
@@ -245,7 +248,7 @@ intentMatcher.register("REGISTER_SUCCESS", {
         }
       } catch (err) {
         console.warn(
-          "Could not fetch user name for welcome flex:",
+          "Could not fetch user name or sync rich menu for welcome flex:",
           err.message,
         );
       }
@@ -331,13 +334,11 @@ class EventsHandler {
         "สมัครเรียบร้อย",
       ].some((k) => text.includes(k));
 
-      // ตรวจสอบสมาชิก -> หากไม่ใช่สมาชิก ให้ส่งข้อความแจ้งเตือนเสมอ
-      if (!isRegisterMessage) {
-        const isMember = await lineProvider.isMember(source.userId);
-        if (!isMember) {
-          await lineProvider.replyOrPush(event, registerFlex());
-          return; // จบการทำงาน
-        }
+      // ตรวจสอบสมาชิกและอัปเดต Rich Menu ให้ตรงกับ Role ทันที
+      const isMember = await lineProvider.isMember(source.userId);
+      if (!isMember && !isRegisterMessage) {
+        await lineProvider.replyOrPush(event, registerFlex());
+        return; // จบการทำงาน
       }
     }
 
@@ -362,10 +363,14 @@ class EventsHandler {
 
   async handleFollow(event) {
     try {
+      if (event.source?.userId) {
+        // เมื่อผู้ใช้กดติดตาม/ปลดบล็อก ให้ตรวจสอบสถานะสมาชิกและสลับ Rich Menu ให้ถูกต้องทันที
+        await lineProvider.isMember(event.source.userId);
+      }
       // ส่ง flex message เมื่อผู้ใช้ทำการ follow หลังจากสติกเกอร์
       // await lineProvider.replyOrPush(event, followmeFlex()); //ยังไม่ส่งในตอนนี้
     } catch (error) {
-      console.error("Failed to send flex message:", error.message);
+      console.error("Failed to send flex message or handle follow:", error.message);
       await lineProvider.replyOrPush(event, {
         type: "sticker",
         packageId: "789",
