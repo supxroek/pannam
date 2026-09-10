@@ -94,7 +94,7 @@ export async function registerMember(data) {
       });
 
       // 7. ผูกสิทธิ์คนเข้ากับบ้านเลขที่ในตาราง user_properties
-      const userProperty = await tx.userProperty.upsert({
+      await tx.userProperty.upsert({
         where: {
           userId_propertyId: {
             userId: newUser.id,

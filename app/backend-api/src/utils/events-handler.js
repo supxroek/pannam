@@ -5,6 +5,7 @@ import intentMatcher from "./intent-matcher.js";
 import registerFlex from "../templates/flex/register.flex.js";
 import welcomeFlex from "../templates/flex/welcome.flex.js";
 import { prisma } from "../lib/prisma.js";
+import welcomeBackFlex from "../templates/flex/welcome-back.flex.js";
 
 // ============================================================
 // ลงทะเบียน Intents
@@ -362,15 +363,117 @@ class EventsHandler {
   }
 
   async handleFollow(event) {
+    const userId = event.source?.userId;
+    let displayName = "สมาชิก";
+    let user = null; // ✨ แก้ไข: ประกาศตัวแปรไว้ตรงนี้ เพื่อให้ทุก block เรียกใช้ได้
+
     try {
-      if (event.source?.userId) {
-        // เมื่อผู้ใช้กดติดตาม/ปลดบล็อก ให้ตรวจสอบสถานะสมาชิกและสลับ Rich Menu ให้ถูกต้องทันที
-        await lineProvider.isMember(event.source.userId);
+      if (userId) {
+        try {
+          // อัปเดต Rich Menu ตาม Role ทันที (เช่น RESIDENT -> สำหรับลูกบ้าน)
+          await lineProvider.isMember(userId);
+
+          // ✨ แก้ไข: ถอด const ออก เพื่อบันทึกค่าลงในตัวแปร user ที่ประกาศไว้ด้านบน
+          user = await prisma.user.findUnique({
+            where: { lineUserId: userId },
+            select: {
+              fullName: true,
+              nationalId: true,
+              phoneNumber: true,
+              // 1. ดึงข้อมูลหมู่บ้านผ่านตาราง userVillages
+              userVillages: {
+                where: { status: "ACTIVE" },
+                select: {
+                  village: {
+                    select: {
+                      address: true, // ที่อยู่หมู่บ้าน เช่น บ้านคลองไคร หมู่ที่ 10
+                      subDistrict: true, // ตำบล
+                      province: true, // จังหวัด
+                    },
+                  },
+                },
+              },
+              // 2. ดึงข้อมูลบ้าน/แปลงที่ดินผ่านตาราง userProperties
+              userProperties: {
+                select: {
+                  property: {
+                    select: {
+                      houseNumber: true, // เลขที่บ้าน
+                      zone: true, // โซน
+                    },
+                  },
+                },
+              },
+            },
+          });
+
+          if (user?.fullName) {
+            displayName = user.fullName;
+          }
+        } catch (err) {
+          console.warn(
+            "Could not fetch user name or sync rich menu for welcome flex:",
+            err.message,
+          );
+        }
       }
-      // ส่ง flex message เมื่อผู้ใช้ทำการ follow หลังจากสติกเกอร์
-      // await lineProvider.replyOrPush(event, followmeFlex()); //ยังไม่ส่งในตอนนี้
+
+      // Quick Reply ปุ่มลัดสำหรับเลือกทำรายการ
+      const quickReply = {
+        items: [
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "เช็คค่าน้ำ 💧",
+              text: "เช็คค่าน้ำ",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "ประวัติการใช้น้ำ 📊",
+              text: "ประวัติ",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "แจ้งปัญหา 🛠️",
+              text: "แจ้งปัญหา",
+            },
+          },
+        ],
+      };
+
+      // เตรียมข้อมูลสำหรับ Flex (ตอนนี้จะเข้าถึง user ได้แล้ว ไม่ขึ้น undefined)
+      const data = {
+        name: displayName,
+        number: user?.phoneNumber || "ไม่ได้ระบุ",
+        idCard: user?.nationalId || "ไม่ได้ระบุ",
+        village: user?.userVillages?.[0]?.village?.address || "ไม่ได้ระบุ",
+        property:
+          user?.userProperties?.[0]?.property?.houseNumber || "ไม่ได้ระบุ",
+        zone: user?.userProperties?.[0]?.property?.zone || "ไม่ได้ระบุ",
+      };
+
+      console.log("data", data);
+
+      const flexMessage = welcomeBackFlex(data);
+      const replyPayload = {
+        ...flexMessage,
+        quickReply,
+      };
+
+      // ส่ง Flex Message พร้อม Quick Reply
+      await lineProvider.replyOrPush(event, replyPayload);
     } catch (error) {
-      console.error("Failed to send flex message or handle follow:", error.message);
+      console.error(
+        "Failed to send flex message or handle follow:",
+        error.message,
+      );
       await lineProvider.replyOrPush(event, {
         type: "sticker",
         packageId: "789",
