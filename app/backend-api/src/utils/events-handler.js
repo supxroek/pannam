@@ -5,7 +5,6 @@ import intentMatcher from "./intent-matcher.js";
 import registerFlex from "../templates/flex/register.flex.js";
 import welcomeFlex from "../templates/flex/welcome.flex.js";
 import welcomeBackFlex from "../templates/flex/welcome-back.flex.js";
-import { prisma } from "../lib/prisma.js";
 
 // ============================================================
 // ลงทะเบียน Intents
@@ -120,14 +119,30 @@ intentMatcher.register("COMPLAINT", {
 // สรุปความคืบหน้า (SUMMARY)
 intentMatcher.register("SUMMARY", {
   description: "สรุปความคืบหน้า",
-  keywords: ["สรุป", "summary", "บันทึก", "บันทึกการใช้น้ำ", "จด"],
-  optionalKeywords: ["บันทึก", "จด", "เพิ่ม", "เขียน"],
+  keywords: ["สรุป", "summary", "ความคืบหน้า", "คงเหลือ"],
+  optionalKeywords: ["สรุป", "ยอด", "ความคืบหน้า", "ผล"],
+  patterns: ["สรุป.*ความคืบหน้า", "สรุป.*คงเหลือ", "สรุป.*ยอด"],
   weight: 1.0,
-  execute: async (event) => {    
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: "สรุปความคืบหน้าสำเร็จ",
-    });
+  execute: async (event) => {
+    // ตรวจสอบ Role
+    const { source } = event;
+    const { member } = await lineProvider.isMember(source?.userId);
+    if (
+      member.userVillages[0]?.role == "METER_READER" ||
+      member.userVillages[0]?.role == "VILLAGE_ADMIN"
+    ) {
+      await lineProvider.replyOrPush(event, {
+        type: "text",
+        text: "สรุปความคืบหน้าสำเร็จ",
+      });
+      return;
+    } else {
+      await lineProvider.replyOrPush(event, {
+        type: "text",
+        text: "ขออภัยครับ/ค่ะ คุณไม่มีสิทธิ์ใช้งานฟังก์ชันนี้",
+      });
+      return;
+    }
   },
 });
 
@@ -137,10 +152,25 @@ intentMatcher.register("PENDING_CASH", {
   keywords: ["บ้านค้าง", "ชำระ", "pending", "cash"],
   weight: 1.0,
   execute: async (event) => {
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: "ตรวจสอบบ้านค้างชำระสำเร็จ",
-    });
+    // ตรวจสอบ Role
+    const { source } = event;
+    const { member } = await lineProvider.isMember(source?.userId);
+    if (
+      member.userVillages[0]?.role == "METER_READER" ||
+      member.userVillages[0]?.role == "VILLAGE_ADMIN"
+    ) {
+      await lineProvider.replyOrPush(event, {
+        type: "text",
+        text: "ตรวจสอบบ้านค้างชำระสำเร็จ",
+      });
+      return;
+    } else {
+      await lineProvider.replyOrPush(event, {
+        type: "text",
+        text: "ขออภัยครับ/ค่ะ คุณไม่มีสิทธิ์ใช้งานฟังก์ชันนี้",
+      });
+      return;
+    }
   },
 });
 
@@ -278,7 +308,9 @@ intentMatcher.register("REGISTER_SUCCESS", {
     if (source?.userId) {
       try {
         // อัปเดต Rich Menu ตาม Role ทันที (เช่น RESIDENT -> สำหรับลูกบ้าน)
-        const { isMember, member } = await lineProvider.isMember(source?.userId);
+        const { isMember, member } = await lineProvider.isMember(
+          source?.userId,
+        );
         if (isMember) {
           members = member;
         }
