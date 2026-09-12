@@ -40,7 +40,16 @@ intentMatcher.register("WATER_USAGE", {
 // ประวัติการใช้น้ำ
 intentMatcher.register("HISTORY", {
   description: "ประวัติการใช้น้ำ 6 เดือนย้อนหลัง",
-  keywords: ["ประวัติ", "การใช้น้ำ", "history", "ประวัติการใช้น้ำ", "เดือนที่แล้ว", "แล้วมา", "ก่อนหน้า", "ก่อน"],
+  keywords: [
+    "ประวัติ",
+    "การใช้น้ำ",
+    "history",
+    "ประวัติการใช้น้ำ",
+    "เดือนที่แล้ว",
+    "แล้วมา",
+    "ก่อนหน้า",
+    "ก่อน",
+  ],
   optionalKeywords: ["ตรวจสอบ", "เช็ค", "ดู", "ย้อนหลัง", "สอบถาม"],
   patterns: [
     "ตรวจสอบ.*ประวัติ",
@@ -56,7 +65,7 @@ intentMatcher.register("HISTORY", {
     "เดือน.*ที่แล้ว",
     "*ก่อนหน้า",
     "*ที่แล้ว",
-    "ก่อน.*เดือน"
+    "ก่อน.*เดือน",
   ],
   weight: 1.0,
   execute: async (event) => {
@@ -301,7 +310,7 @@ intentMatcher.register("REGISTER_SUCCESS", {
           action: {
             type: "message",
             label: "ประวัติการใช้น้ำ 📊",
-            text: "ประวัติ",
+            text: "ประวัติการใช้น้ำ",
           },
         },
         {
@@ -350,24 +359,9 @@ class EventsHandler {
     if (source?.userId) {
       await lineProvider.showLoadingAnimation(source.userId);
 
-      // ตรวจสอบว่าเป็นข้อความแจ้งเตือนการลงทะเบียนสำเร็จ หรือ ยืนยันข้อมูลถูกต้อง หรือไม่
-      const text = message?.type === "text" ? message.text.trim() : "";
-      const isRegisterMessage = [
-        "ลงทะเบียนสมาชิกสำเร็จ",
-        "ยืนยันข้อมูลถูกต้อง",
-        "ยืนยันข้อมูล",
-        "ยืนยันการลงทะเบียน",
-        "ยืนยันการสมัคร",
-        "ข้อมูลถูกต้อง",
-        "ลงทะเบียนเรียบร้อย",
-        "สมัครสมาชิกสำเร็จ",
-        "ลงทะเบียนสำเร็จ",
-        "สมัครเรียบร้อย",
-      ].some((k) => text.includes(k));
-
       // ตรวจสอบสมาชิกและอัปเดต Rich Menu ให้ตรงกับ Role ทันที
       const isMember = await lineProvider.isMember(source.userId);
-      if (!isMember && !isRegisterMessage) {
+      if (!isMember) {
         await lineProvider.replyOrPush(event, registerFlex());
         return; // จบการทำงาน
       }
@@ -387,64 +381,59 @@ class EventsHandler {
       default:
         await lineProvider.replyOrPush(event, {
           type: "text",
-          text: "ขออภัยครับ/ค่ะ ตอนนี้ฉันสามารถจัดการข้อความประเภทข้อความเท่านั้น",
+          text: "ขออภัยครับ/ค่ะ ฉันสามารถตอบกลับประเภทข้อความและสติ๊กเกอร์เท่านั้น",
         });
     }
   }
 
   async handleFollow(event) {
-    const userId = event.source?.userId;
+    const { source } = event;
     let displayName = "สมาชิก";
-    let user = null; // ✨ แก้ไข: ประกาศตัวแปรไว้ตรงนี้ เพื่อให้ทุก block เรียกใช้ได้
+    let userData = null;
 
     try {
-      if (userId) {
-        try {
-          // อัปเดต Rich Menu ตาม Role ทันที (เช่น RESIDENT -> สำหรับลูกบ้าน)
-          await lineProvider.isMember(userId);
+      if (source?.userId) {
+        await lineProvider.showLoadingAnimation(source.userId);
 
-          // ✨ แก้ไข: ถอด const ออก เพื่อบันทึกค่าลงในตัวแปร user ที่ประกาศไว้ด้านบน
-          user = await prisma.user.findUnique({
-            where: { lineUserId: userId },
-            select: {
-              fullName: true,
-              nationalId: true,
-              phoneNumber: true,
-              // 1. ดึงข้อมูลหมู่บ้านผ่านตาราง userVillages
-              userVillages: {
-                where: { status: "ACTIVE" },
-                select: {
-                  village: {
-                    select: {
-                      address: true, // ที่อยู่หมู่บ้าน เช่น บ้านคลองไคร หมู่ที่ 10
-                      subDistrict: true, // ตำบล
-                      province: true, // จังหวัด
-                    },
-                  },
-                },
-              },
-              // 2. ดึงข้อมูลบ้าน/แปลงที่ดินผ่านตาราง userProperties
-              userProperties: {
-                select: {
-                  property: {
-                    select: {
-                      houseNumber: true, // เลขที่บ้าน
-                      zone: true, // โซน
-                    },
+        // อัปเดต Rich Menu ตาม Role ทันที (เช่น RESIDENT -> สำหรับลูกบ้าน)
+        await lineProvider.isMember(userId);
+
+        // ✨ แก้ไข: ถอด const ออก เพื่อบันทึกค่าลงในตัวแปร userData ที่ประกาศไว้ด้านบน
+        userData = await prisma.user.findUnique({
+          where: { lineUserId: userId },
+          select: {
+            fullName: true,
+            nationalId: true,
+            phoneNumber: true,
+            // 1. ดึงข้อมูลหมู่บ้านผ่านตาราง userVillages
+            userVillages: {
+              where: { status: "ACTIVE" },
+              select: {
+                village: {
+                  select: {
+                    address: true, // ที่อยู่หมู่บ้าน เช่น บ้านคลองไคร หมู่ที่ 10
+                    subDistrict: true, // ตำบล
+                    province: true, // จังหวัด
                   },
                 },
               },
             },
-          });
+            // 2. ดึงข้อมูลบ้าน/แปลงที่ดินผ่านตาราง userProperties
+            userProperties: {
+              select: {
+                property: {
+                  select: {
+                    houseNumber: true, // เลขที่บ้าน
+                    zone: true, // โซน
+                  },
+                },
+              },
+            },
+          },
+        });
 
-          if (user?.fullName) {
-            displayName = user.fullName;
-          }
-        } catch (err) {
-          console.warn(
-            "Could not fetch user name or sync rich menu for welcome flex:",
-            err.message,
-          );
+        if (userData?.fullName) {
+          displayName = userData.fullName;
         }
       }
 
@@ -464,7 +453,7 @@ class EventsHandler {
             action: {
               type: "message",
               label: "ประวัติการใช้น้ำ 📊",
-              text: "ประวัติ",
+              text: "ประวัติการใช้น้ำ",
             },
           },
           {
@@ -481,15 +470,12 @@ class EventsHandler {
       // เตรียมข้อมูลสำหรับ Flex (ตอนนี้จะเข้าถึง user ได้แล้ว ไม่ขึ้น undefined)
       const data = {
         name: displayName,
-        number: user?.phoneNumber || "",
-        idCard: user?.nationalId || "",
-        village: user?.userVillages?.[0]?.village?.address || "",
-        property:
-          user?.userProperties?.[0]?.property?.houseNumber || "",
-        zone: user?.userProperties?.[0]?.property?.zone || "",
+        number: userData?.phoneNumber || "",
+        idCard: userData?.nationalId || "",
+        village: userData?.userVillages?.[0]?.village?.address || "",
+        property: userData?.userProperties?.[0]?.property?.houseNumber || "",
+        zone: userData?.userProperties?.[0]?.property?.zone || "",
       };
-
-      console.log("data", data);
 
       const flexMessage = welcomeBackFlex(data);
       const replyPayload = {
@@ -512,6 +498,7 @@ class EventsHandler {
     }
   }
 
+  /* ============== Utils Function ============== */
   // 🔧 ฟังก์ชันหลัก: จัดการข้อความ (ปรับปรุงแล้ว)
   async _handleTextMessage(event) {
     const text = event.message.text;
