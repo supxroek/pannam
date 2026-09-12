@@ -112,6 +112,112 @@ export async function handleRegister(req, res, next) {
   }
 }
 
+/**
+ * ดึงข้อมูลโปรไฟล์ผู้ใช้ปัจจุบัน
+ */
+export async function getProfile(req, res, next) {
+  try {
+    const lineUserId = req.lineUser.userId;
+    const user = await prisma.user.findUnique({
+      where: { lineUserId },
+      include: {
+        userVillages: {
+          where: { status: "ACTIVE" },
+          include: { village: true },
+        },
+        userProperties: {
+          include: { property: true },
+        },
+      },
+    });
+
+    if (!user) {
+      return next(AppError.notFound("ไม่พบข้อมูลผู้ใช้ในระบบ"));
+    }
+
+    const cleanId = String(user.nationalId || "").replace(/[^0-9]/g, "");
+    const maskedId =
+      cleanId.length === 13
+        ? `${cleanId.slice(0, 1)}-${cleanId.slice(1, 5)}-XXXXX-${cleanId.slice(10, 12)}-${cleanId.slice(12)}`
+        : cleanId || "-";
+
+    const cleanPhone = String(user.phoneNumber || "").replace(/[^0-9]/g, "");
+    const formattedPhone =
+      cleanPhone.length === 10
+        ? `${cleanPhone.slice(0, 3)}-${cleanPhone.slice(3, 6)}-${cleanPhone.slice(6)}`
+        : user.phoneNumber || "-";
+
+    const role = user.userVillages[0]?.role || "RESIDENT";
+    const village = user.userVillages[0]?.village || null;
+    const properties = user.userProperties.map((up) => ({
+      id: up.property.id,
+      houseNumber: up.property.houseNumber,
+      zone: up.property.zone,
+      meterCode: up.property.meterCode,
+      status: up.property.status,
+    }));
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        id: user.id,
+        lineUserId: user.lineUserId,
+        fullName: user.fullName,
+        nationalId: user.nationalId,
+        maskedNationalId: maskedId,
+        phoneNumber: user.phoneNumber,
+        formattedPhone,
+        birthdate: user.birthdate,
+        birthdateFormatted: user.birthdate ? dayjs(user.birthdate).locale("th").format("D MMMM BBBB") : "-",
+        role,
+        village,
+        properties,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * อัปเดตข้อมูลโปรไฟล์ผู้ใช้ (เช่น เบอร์โทรศัพท์)
+ */
+export async function updateProfile(req, res, next) {
+  try {
+    const lineUserId = req.lineUser.userId;
+    const { phoneNumber } = req.body;
+
+    if (!phoneNumber) {
+      return next(AppError.badRequest("กรุณาระบุเบอร์โทรศัพท์"));
+    }
+
+    const cleanedPhone = String(phoneNumber).replace(/[^0-9]/g, "");
+    if (cleanedPhone.length < 9 || cleanedPhone.length > 10) {
+      return next(AppError.badRequest("เบอร์โทรศัพท์ต้องมีความยาว 9-10 หลัก"));
+    }
+
+    const updated = await prisma.user.update({
+      where: { lineUserId },
+      data: {
+        phoneNumber: cleanedPhone,
+        updatedAt: new Date(),
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "อัปเดตข้อมูลส่วนตัวเรียบร้อยแล้ว",
+      data: {
+        phoneNumber: updated.phoneNumber,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 export default {
   handleRegister,
+  getProfile,
+  updateProfile,
 };

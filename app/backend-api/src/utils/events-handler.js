@@ -5,6 +5,11 @@ import intentMatcher from "./intent-matcher.js";
 import registerFlex from "../templates/flex/register.flex.js";
 import welcomeFlex from "../templates/flex/welcome.flex.js";
 import welcomeBackFlex from "../templates/flex/welcome-back.flex.js";
+import waterBillFlex from "../templates/flex/water-bill.flex.js";
+import waterHistoryFlex from "../templates/flex/water-history.flex.js";
+import paymentInfoFlex from "../templates/flex/payment-info.flex.js";
+import { readerProgressFlex, readerOverdueFlex } from "../templates/flex/reader.flex.js";
+import * as waterService from "../services/water.service.js";
 
 // ============================================================
 // ลงทะเบียน Intents
@@ -29,10 +34,25 @@ intentMatcher.register("WATER_USAGE", {
   patterns: ["เช็ค.*น้ำ", "ดู.*บิล", "ค่า.*น้ำ.*เท่าไร", "ยอด.*น้ำ.*ค้าง"],
   weight: 1.2,
   execute: async (event) => {
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: "คุณต้องการตรวจสอบค่าน้ำของบัญชีไหนครับ/ค่ะ? กรุณาระบุหมายเลขผู้ใช้น้ำค่ะ", // แก้ไขเป็น flex เพื่อแสดงผลการใช้น้ำเดือนนั้นๆ
-    });
+    const { source } = event;
+    try {
+      const properties = await waterService.getUserPropertiesWithBills(
+        source?.userId,
+      );
+
+      if (!properties || properties.length === 0) {
+        await lineProvider.replyOrPush(event, waterBillFlex([]));
+        return;
+      }
+
+      await lineProvider.replyOrPush(event, waterBillFlex(properties));
+    } catch (error) {
+      console.error("[WATER_USAGE] Error:", error.message);
+      await lineProvider.replyOrPush(event, {
+        type: "text",
+        text: "ขออภัยค่ะ ไม่สามารถดึงข้อมูลค่าน้ำได้ในขณะนี้ กรุณาลองใหม่อีกครั้งค่ะ 🙏",
+      });
+    }
   },
 });
 
@@ -68,10 +88,26 @@ intentMatcher.register("HISTORY", {
   ],
   weight: 1.0,
   execute: async (event) => {
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: "ประวัติการใช้น้ำ 6 เดือนย้อนหลัง", // เปลี่ยนเป็น flex เพื่อแสดงผลการใช้น้ำ 6 เดือนย้อนหลัง
-    });
+    const { source } = event;
+    try {
+      const properties = await waterService.getUserPropertiesWithHistory(
+        source?.userId,
+        3,
+      );
+
+      if (!properties || properties.length === 0) {
+        await lineProvider.replyOrPush(event, waterHistoryFlex([]));
+        return;
+      }
+
+      await lineProvider.replyOrPush(event, waterHistoryFlex(properties));
+    } catch (error) {
+      console.error("[HISTORY] Error:", error.message);
+      await lineProvider.replyOrPush(event, {
+        type: "text",
+        text: "ขออภัยค่ะ ไม่สามารถดึงประวัติการใช้น้ำได้ในขณะนี้ กรุณาลองใหม่อีกครั้งค่ะ 🙏",
+      });
+    }
   },
 });
 
@@ -79,14 +115,28 @@ intentMatcher.register("HISTORY", {
 intentMatcher.register("PAYMENT_INFO", {
   description: "วิธีการชำระเงิน",
   keywords: ["ชำระเงิน", "วิธี", "การชำระ", "payment"],
-  optionalKeywords: ["วิธี", "การชำระ", "payment"],
-  patterns: ["ชำระเงิน.*วิธี", "วิธี.*การชำระ", "payment.*วิธี"],
+  optionalKeywords: ["วิธี", "การชำระ", "payment", "โอน", "บัญชี", "พร้อมเพย์", "ธนาคาร"],
+  patterns: ["ชำระเงิน.*วิธี", "วิธี.*การชำระ", "payment.*วิธี", "โอน.*เงิน", "ช่องทาง.*ชำระ"],
   weight: 1.0,
   execute: async (event) => {
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: "วิธีการชำระเงิน: https://www.pannam.co.th/payment",
-    });
+    const { source } = event;
+    try {
+      const villageId = await waterService.getUserVillageId(source?.userId);
+
+      if (!villageId) {
+        await lineProvider.replyOrPush(event, paymentInfoFlex(null));
+        return;
+      }
+
+      const village = await waterService.getVillagePaymentInfo(villageId);
+      await lineProvider.replyOrPush(event, paymentInfoFlex(village));
+    } catch (error) {
+      console.error("[PAYMENT_INFO] Error:", error.message);
+      await lineProvider.replyOrPush(event, {
+        type: "text",
+        text: "ขออภัยค่ะ ไม่สามารถดึงข้อมูลช่องทางชำระเงินได้ในขณะนี้ กรุณาลองใหม่อีกครั้งค่ะ 🙏",
+      });
+    }
   },
 });
 
@@ -108,9 +158,7 @@ intentMatcher.register("COMPLAINT", {
   execute: async (event) => {
     await lineProvider.replyOrPush(event, {
       type: "text",
-      text: `กรุณาอธิบายปัญหาที่พบเพื่อให้เจ้าหน้าที่ติดต่อกลับค่ะ หรือสามารถติดต่อได้ทางโทรศัพท์ที่
-1. 081-xxxx-xxxx (คุณทดสอบ)
-2. 082-xxxx-xxxx (คุณแอดมิน)`,
+      text: `🛠️ แจ้งปัญหา / ร้องเรียน\n\nกรุณาอธิบายปัญหาที่พบ เพื่อให้เจ้าหน้าที่ติดต่อกลับค่ะ\n\nหรือติดต่อโดยตรง:\n📞 081-xxxx-xxxx (คุณทดสอบ)\n📞 082-xxxx-xxxx (คุณแอดมิน)\n\nเวลาทำการ: จ.-ศ. 08:00-17:00 น.`,
     });
   },
 });
@@ -120,28 +168,39 @@ intentMatcher.register("COMPLAINT", {
 intentMatcher.register("SUMMARY", {
   description: "สรุปความคืบหน้า",
   keywords: ["สรุป", "summary", "ความคืบหน้า", "คงเหลือ"],
-  optionalKeywords: ["สรุป", "ยอด", "ความคืบหน้า", "ผล"],
-  patterns: ["สรุป.*ความคืบหน้า", "สรุป.*คงเหลือ", "สรุป.*ยอด"],
+  optionalKeywords: ["สรุป", "ยอด", "ความคืบหน้า", "ผล", "จดน้ำ", "มิเตอร์"],
+  patterns: ["สรุป.*ความคืบหน้า", "สรุป.*คงเหลือ", "สรุป.*ยอด", "สรุป.*จด"],
   weight: 1.0,
   execute: async (event) => {
-    // ตรวจสอบ Role
     const { source } = event;
-    const { member } = await lineProvider.isMember(source?.userId);
-    if (
-      member.userVillages[0]?.role == "METER_READER" ||
-      member.userVillages[0]?.role == "VILLAGE_ADMIN"
-    ) {
+    try {
+      const { member } = await lineProvider.isMember(source?.userId);
+      const userRole = member?.userVillages?.[0]?.role;
+      if (userRole !== "METER_READER" && userRole !== "VILLAGE_ADMIN") {
+        await lineProvider.replyOrPush(event, {
+          type: "text",
+          text: "ขออภัยค่ะ ฟังก์ชันนี้สำหรับผู้จดมิเตอร์หรือผู้ดูแลหมู่บ้านเท่านั้นนะคะ 🙏",
+        });
+        return;
+      }
+
+      const villageId = await waterService.getUserVillageId(source?.userId);
+      if (!villageId) {
+        await lineProvider.replyOrPush(event, {
+          type: "text",
+          text: "ไม่พบข้อมูลหมู่บ้านที่คุณสังกัด กรุณาติดต่อผู้ดูแลระบบค่ะ",
+        });
+        return;
+      }
+
+      const progressData = await waterService.getReadingProgress(villageId);
+      await lineProvider.replyOrPush(event, readerProgressFlex(progressData));
+    } catch (error) {
+      console.error("[SUMMARY] Error:", error.message);
       await lineProvider.replyOrPush(event, {
         type: "text",
-        text: "สรุปความคืบหน้าสำเร็จ",
+        text: "ขออภัยค่ะ ไม่สามารถดึงข้อมูลสรุปความคืบหน้าได้ในขณะนี้ กรุณาลองใหม่อีกครั้งค่ะ 🙏",
       });
-      return;
-    } else {
-      await lineProvider.replyOrPush(event, {
-        type: "text",
-        text: "ขออภัยครับ/ค่ะ คุณไม่มีสิทธิ์ใช้งานฟังก์ชันนี้",
-      });
-      return;
     }
   },
 });
@@ -149,27 +208,40 @@ intentMatcher.register("SUMMARY", {
 // ตรวจสอบบ้านค้างชำระ (PENDING_CASH)
 intentMatcher.register("PENDING_CASH", {
   description: "ตรวจสอบบ้านค้างชำระ",
-  keywords: ["บ้านค้าง", "ชำระ", "pending", "cash"],
+  keywords: ["บ้านค้าง", "ชำระ", "pending", "cash", "ค้างชำระ"],
+  optionalKeywords: ["ตรวจ", "เช็ค", "ดู", "ยอดค้าง", "ค้างจ่าย", "เก็บเงิน"],
+  patterns: ["เช็ค.*ค้าง", "ตรวจ.*ค้าง", "บ้าน.*ค้าง", "ยอด.*ค้าง"],
   weight: 1.0,
   execute: async (event) => {
-    // ตรวจสอบ Role
     const { source } = event;
-    const { member } = await lineProvider.isMember(source?.userId);
-    if (
-      member.userVillages[0]?.role == "METER_READER" ||
-      member.userVillages[0]?.role == "VILLAGE_ADMIN"
-    ) {
+    try {
+      const { member } = await lineProvider.isMember(source?.userId);
+      const userRole = member?.userVillages?.[0]?.role;
+      if (userRole !== "METER_READER" && userRole !== "VILLAGE_ADMIN") {
+        await lineProvider.replyOrPush(event, {
+          type: "text",
+          text: "ขออภัยค่ะ ฟังก์ชันนี้สำหรับผู้จดมิเตอร์หรือผู้ดูแลหมู่บ้านเท่านั้นนะคะ 🙏",
+        });
+        return;
+      }
+
+      const villageId = await waterService.getUserVillageId(source?.userId);
+      if (!villageId) {
+        await lineProvider.replyOrPush(event, {
+          type: "text",
+          text: "ไม่พบข้อมูลหมู่บ้านที่คุณสังกัด กรุณาติดต่อผู้ดูแลระบบค่ะ",
+        });
+        return;
+      }
+
+      const overdueData = await waterService.getOverdueSummary(villageId);
+      await lineProvider.replyOrPush(event, readerOverdueFlex(overdueData));
+    } catch (error) {
+      console.error("[PENDING_CASH] Error:", error.message);
       await lineProvider.replyOrPush(event, {
         type: "text",
-        text: "ตรวจสอบบ้านค้างชำระสำเร็จ",
+        text: "ขออภัยค่ะ ไม่สามารถดึงข้อมูลบ้านค้างชำระได้ในขณะนี้ กรุณาลองใหม่อีกครั้งค่ะ 🙏",
       });
-      return;
-    } else {
-      await lineProvider.replyOrPush(event, {
-        type: "text",
-        text: "ขออภัยครับ/ค่ะ คุณไม่มีสิทธิ์ใช้งานฟังก์ชันนี้",
-      });
-      return;
     }
   },
 });
@@ -509,6 +581,33 @@ class EventsHandler {
         type: "text",
         text: `"${text}" ขออภัย! ไม่สามารถเข้าใจคำสั่งของคุณได้`,
       });
+    }
+  }
+
+  // 🔧 จัดการ Postback Events (รองรับ actions จาก Flex buttons ในอนาคต)
+  async handlePostback(event) {
+    const { source, postback } = event;
+
+    if (source?.userId) {
+      await lineProvider.showLoadingAnimation(source.userId);
+    }
+
+    console.log("[Postback] data:", postback?.data);
+
+    // ตอนนี้ยังไม่มี postback action เฉพาะ — รองรับเพิ่มได้ในอนาคต
+    // เช่น: data=action=view_detail&propertyId=123
+    try {
+      const params = new URLSearchParams(postback?.data || "");
+      const action = params.get("action");
+
+      switch (action) {
+        // เพิ่ม cases ตรงนี้ในอนาคต
+        default:
+          console.log("[Postback] Unhandled action:", action);
+          break;
+      }
+    } catch (error) {
+      console.error("[Postback] Error:", error.message);
     }
   }
 }

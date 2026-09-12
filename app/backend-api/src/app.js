@@ -6,6 +6,7 @@ const router = express.Router();
 import webhookRoutes from "./routes/bot.routes.js";
 import memberRoutes from "./routes/member.routes.js";
 import villageRoutes from "./routes/village.routes.js";
+import waterRoutes from "./routes/water.routes.js";
 
 // Import middlewares
 import lineSignature from "./middlewares/line-signature.js";
@@ -22,5 +23,6 @@ router.use(
 
 router.use(`${API_VERSION}/member`, memberRoutes);
 router.use(`${API_VERSION}/villages`, villageRoutes);
+router.use(`${API_VERSION}/water`, waterRoutes);
 
 export default router;

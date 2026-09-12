@@ -24,7 +24,7 @@ class Webhook {
             await eventHandlers.handleFollow(event);
             break;
           case "postback":
-            // handle postback if needed in future
+            await eventHandlers.handlePostback(event);
             break;
           default:
             console.log("Unhandled event type:", event.type);

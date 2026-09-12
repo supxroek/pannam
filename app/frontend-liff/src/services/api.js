@@ -197,11 +197,161 @@ export async function registerMember(formData, idToken, villageList = []) {
     // ไม่ throw error เพื่อให้หน้าเว็บเปลี่ยนไปแสดงผลหน้า SuccessScreen ได้ตามปกติ
   }
 
-  return data;
+}
+
+/**
+ * ฟังก์ชันกลางสำหรับเรียกใช้งาน API Backend พร้อมแนบ LINE ID Token
+ */
+async function fetchWithAuth(endpoint, options = {}, idToken) {
+  if (!idToken) {
+    throw new ApiError("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบใหม่", "TOKEN_INVALID", 401);
+  }
+
+  const url = `${API_BASE_URL}${endpoint}`;
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${idToken}`,
+    ...options.headers,
+  };
+
+  const response = await fetch(url, { ...options, headers });
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const errorMsg = data.message || `เกิดข้อผิดพลาดในการติดต่อระบบ (รหัส: ${response.status})`;
+    throw new ApiError(
+      errorMsg,
+      data.code || (response.status === 401 ? "TOKEN_INVALID" : "API_ERROR"),
+      response.status,
+      data.errors
+    );
+  }
+
+  return data.data !== undefined ? data.data : data;
+}
+
+/**
+ * ============================================================
+ * API สำหรับผู้จดน้ำ (Meter Reader)
+ * ============================================================
+ */
+
+/**
+ * ดึงข้อมูลสรุปความคืบหน้าการจดน้ำในเดือนปัจจุบัน
+ */
+export async function fetchReadingProgress(idToken) {
+  return await fetchWithAuth("/api/water/progress", { method: "GET" }, idToken);
+}
+
+/**
+ * ดึงรายชื่อบ้านทั้งหมดสำหรับจดน้ำ พร้อมสถานะและเลขก่อนหน้า
+ */
+export async function fetchPropertiesForReading(idToken) {
+  return await fetchWithAuth("/api/water/properties-for-reading", { method: "GET" }, idToken);
+}
+
+/**
+ * บันทึกการอ่านมิเตอร์น้ำ
+ */
+export async function recordMeterReadingApi(payload, idToken) {
+  return await fetchWithAuth("/api/water/record-reading", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  }, idToken);
+}
+
+/**
+ * ดึงรายการบิลที่ค้างชำระทั้งหมดในหมู่บ้าน
+ */
+export async function fetchUnpaidBills(idToken) {
+  return await fetchWithAuth("/api/water/unpaid-bills", { method: "GET" }, idToken);
+}
+
+/**
+ * บันทึกการรับเงินสดโดยผู้จดน้ำ
+ */
+export async function recordCashPaymentApi(invoiceId, idToken) {
+  return await fetchWithAuth("/api/water/record-cash", {
+    method: "POST",
+    body: JSON.stringify({ invoiceId }),
+  }, idToken);
+}
+
+/**
+ * ============================================================
+ * API สำหรับลูกบ้าน (Resident)
+ * ============================================================
+ */
+
+/**
+ * ดึงรายการบ้านทั้งหมดที่ผู้ใช้ผูกไว้
+ */
+export async function fetchMyProperties(idToken) {
+  return await fetchWithAuth("/api/water/my-properties", { method: "GET" }, idToken);
+}
+
+/**
+ * ดึงข้อมูลบิลค่าน้ำปัจจุบันและช่องทางชำระเงิน
+ */
+export async function fetchCurrentBill(propertyId, idToken) {
+  const query = propertyId ? `?propertyId=${propertyId}` : "";
+  return await fetchWithAuth(`/api/water/current-bill${query}`, { method: "GET" }, idToken);
+}
+
+/**
+ * แนบสลิปโอนเงินค่าน้ำ
+ */
+export async function submitPaymentSlipApi(invoiceId, slipUrl, idToken) {
+  return await fetchWithAuth("/api/water/submit-slip", {
+    method: "POST",
+    body: JSON.stringify({ invoiceId, slipUrl }),
+  }, idToken);
+}
+
+/**
+ * ดึงประวัติการใช้น้ำเต็มรูปแบบสำหรับนำไปวาดกราฟและแสดงตาราง
+ */
+export async function fetchHistoryChart(propertyId, idToken) {
+  const query = propertyId ? `?propertyId=${propertyId}` : "";
+  return await fetchWithAuth(`/api/water/history-chart${query}`, { method: "GET" }, idToken);
+}
+
+/**
+ * ============================================================
+ * API ข้อมูลโปรไฟล์ส่วนตัว (Profile)
+ * ============================================================
+ */
+
+/**
+ * ดึงข้อมูลโปรไฟล์ผู้ใช้ปัจจุบัน
+ */
+export async function fetchUserProfile(idToken) {
+  return await fetchWithAuth("/api/member/profile", { method: "GET" }, idToken);
+}
+
+/**
+ * อัปเดตข้อมูลโปรไฟล์ผู้ใช้ (เบอร์โทรศัพท์)
+ */
+export async function updateUserProfile(data, idToken) {
+  return await fetchWithAuth("/api/member/profile", {
+    method: "PUT",
+    body: JSON.stringify(data),
+  }, idToken);
 }
 
 export default {
   fetchVillages,
   fetchVillageProperties,
   registerMember,
+  fetchReadingProgress,
+  fetchPropertiesForReading,
+  recordMeterReading: recordMeterReadingApi,
+  fetchUnpaidBills,
+  recordCashPayment: recordCashPaymentApi,
+  fetchMyProperties,
+  fetchCurrentBill,
+  submitPaymentSlip: submitPaymentSlipApi,
+  fetchHistoryChart,
+  fetchUserProfile,
+  updateUserProfile,
 };
