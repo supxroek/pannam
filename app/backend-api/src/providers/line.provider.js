@@ -1,6 +1,10 @@
 import * as line from "@line/bot-sdk";
 import axios from "axios";
-import { config, LINE_RICH_MENU_ID_ADMIN, LINE_RICH_MENU_ID_MEMBER } from "../config/line.config.js";
+import {
+  config,
+  LINE_RICH_MENU_ID_ADMIN,
+  LINE_RICH_MENU_ID_MEMBER,
+} from "../config/line.config.js";
 import { prisma } from "../lib/prisma.js";
 
 // const { LINE_RICH_MENU_ID } = process.env;
@@ -92,10 +96,34 @@ class LineProvider {
       const member = await prisma.user.findUnique({
         where: { lineUserId: userId },
         select: {
+          fullName: true,
+          nationalId: true,
+          phoneNumber: true,
+          // 1. ดึงข้อมูลหมู่บ้านเฉพาะที่ ACTIVE
           userVillages: {
-            where: { status: "ACTIVE" }, // ดึงเฉพาะหมู่บ้านที่สถานะยังใช้งานได้อยู่
+            where: { status: "ACTIVE" }, // กรองสถานะระดับความสัมพันธ์ลูกบ้าน-หมู่บ้าน
             select: {
               role: true,
+              village: {
+                select: {
+                  address: true,
+                  subDistrict: true,
+                  province: true,
+                },
+              },
+            },
+          },
+          // 2. ดึงข้อมูลบ้าน/แปลงที่ดิน เฉพาะชิ้นที่ผู้ใช้งานยังใช้งานอยู่ (ACTIVE) ✨
+          userProperties: {
+            select: {
+              property: {
+                // หากตัวบ้านเองมีฟิลด์สถานะด้วย สามารถใส่กรองเพิ่มในระดับนี้ได้เช่นกัน
+                // where: { isDeleted: false },
+                select: {
+                  houseNumber: true,
+                  zone: true,
+                },
+              },
             },
           },
         },
@@ -104,7 +132,7 @@ class LineProvider {
       // ถ้าไม่เจอ User ในระบบเลย
       if (!member) {
         await this.unlinkRichMenu(userId);
-        return false;
+        return { isMember: false, member: null };
       }
 
       // ดึงรายการ Role ทั้งหมดของผู้ใช้ออกมาเป็น Array ของ String เช่น ["RESIDENT"] หรือ ["METER_READER", "RESIDENT"]
@@ -112,30 +140,38 @@ class LineProvider {
 
       if (roles.includes("METER_READER") || roles.includes("VILLAGE_ADMIN")) {
         await this.linkRichMenu_Admin(userId);
-        return true;
+        return { isMember: true, member: member };
       } else if (roles.includes("RESIDENT")) {
         await this.linkRichMenu_Member(userId);
-        return true;
+        return { isMember: true, member: member };
       } else {
         // มีชื่อในระบบแต่ไม่มีบทบาทที่ใช้งานได้ หรือไม่มีหมู่บ้านที่ ACTIVE อยู่เลย
         await this.unlinkRichMenu(userId);
-        return false;
+        return { isMember: false, member: null };
       }
     } catch (error) {
-      console.error(`[LineProvider] Error checking member status for ${userId}:`, error.message);
-      return false;
+      console.error(
+        `[LineProvider] Error checking member status for ${userId}:`,
+        error.message,
+      );
+      return { isMember: false, member: null };
     }
   }
 
   // Link rich menu to member
   async linkRichMenu_Member(userId) {
     try {
-      console.log(`[LineProvider] Linking Member Rich Menu (${LINE_RICH_MENU_ID_MEMBER}) to user: ${userId}`);
-      return await this.client.linkRichMenuIdToUser(userId, LINE_RICH_MENU_ID_MEMBER);
+      console.log(
+        `[LineProvider] Linking Member Rich Menu (${LINE_RICH_MENU_ID_MEMBER}) to user: ${userId}`,
+      );
+      return await this.client.linkRichMenuIdToUser(
+        userId,
+        LINE_RICH_MENU_ID_MEMBER,
+      );
     } catch (error) {
       console.error(
         `[LineProvider] Failed to link Member rich menu to ${userId}:`,
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
   }
@@ -143,12 +179,17 @@ class LineProvider {
   // Link rich menu to admin
   async linkRichMenu_Admin(userId) {
     try {
-      console.log(`[LineProvider] Linking Admin/MeterReader Rich Menu (${LINE_RICH_MENU_ID_ADMIN}) to user: ${userId}`);
-      return await this.client.linkRichMenuIdToUser(userId, LINE_RICH_MENU_ID_ADMIN);
+      console.log(
+        `[LineProvider] Linking Admin/MeterReader Rich Menu (${LINE_RICH_MENU_ID_ADMIN}) to user: ${userId}`,
+      );
+      return await this.client.linkRichMenuIdToUser(
+        userId,
+        LINE_RICH_MENU_ID_ADMIN,
+      );
     } catch (error) {
       console.error(
         `[LineProvider] Failed to link Admin rich menu to ${userId}:`,
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
   }
@@ -156,7 +197,9 @@ class LineProvider {
   // Unlink rich menu (reverts user back to bot default rich menu)
   async unlinkRichMenu(userId) {
     try {
-      console.log(`[LineProvider] Unlinking custom rich menu for user: ${userId} (reverts to default)`);
+      console.log(
+        `[LineProvider] Unlinking custom rich menu for user: ${userId} (reverts to default)`,
+      );
       return await this.client.unlinkRichMenuIdFromUser(userId);
     } catch (error) {
       // 404 is expected if the user has no individually linked rich menu (they were already on default)
@@ -166,7 +209,7 @@ class LineProvider {
       }
       console.error(
         `[LineProvider] Failed to unlink rich menu for ${userId}:`,
-        error.response?.data || error.message
+        error.response?.data || error.message,
       );
     }
   }

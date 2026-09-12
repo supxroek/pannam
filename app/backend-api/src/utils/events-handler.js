@@ -123,7 +123,7 @@ intentMatcher.register("SUMMARY", {
   keywords: ["สรุป", "summary", "บันทึก", "บันทึกการใช้น้ำ", "จด"],
   optionalKeywords: ["บันทึก", "จด", "เพิ่ม", "เขียน"],
   weight: 1.0,
-  execute: async (event) => {
+  execute: async (event) => {    
     await lineProvider.replyOrPush(event, {
       type: "text",
       text: "สรุปความคืบหน้าสำเร็จ",
@@ -272,19 +272,15 @@ intentMatcher.register("REGISTER_SUCCESS", {
   ],
   weight: 2.0,
   execute: async (event) => {
-    const userId = event.source?.userId;
-    let displayName = "สมาชิก";
+    const { source } = event;
+    let members = null;
 
-    if (userId) {
+    if (source?.userId) {
       try {
         // อัปเดต Rich Menu ตาม Role ทันที (เช่น RESIDENT -> สำหรับลูกบ้าน)
-        await lineProvider.isMember(userId);
-
-        const user = await prisma.user.findUnique({
-          where: { lineUserId: userId },
-        });
-        if (user?.fullName) {
-          displayName = user.fullName;
+        const { isMember, member } = await lineProvider.isMember(source?.userId);
+        if (isMember) {
+          members = member;
         }
       } catch (err) {
         console.warn(
@@ -324,7 +320,7 @@ intentMatcher.register("REGISTER_SUCCESS", {
       ],
     };
 
-    const flexMessage = welcomeFlex({ name: displayName });
+    const flexMessage = welcomeFlex({ name: members?.fullName || "สมาชิก" });
     const replyPayload = {
       ...flexMessage,
       quickReply,
@@ -360,7 +356,7 @@ class EventsHandler {
       await lineProvider.showLoadingAnimation(source.userId);
 
       // ตรวจสอบสมาชิกและอัปเดต Rich Menu ให้ตรงกับ Role ทันที
-      const isMember = await lineProvider.isMember(source.userId);
+      const { isMember } = await lineProvider.isMember(source.userId);
       if (!isMember) {
         await lineProvider.replyOrPush(event, registerFlex());
         return; // จบการทำงาน
@@ -388,52 +384,17 @@ class EventsHandler {
 
   async handleFollow(event) {
     const { source } = event;
-    let displayName = "สมาชิก";
-    let userData = null;
+    let members = null;
 
     try {
       if (source?.userId) {
         await lineProvider.showLoadingAnimation(source.userId);
 
         // อัปเดต Rich Menu ตาม Role ทันที (เช่น RESIDENT -> สำหรับลูกบ้าน)
-        await lineProvider.isMember(source.userId);
-
-        // ✨ แก้ไข: ถอด const ออก เพื่อบันทึกค่าลงในตัวแปร userData ที่ประกาศไว้ด้านบน
-        userData = await prisma.user.findUnique({
-          where: { lineUserId: source?.userId },
-          select: {
-            fullName: true,
-            nationalId: true,
-            phoneNumber: true,
-            // 1. ดึงข้อมูลหมู่บ้านผ่านตาราง userVillages
-            userVillages: {
-              where: { status: "ACTIVE" },
-              select: {
-                village: {
-                  select: {
-                    address: true, // ที่อยู่หมู่บ้าน เช่น บ้านคลองไคร หมู่ที่ 10
-                    subDistrict: true, // ตำบล
-                    province: true, // จังหวัด
-                  },
-                },
-              },
-            },
-            // 2. ดึงข้อมูลบ้าน/แปลงที่ดินผ่านตาราง userProperties
-            userProperties: {
-              select: {
-                property: {
-                  select: {
-                    houseNumber: true, // เลขที่บ้าน
-                    zone: true, // โซน
-                  },
-                },
-              },
-            },
-          },
-        });
-
-        if (userData?.fullName) {
-          displayName = userData.fullName;
+        const { isMember, member } = await lineProvider.isMember(source.userId);
+        console.log("isMember", isMember, "member", member);
+        if (isMember) {
+          members = member;
         }
       }
 
@@ -469,12 +430,12 @@ class EventsHandler {
 
       // เตรียมข้อมูลสำหรับ Flex (ตอนนี้จะเข้าถึง user ได้แล้ว ไม่ขึ้น undefined)
       const data = {
-        name: displayName,
-        number: userData?.phoneNumber || "",
-        idCard: userData?.nationalId || "",
-        village: userData?.userVillages?.[0]?.village?.address || "",
-        property: userData?.userProperties?.[0]?.property?.houseNumber || "",
-        zone: userData?.userProperties?.[0]?.property?.zone || "",
+        name: members?.fullName || "สมาชิก",
+        number: members?.phoneNumber || "",
+        idCard: members?.nationalId || "",
+        village: members?.userVillages?.[0]?.village?.address || "",
+        property: members?.userProperties?.[0]?.property?.houseNumber || "",
+        zone: members?.userProperties?.[0]?.property?.zone || "",
       };
 
       const flexMessage = welcomeBackFlex(data);
