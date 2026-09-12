@@ -9,7 +9,7 @@ import { flex, bubble, box, text, button } from "./common.flex.js";
 export default function welcomeBackFlex(data = {}) {
   // 1. ดึงและป้องกันข้อมูลพื้นฐาน
   const fullName = data.name ? `คุณ${data.name}` : "คุณสมาชิก";
-  const displayVillage = data.village || "ไม่ได้ระบุ";
+  const displayVillage = data.village || "-";
 
   // 2. ทำ Masking เลขบัตรประชาชน (2-xxxx-XXXXX-xx-x)
   const cleanId = String(data.idCard || "").replace(/[^0-9]/g, "");
@@ -18,7 +18,7 @@ export default function welcomeBackFlex(data = {}) {
       ? `${cleanId.slice(0, 1)}-${cleanId.slice(1, 5)}-XXXXX-${cleanId.slice(10, 12)}-${cleanId.slice(12)}`
       : cleanId
         ? `${cleanId.slice(0, 4)}XXXXX${cleanId.slice(-2)}`
-        : "ไม่ได้ระบุ";
+        : "-";
 
   // 3. ทำ Masking เบอร์โทรศัพท์ (0xx-XXX-xxxx)
   const cleanPhone = String(data.number || "").replace(/[^0-9]/g, "");
@@ -27,20 +27,20 @@ export default function welcomeBackFlex(data = {}) {
       ? `${cleanPhone.slice(0, 3)}-XXX-${cleanPhone.slice(6)}`
       : cleanPhone.length === 9
         ? `${cleanPhone.slice(0, 2)}-XXX-${cleanPhone.slice(5)}`
-        : data.number || "ไม่ได้ระบุ";
+        : data.number || "-";
 
   // 4. จัดรูปแบบแสดงโซนและที่อยู่บ้านเลขที่
   const zoneDisplay =
-    data.zone && data.zone !== "ไม่ได้ระบุ" ? `โซน ${data.zone}` : "";
+    data.zone && data.zone !== "-" ? `โซน ${data.zone}` : "";
   const addressDisplay =
     [
-      data.property && data.property !== "ไม่ได้ระบุ"
+      data.property && data.property !== "-"
         ? `บ้านเลขที่ ${data.property}`
         : "",
       zoneDisplay,
     ]
       .filter(Boolean)
-      .join(" ") || "ไม่ได้ระบุ";
+      .join(" ") || "-";
 
   // 5. ส่งออกโครงสร้าง Flex Object ที่ถูกต้องตามโครงสร้าง LINE API
   return flex(
@@ -59,7 +59,7 @@ export default function welcomeBackFlex(data = {}) {
               text({
                 text: "✨ ยินดีต้อนรับกลับมา",
                 size: "xxs",
-                weight: "bold",
+                // weight: "bold",
                 color: "#16a34a",
               }),
             ],
@@ -79,14 +79,14 @@ export default function welcomeBackFlex(data = {}) {
             margin: "sm",
             contents: [
               text({
-                text: "ระบบตรวจสอบข้อมูลสมาชิก 💧",
+                text: "ข้อมูลสมาชิกเก่าของท่าน",
                 size: "lg",
                 weight: "bold",
                 color: "#1e293b",
                 wrap: true,
               }),
               text({
-                text: `สวัสดีค่ะ ${fullName} บัญชีของคุณผูกกับข้อมูลในระบบเรียบร้อยแล้ว รายละเอียดข้อมูลสมาชิกของคุณปัจจุบันมีดังนี้ค่ะ:`,
+                text: `สวัสดีค่ะ ${fullName} บัญชีของคุณผูกกับข้อมูลในระบบเรียบร้อยแล้ว รายละเอียดข้อมูลสมาชิกของคุณปัจจุบันมีดังนี้ค่ะ`,
                 size: "xs",
                 color: "#64748b",
                 wrap: true,
@@ -101,24 +101,28 @@ export default function welcomeBackFlex(data = {}) {
             backgroundColor: "#f8fafc",
             cornerRadius: "md",
             paddingAll: "md",
-            margin: "sm",
-            spacing: "sm",
+            margin: "md",
+            spacing: "xs",
             contents: [
               box({
                 layout: "horizontal",
+                spacing: "sm",
+                alignItems: "center",
+                margin: "xs",
                 contents: [
                   text({
                     text: "👤 ชื่อ-สกุล:",
                     size: "xs",
                     color: "#64748b",
-                    flex: 3,
+                    weight: "bold",
+                    flex: 0,
                   }),
                   text({
-                    text: data.name || "ไม่ได้ระบุ",
+                    text: " " + data.name || "-",
                     size: "xs",
                     color: "#1e293b",
-                    weight: "bold",
-                    flex: 7,
+                    // weight: "bold",
+                    flex: 1,
                     wrap: true,
                   }),
                 ],
@@ -130,13 +134,15 @@ export default function welcomeBackFlex(data = {}) {
                     text: "🪪 เลขบัตร ปชช.:",
                     size: "xs",
                     color: "#64748b",
-                    flex: 3,
+                    weight: "bold",
+                    flex: 0,
                   }),
                   text({
-                    text: maskedId,
+                    text: " " + maskedId,
                     size: "xs",
-                    color: "#334155",
-                    flex: 7,
+                    color: "#1e293b",
+                    // weight: "bold",
+                    flex: 1,
                   }),
                 ],
               }),
@@ -147,13 +153,15 @@ export default function welcomeBackFlex(data = {}) {
                     text: "📱 เบอร์โทรศัพท์:",
                     size: "xs",
                     color: "#64748b",
-                    flex: 3,
+                    weight: "bold",
+                    flex: 0,
                   }),
                   text({
-                    text: maskedPhone,
+                    text: " " + maskedPhone,
                     size: "xs",
-                    color: "#334155",
-                    flex: 7,
+                    color: "#1e293b",
+                    // weight: "bold",
+                    flex: 1,
                   }),
                 ],
               }),
@@ -164,13 +172,15 @@ export default function welcomeBackFlex(data = {}) {
                     text: "📍 หมู่บ้าน:",
                     size: "xs",
                     color: "#64748b",
-                    flex: 3,
+                    weight: "bold",
+                    flex: 0,
                   }),
                   text({
-                    text: displayVillage,
+                    text: " " + displayVillage,
                     size: "xs",
-                    color: "#334155",
-                    flex: 7,
+                    color: "#1e293b",
+                    // weight: "bold",
+                    flex: 1,
                     wrap: true,
                   }),
                 ],
@@ -182,13 +192,15 @@ export default function welcomeBackFlex(data = {}) {
                     text: "🏡 เลขที่บ้าน:",
                     size: "xs",
                     color: "#64748b",
-                    flex: 3,
+                    weight: "bold",
+                    flex: 0,
                   }),
                   text({
-                    text: addressDisplay,
+                    text: " " + addressDisplay,
                     size: "xs",
-                    color: "#334155",
-                    flex: 7,
+                    color: "#1e293b",
+                    // weight: "bold",
+                    flex: 1,
                     wrap: true,
                   }),
                 ],

@@ -11,6 +11,131 @@ import welcomeBackFlex from "../templates/flex/welcome-back.flex.js";
 // ลงทะเบียน Intents
 // ============================================================
 
+/* ================ For Members ================ */
+// ตรวจสอบค่าน้ำ
+intentMatcher.register("WATER_USAGE", {
+  description: "ตรวจสอบค่าน้ำ",
+  keywords: ["ค่าน้ำ", "บิลน้ำ", "น้ำประปา", "water bill"],
+  optionalKeywords: [
+    "ตรวจสอบ",
+    "เช็ค",
+    "ดู",
+    "ถาม",
+    "เท่าไร",
+    "ยอด",
+    "ค้าง",
+    "จ่าย",
+    "ชำระ",
+  ],
+  patterns: ["เช็ค.*น้ำ", "ดู.*บิล", "ค่า.*น้ำ.*เท่าไร", "ยอด.*น้ำ.*ค้าง"],
+  weight: 1.2,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "คุณต้องการตรวจสอบค่าน้ำของบัญชีไหนครับ/ค่ะ? กรุณาระบุหมายเลขผู้ใช้น้ำค่ะ", // แก้ไขเป็น flex เพื่อแสดงผลการใช้น้ำเดือนนั้นๆ
+    });
+  },
+});
+
+// ประวัติการใช้น้ำ
+intentMatcher.register("HISTORY", {
+  description: "ประวัติการใช้น้ำ 6 เดือนย้อนหลัง",
+  keywords: ["ประวัติ", "การใช้น้ำ", "history", "ประวัติการใช้น้ำ", "เดือนที่แล้ว", "แล้วมา", "ก่อนหน้า", "ก่อน"],
+  optionalKeywords: ["ตรวจสอบ", "เช็ค", "ดู", "ย้อนหลัง", "สอบถาม"],
+  patterns: [
+    "ตรวจสอบ.*ประวัติ",
+    "เช็ค.*ประวัติ",
+    "ดู.*ประวัติ",
+    "ประวัติ.*ย้อนหลัง",
+    "สอบถาม.*ประวัติ",
+    "ประวัติ.*การใช้น้ำ",
+    "ยอด.*การใช้น้ำ",
+    "เดือน.*การใช้น้ำ",
+    "เดือน.*ย้อนหลัง",
+    "เดือน.*ก่อนหน้า",
+    "เดือน.*ที่แล้ว",
+    "*ก่อนหน้า",
+    "*ที่แล้ว",
+    "ก่อน.*เดือน"
+  ],
+  weight: 1.0,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "ประวัติการใช้น้ำ 6 เดือนย้อนหลัง", // เปลี่ยนเป็น flex เพื่อแสดงผลการใช้น้ำ 6 เดือนย้อนหลัง
+    });
+  },
+});
+
+// วิธีการชำระเงิน (PAYMENT_INFO)
+intentMatcher.register("PAYMENT_INFO", {
+  description: "วิธีการชำระเงิน",
+  keywords: ["ชำระเงิน", "วิธี", "การชำระ", "payment"],
+  optionalKeywords: ["วิธี", "การชำระ", "payment"],
+  patterns: ["ชำระเงิน.*วิธี", "วิธี.*การชำระ", "payment.*วิธี"],
+  weight: 1.0,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "วิธีการชำระเงิน: https://www.pannam.co.th/payment",
+    });
+  },
+});
+
+// ร้องเรียนหรือแจ้งปัญหา
+intentMatcher.register("COMPLAINT", {
+  description: "ร้องเรียนหรือแจ้งปัญหา",
+  keywords: [
+    "ร้องเรียน",
+    "แจ้งปัญหา",
+    "เสีย",
+    "พัง",
+    "น้ำไม่ไหล",
+    "น้ำรั่ว",
+    "ท่อแตก",
+  ],
+  optionalKeywords: ["ครับ", "ค่ะ", "ที่บ้าน", "ในหมู่บ้าน", "ตรงนี้"],
+  negativeKeywords: ["ไม่ร้องเรียน", "ไม่มีปัญหา"],
+  weight: 1.1,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: `กรุณาอธิบายปัญหาที่พบเพื่อให้เจ้าหน้าที่ติดต่อกลับค่ะ หรือสามารถติดต่อได้ทางโทรศัพท์ที่
+1. 081-xxxx-xxxx (คุณทดสอบ)
+2. 082-xxxx-xxxx (คุณแอดมิน)`,
+    });
+  },
+});
+
+/* ================ For Admins ================ */
+// สรุปความคืบหน้า (SUMMARY)
+intentMatcher.register("SUMMARY", {
+  description: "สรุปความคืบหน้า",
+  keywords: ["สรุป", "summary", "บันทึก", "บันทึกการใช้น้ำ", "จด"],
+  optionalKeywords: ["บันทึก", "จด", "เพิ่ม", "เขียน"],
+  weight: 1.0,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "สรุปความคืบหน้าสำเร็จ",
+    });
+  },
+});
+
+// ตรวจสอบบ้านค้างชำระ (PENDING_CASH)
+intentMatcher.register("PENDING_CASH", {
+  description: "ตรวจสอบบ้านค้างชำระ",
+  keywords: ["บ้านค้าง", "ชำระ", "pending", "cash"],
+  weight: 1.0,
+  execute: async (event) => {
+    await lineProvider.replyOrPush(event, {
+      type: "text",
+      text: "ตรวจสอบบ้านค้างชำระสำเร็จ",
+    });
+  },
+});
+
+/* ================ For Others ================ */
 // ทักทายผู้ใช้
 intentMatcher.register("GREETING", {
   description: "ทักทายผู้ใช้",
@@ -52,78 +177,6 @@ intentMatcher.register("GREETING", {
   },
 });
 
-// ตรวจสอบค่าน้ำ
-intentMatcher.register("WATER_CHECK", {
-  description: "ตรวจสอบค่าน้ำ",
-  keywords: ["ค่าน้ำ", "บิลน้ำ", "น้ำประปา", "water bill"],
-  optionalKeywords: [
-    "ตรวจสอบ",
-    "เช็ค",
-    "ดู",
-    "ถาม",
-    "เท่าไร",
-    "ยอด",
-    "ค้าง",
-    "จ่าย",
-    "ชำระ",
-  ],
-  patterns: ["เช็ค.*น้ำ", "ดู.*บิล", "ค่า.*น้ำ.*เท่าไร", "ยอด.*น้ำ.*ค้าง"],
-  weight: 1.2,
-  execute: async (event) => {
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: "คุณต้องการตรวจสอบค่าน้ำของบัญชีไหนครับ/ค่ะ? กรุณาระบุหมายเลขผู้ใช้น้ำค่ะ", // แก้ไขเป็น flex เพื่อแสดงผลการใช้น้ำเดือนนั้นๆ
-    });
-  },
-});
-
-// ประวัติการใช้น้ำ
-intentMatcher.register("HISTORY", {
-  description: "ประวัติการใช้น้ำ 6 เดือนย้อนหลัง",
-  keywords: ["ประวัติ", "การใช้น้ำ", "history", "ประวัติการใช้น้ำ"],
-  optionalKeywords: ["ตรวจสอบ", "เช็ค", "ดู", "ย้อนหลัง", "สอบถาม"],
-  patterns: [
-    "ตรวจสอบ.*ประวัติ",
-    "เช็ค.*ประวัติ",
-    "ดู.*ประวัติ",
-    "ประวัติ.*ย้อนหลัง",
-    "สอบถาม.*ประวัติ",
-    "ประวัติ.*การใช้น้ำ",
-    "ยอด.*การใช้น้ำ",
-  ],
-  weight: 1.0,
-  execute: async (event) => {
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: "ประวัติการใช้น้ำ 6 เดือนย้อนหลัง", // เปลี่ยนเป็น flex เพื่อแสดงผลการใช้น้ำ 6 เดือนย้อนหลัง
-    });
-  },
-});
-
-// จดค่าน้ำ
-intentMatcher.register("RECORD_WATER", {
-  description: "จดค่าน้ำ",
-  keywords: ["จดค่าน้ำ", "บันทึก", "บันทึกการใช้น้ำ", "จดน้ำ"],
-  optionalKeywords: ["บันทึก", "จด", "เพิ่ม", "เขียน"],
-  patterns: [
-    "บันทึก.*การใช้น้ำ",
-    "จด.*การใช้น้ำ",
-    "เพิ่ม.*การใช้น้ำ",
-    "เขียน.*การใช้น้ำ",
-    "จด.*น้ำ",
-    "บันทึก.*น้ำ",
-    "เพิ่ม.*น้ำ",
-    "เขียน.*น้ำ",
-  ],
-  weight: 1.0,
-  execute: async (event) => {
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: "บันทึกการใช้น้ำสำเร็จ",
-    });
-  },
-});
-
 // ขอความช่วยเหลือ
 intentMatcher.register("HELP", {
   description: "ขอความช่วยเหลือ",
@@ -155,29 +208,6 @@ intentMatcher.register("HELP", {
 1. พิมพ์ "เช็คค่าน้ำ" เพื่อตรวจสอบค่าน้ำ
 2. พิมพ์ "ประวัติ" เพื่อดูประวัติการใช้น้ำ
 3. พิมพ์ "แจ้งปัญหา" เพื่อติดต่อเจ้าหน้าที่`,
-    });
-  },
-});
-
-// ร้องเรียนหรือแจ้งปัญหา
-intentMatcher.register("COMPLAINT", {
-  description: "ร้องเรียนหรือแจ้งปัญหา",
-  keywords: [
-    "ร้องเรียน",
-    "แจ้งปัญหา",
-    "เสีย",
-    "พัง",
-    "น้ำไม่ไหล",
-    "น้ำรั่ว",
-    "ท่อแตก",
-  ],
-  optionalKeywords: ["ครับ", "ค่ะ", "ที่บ้าน", "ในหมู่บ้าน", "ตรงนี้"],
-  negativeKeywords: ["ไม่ร้องเรียน", "ไม่มีปัญหา"],
-  weight: 1.1,
-  execute: async (event) => {
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: "ขออภัยในความไม่สะดวกครับ/ค่ะ กรุณาอธิบายปัญหาที่พบเพื่อให้เจ้าหน้าที่ติดต่อกลับค่ะ",
     });
   },
 });
@@ -451,12 +481,12 @@ class EventsHandler {
       // เตรียมข้อมูลสำหรับ Flex (ตอนนี้จะเข้าถึง user ได้แล้ว ไม่ขึ้น undefined)
       const data = {
         name: displayName,
-        number: user?.phoneNumber || "ไม่ได้ระบุ",
-        idCard: user?.nationalId || "ไม่ได้ระบุ",
-        village: user?.userVillages?.[0]?.village?.address || "ไม่ได้ระบุ",
+        number: user?.phoneNumber || "",
+        idCard: user?.nationalId || "",
+        village: user?.userVillages?.[0]?.village?.address || "",
         property:
-          user?.userProperties?.[0]?.property?.houseNumber || "ไม่ได้ระบุ",
-        zone: user?.userProperties?.[0]?.property?.zone || "ไม่ได้ระบุ",
+          user?.userProperties?.[0]?.property?.houseNumber || "",
+        zone: user?.userProperties?.[0]?.property?.zone || "",
       };
 
       console.log("data", data);
