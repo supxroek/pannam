@@ -131,7 +131,7 @@ export default function welcomeBackFlex(data = {}) {
                 layout: "horizontal",
                 contents: [
                   text({
-                    text: "🪪 เลขบัตร ปชช.:",
+                    text: "🪪 เลข ปชช.:",
                     size: "xs",
                     color: "#64748b",
                     weight: "bold",

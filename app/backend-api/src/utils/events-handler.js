@@ -4,8 +4,8 @@ import lineProvider from "../providers/line.provider.js";
 import intentMatcher from "./intent-matcher.js";
 import registerFlex from "../templates/flex/register.flex.js";
 import welcomeFlex from "../templates/flex/welcome.flex.js";
-import { prisma } from "../lib/prisma.js";
 import welcomeBackFlex from "../templates/flex/welcome-back.flex.js";
+import { prisma } from "../lib/prisma.js";
 
 // ============================================================
 // ลงทะเบียน Intents
@@ -396,11 +396,11 @@ class EventsHandler {
         await lineProvider.showLoadingAnimation(source.userId);
 
         // อัปเดต Rich Menu ตาม Role ทันที (เช่น RESIDENT -> สำหรับลูกบ้าน)
-        await lineProvider.isMember(userId);
+        await lineProvider.isMember(source.userId);
 
         // ✨ แก้ไข: ถอด const ออก เพื่อบันทึกค่าลงในตัวแปร userData ที่ประกาศไว้ด้านบน
         userData = await prisma.user.findUnique({
-          where: { lineUserId: userId },
+          where: { lineUserId: source?.userId },
           select: {
             fullName: true,
             nationalId: true,
