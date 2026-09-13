@@ -15,8 +15,15 @@ import {
   Wallet,
 } from "lucide-react";
 
+// สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
+import { TEST_useLiffAuth } from '@/constants/registerData';
+
 export default function RecordPayment() {
   const { user, loading: authLoading, error: authError } = useLiffAuth(LINE_LIFF_ID_RECORD_PAYMENT);
+
+  // สำหรับการพัฒนาใน Local (Mock LIFF):
+  // =========================================================================
+  // const { users: user, loading: authLoading, error: authError } = TEST_useLiffAuth();
 
   const [unpaidBills, setUnpaidBills] = useState([]);
   const [loading, setLoading] = useState(true);

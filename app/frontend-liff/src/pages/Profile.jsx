@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLiffAuth } from "@/hooks/useLiffAuth";
-import { LINE_LIFF_ID_RECORD_WATER } from "@/constants/line-liff";
+import { LINE_LIFF_ID_PROFILE } from "@/constants/line-liff";
 import { fetchUserProfile, updateUserProfile } from "@/services/api";
 import { getSafeIdToken, liffLogout } from "@/lib/liff";
 import Navbar from "@/components/layout/Navbar";
@@ -24,8 +24,15 @@ import {
   Receipt,
 } from "lucide-react";
 
+// สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
+import { TEST_useLiffAuth } from '@/constants/registerData';
+
 export default function Profile() {
-  const { user, loading: authLoading, error: authError } = useLiffAuth(LINE_LIFF_ID_RECORD_WATER);
+  const { user, loading: authLoading, error: authError } = useLiffAuth(LINE_LIFF_ID_PROFILE);
+
+  // สำหรับการพัฒนาใน Local (Mock LIFF):
+  // =========================================================================
+  // const { users: user, loading: authLoading, error: authError } = TEST_useLiffAuth();
 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);

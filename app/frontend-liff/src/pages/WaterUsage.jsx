@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLiffAuth } from "@/hooks/useLiffAuth";
-import { LINE_LIFF_ID_RECORD_WATER } from "@/constants/line-liff";
+import { LINE_LIFF_ID_WATER_USAGE } from "@/constants/line-liff";
 import { fetchMyProperties, fetchCurrentBill, submitPaymentSlipApi } from "@/services/api";
 import { compressImage } from "@/utils/image-compressor";
 import { getSafeIdToken } from "@/lib/liff";
@@ -25,8 +25,15 @@ import {
   TrendingUp,
 } from "lucide-react";
 
+// สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
+import { TEST_useLiffAuth } from '@/constants/registerData';
+
 export default function WaterUsage() {
-  const { user, loading: authLoading, error: authError } = useLiffAuth(LINE_LIFF_ID_RECORD_WATER);
+  const { user, loading: authLoading, error: authError } = useLiffAuth(LINE_LIFF_ID_WATER_USAGE);
+
+  // สำหรับการพัฒนาใน Local (Mock LIFF):
+  // =========================================================================
+  // const { users: user, loading: authLoading, error: authError } = TEST_useLiffAuth();
 
   const [properties, setProperties] = useState([]);
   const [selectedPropertyId, setSelectedPropertyId] = useState(null);

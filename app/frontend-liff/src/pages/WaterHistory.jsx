@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useLiffAuth } from "@/hooks/useLiffAuth";
-import { LINE_LIFF_ID_RECORD_WATER } from "@/constants/line-liff";
+import { LINE_LIFF_ID_WATER_HISTORY } from "@/constants/line-liff";
 import { fetchMyProperties, fetchHistoryChart } from "@/services/api";
 import { getSafeIdToken } from "@/lib/liff";
 import Navbar from "@/components/layout/Navbar";
@@ -27,10 +27,17 @@ import {
   Droplets,
 } from "lucide-react";
 
-export default function WaterHistory() {
-  const { user, loading: authLoading, error: authError } = useLiffAuth(LINE_LIFF_ID_RECORD_WATER);
-  const [searchParams, setSearchParams] = useSearchParams();
+// สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
+import { TEST_useLiffAuth } from '@/constants/registerData';
 
+export default function WaterHistory() {
+  const { user, loading: authLoading, error: authError } = useLiffAuth(LINE_LIFF_ID_WATER_HISTORY);
+
+  // สำหรับการพัฒนาใน Local (Mock LIFF):
+  // =========================================================================
+  // const { users: user, loading: authLoading, error: authError } = TEST_useLiffAuth();
+  
+  const [searchParams, setSearchParams] = useSearchParams();
   const [properties, setProperties] = useState([]);
   const [selectedPropertyId, setSelectedPropertyId] = useState(
     searchParams.get("propertyId") ? Number(searchParams.get("propertyId")) : null

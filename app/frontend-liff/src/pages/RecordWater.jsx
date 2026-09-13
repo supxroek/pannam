@@ -20,8 +20,15 @@ import {
   Check,
 } from "lucide-react";
 
+// สำหรับทดสอบ useLiffAuth เพื่อไม่ให้หน้าเว็บทำการ Login จริง
+import { TEST_useLiffAuth } from '@/constants/registerData';
+
 export default function RecordWater() {
   const { user, loading: authLoading, error: authError } = useLiffAuth(LINE_LIFF_ID_RECORD_WATER);
+
+  // สำหรับการพัฒนาใน Local (Mock LIFF):
+  // =========================================================================
+  // const { users: user, loading: authLoading, error: authError } = TEST_useLiffAuth();
 
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
