@@ -67,7 +67,6 @@ intentMatcher.register("WATER_HISTORY", {
     "เดือนที่แล้ว",
     "แล้วมา",
     "ก่อนหน้า",
-    "ก่อน",
   ],
   optionalKeywords: ["ตรวจสอบ", "เช็ค", "ดู", "ย้อนหลัง", "สอบถาม"],
   patterns: [
@@ -82,9 +81,6 @@ intentMatcher.register("WATER_HISTORY", {
     "เดือน.*ย้อนหลัง",
     "เดือน.*ก่อนหน้า",
     "เดือน.*ที่แล้ว",
-    "*ก่อนหน้า",
-    "*ที่แล้ว",
-    "ก่อน.*เดือน",
   ],
   weight: 1.0,
   execute: async (event) => {
