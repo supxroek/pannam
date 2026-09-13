@@ -57,7 +57,7 @@ intentMatcher.register("WATER_USAGE", {
 });
 
 // ประวัติการใช้น้ำ
-intentMatcher.register("HISTORY", {
+intentMatcher.register("WATER_HISTORY", {
   description: "ประวัติการใช้น้ำ 6 เดือนย้อนหลัง",
   keywords: [
     "ประวัติ",
@@ -205,8 +205,8 @@ intentMatcher.register("SUMMARY", {
   },
 });
 
-// ตรวจสอบบ้านค้างชำระ (PENDING_CASH)
-intentMatcher.register("PENDING_CASH", {
+// ตรวจสอบบ้านค้างชำระ (UNPAID)
+intentMatcher.register("UNPAID", {
   description: "ตรวจสอบบ้านค้างชำระ",
   keywords: ["บ้านค้าง", "ชำระ", "pending", "cash", "ค้างชำระ"],
   optionalKeywords: ["ตรวจ", "เช็ค", "ดู", "ยอดค้าง", "ค้างจ่าย", "เก็บเงิน"],

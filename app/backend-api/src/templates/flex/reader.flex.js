@@ -66,7 +66,7 @@ export function readerProgressFlex(data = {}) {
     }
   }
 
-  const liffUrl = `${LINE_DEFAULT_LIFF_URL}${LINE_LIFF_ID_RECORD_WATER || "record-water"}`;
+  const liffUrl = `${LINE_DEFAULT_LIFF_URL}${LINE_LIFF_ID_RECORD_WATER}`;
 
   return flex(
     "สรุปความคืบหน้าการจดน้ำ 📝",
@@ -99,7 +99,7 @@ export function readerProgressFlex(data = {}) {
           // Header
           box({
             layout: "vertical",
-            spacing: "xxs",
+            spacing: "xs",
             contents: [
               text({
                 text: "รอบบันทึกข้อมูล",
