@@ -1,6 +1,6 @@
 // src/templates/flex/water-bill.flex.js
 
-import { flex, bubble, box, text, button, separator } from "./common.flex.js";
+import { flex, bubble, box, text, button } from "./common.flex.js";
 import {
   LINE_DEFAULT_LIFF_URL,
   LINE_LIFF_ID_WATER_USAGE,
@@ -10,15 +10,11 @@ import {
  * สถานะการชำระเงิน → Emoji + Label + สี
  */
 const STATUS_MAP = {
-  PENDING: { emoji: "🟡", label: "รอชำระ", color: "#d97706" },
-  VERIFYING: { emoji: "🟡", label: "รอตรวจสอบ", color: "#d97706" },
-  PAID_CASH: { emoji: "🟢", label: "ชำระแล้ว (เงินสด)", color: "#16a34a" },
-  PAID_ONLINE: {
-    emoji: "🟢",
-    label: "ชำระแล้ว (ออนไลน์)",
-    color: "#16a34a",
-  },
-  OVERDUE: { emoji: "🔴", label: "ค้างชำระ", color: "#dc2626" },
+  PENDING: { emoji: "", label: "รอชำระ", color: "#FF8F00" },
+  VERIFYING: { emoji: "", label: "รอตรวจสอบ", color: "#FF8F00" },
+  PAID_CASH: { emoji: "", label: "ชำระแล้ว (เงินสด)", color: "#16a34a" },
+  PAID_ONLINE: { emoji: "", label: "ชำระแล้ว (โอน)", color: "#16a34a" },
+  OVERDUE: { emoji: "", label: "ค้างชำระ", color: "#dc2626" },
 };
 
 /**
@@ -42,40 +38,35 @@ function waterBillBubble(data) {
 
   if (hasInvoice) {
     infoRows.push(
-      // หน่วยที่ใช้
-      box({
-        layout: "horizontal",
-        spacing: "sm",
-        contents: [
-          text({
-            text: "หน่วยที่ใช้",
-            size: "xs",
-            color: "#64748b",
-            flex: 3,
-          }),
-          text({
-            text: `${data.reading?.consumption ?? "-"} หน่วย`,
-            size: "xs",
-            color: "#1e293b",
-            weight: "bold",
-            align: "end",
-            flex: 4,
-          }),
-        ],
-      }),
       // ยอดรวม
       box({
         layout: "horizontal",
         spacing: "sm",
         contents: [
           text({
-            text: "ยอดรวม",
-            size: "xs",
+            text: `฿${data.invoice.totalAmount.toLocaleString("th-TH", { minimumFractionDigits: 2 })}`,
+            size: "xxl",
+            color: "#1e293b",
+            weight: "bold",
+            align: "center",
+            flex: 4,
+          }),
+        ],
+      }),
+      // หน่วยที่ใช้
+      box({
+        layout: "horizontal",
+        spacing: "sm",
+        margin: "xl",
+        contents: [
+          text({
+            text: "หน่วยที่ใช้",
+            size: "sm",
             color: "#64748b",
             flex: 3,
           }),
           text({
-            text: `฿${data.invoice.totalAmount.toLocaleString("th-TH", { minimumFractionDigits: 2 })}`,
+            text: `${data.reading?.consumption ?? "-"} หน่วย`,
             size: "sm",
             color: "#1e293b",
             weight: "bold",
@@ -91,13 +82,13 @@ function waterBillBubble(data) {
         contents: [
           text({
             text: "สถานะ",
-            size: "xs",
+            size: "sm",
             color: "#64748b",
             flex: 3,
           }),
           text({
             text: `${status.emoji} ${status.label}`,
-            size: "xs",
+            size: "sm",
             color: status.color,
             weight: "bold",
             align: "end",
@@ -112,14 +103,15 @@ function waterBillBubble(data) {
         contents: [
           text({
             text: "กำหนดชำระ",
-            size: "xs",
+            size: "sm",
             color: "#64748b",
             flex: 3,
           }),
           text({
             text: data.invoice.dueDateFormatted || "-",
-            size: "xs",
+            size: "sm",
             color: "#1e293b",
+            weight: "bold",
             align: "end",
             flex: 4,
           }),
@@ -130,15 +122,12 @@ function waterBillBubble(data) {
     infoRows.push(
       text({
         text: "ยังไม่มีข้อมูลบิลค่าน้ำ",
-        size: "xs",
+        size: "sm",
         color: "#94a3b8",
         align: "center",
       }),
     );
   }
-
-  // LIFF URL สำหรับดูรายละเอียด
-  const liffUrl = `${LINE_DEFAULT_LIFF_URL}${LINE_LIFF_ID_WATER_USAGE}?propertyId=${data.propertyId}`;
 
   return bubble({
     size: "kilo",
@@ -153,7 +142,7 @@ function waterBillBubble(data) {
           contents: [
             text({
               text: "💧 ค่าน้ำประจำเดือน",
-              size: "xxs",
+              size: "xs",
               color: "#2563eb",
             }),
           ],
@@ -181,7 +170,7 @@ function waterBillBubble(data) {
               text: hasInvoice
                 ? `ประจำเดือน ${data.reading?.readingMonth || "-"}`
                 : "ยังไม่มีข้อมูล",
-              size: "xs",
+              size: "sm",
               color: "#64748b",
             }),
           ],
@@ -201,13 +190,13 @@ function waterBillBubble(data) {
         button({
           action: {
             type: "uri",
-            label: "💧 ดูรายละเอียดเพิ่มเติม",
-            uri: liffUrl,
+            label: "ดูรายละเอียดเพิ่มเติม",
+            uri: `${LINE_DEFAULT_LIFF_URL}${LINE_LIFF_ID_WATER_USAGE}?propertyId=${data.propertyId}`,
           },
           style: "primary",
           color: "#2563eb",
           height: "sm",
-          margin: "sm",
+          margin: "lg",
         }),
       ],
     }),
@@ -224,6 +213,7 @@ function waterBillBubble(data) {
  * @returns {Object} Flex message object
  */
 export default function waterBillFlex(properties = []) {
+  // กรณีไม่มีข้อมูลบ้าน ให้แสดง flex message ว่างเปล่า
   if (properties.length === 0) {
     // ไม่มีบ้านในระบบ
     return flex(
@@ -236,15 +226,15 @@ export default function waterBillFlex(properties = []) {
           spacing: "md",
           contents: [
             text({
-              text: "💧 เช็คค่าน้ำ",
-              size: "md",
+              text: "⚠️ เช็คค่าน้ำ",
+              size: "lg",
               weight: "bold",
               color: "#1e293b",
               align: "center",
             }),
             text({
               text: "ไม่พบข้อมูลบ้านที่ผูกกับบัญชีของคุณ กรุณาติดต่อเจ้าหน้าที่ค่ะ",
-              size: "xs",
+              size: "sm",
               color: "#64748b",
               align: "center",
               wrap: true,
@@ -259,7 +249,7 @@ export default function waterBillFlex(properties = []) {
 
   // บ้าน 1 หลัง → ส่ง bubble ตรง, หลายหลัง → carousel
   if (bubbles.length === 1) {
-    return flex("เช็คค่าน้ำ 💧", bubbles[0]);
+    return flex("💧 ค่าน้ำประจำเดือน", bubbles[0]);
   }
 
   return flex("เช็คค่าน้ำ 💧", {

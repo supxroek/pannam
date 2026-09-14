@@ -8,7 +8,10 @@ import welcomeBackFlex from "../templates/flex/welcome-back.flex.js";
 import waterBillFlex from "../templates/flex/water-bill.flex.js";
 import waterHistoryFlex from "../templates/flex/water-history.flex.js";
 import paymentInfoFlex from "../templates/flex/payment-info.flex.js";
-import { readerProgressFlex, readerOverdueFlex } from "../templates/flex/reader.flex.js";
+import {
+  readerProgressFlex,
+  readerOverdueFlex,
+} from "../templates/flex/reader.flex.js";
 import * as waterService from "../services/water.service.js";
 
 // ============================================================
@@ -36,10 +39,12 @@ intentMatcher.register("WATER_USAGE", {
   execute: async (event) => {
     const { source } = event;
     try {
+      // ดึงข้อมูลค่าน้ำของผู้ใช้
       const properties = await waterService.getUserPropertiesWithBills(
         source?.userId,
       );
 
+      // กรณีไม่มีข้อมูลค่าน้ำ ให้แสดง flex message ว่างเปล่า
       if (!properties || properties.length === 0) {
         await lineProvider.replyOrPush(event, waterBillFlex([]));
         return;
@@ -50,7 +55,7 @@ intentMatcher.register("WATER_USAGE", {
       console.error("[WATER_USAGE] Error:", error.message);
       await lineProvider.replyOrPush(event, {
         type: "text",
-        text: "ขออภัยค่ะ ไม่สามารถดึงข้อมูลค่าน้ำได้ในขณะนี้ กรุณาลองใหม่อีกครั้งค่ะ 🙏",
+        text: "ขออภัยค่ะ ไม่สามารถดึงข้อมูลค่าน้ำได้ในขณะนี้ กรุณาลองใหม่อีกครั้งในภายหลังค่ะ 🙏",
       });
     }
   },
@@ -111,8 +116,22 @@ intentMatcher.register("WATER_HISTORY", {
 intentMatcher.register("PAYMENT_INFO", {
   description: "วิธีการชำระเงิน",
   keywords: ["ชำระเงิน", "วิธี", "การชำระ", "payment"],
-  optionalKeywords: ["วิธี", "การชำระ", "payment", "โอน", "บัญชี", "พร้อมเพย์", "ธนาคาร"],
-  patterns: ["ชำระเงิน.*วิธี", "วิธี.*การชำระ", "payment.*วิธี", "โอน.*เงิน", "ช่องทาง.*ชำระ"],
+  optionalKeywords: [
+    "วิธี",
+    "การชำระ",
+    "payment",
+    "โอน",
+    "บัญชี",
+    "พร้อมเพย์",
+    "ธนาคาร",
+  ],
+  patterns: [
+    "ชำระเงิน.*วิธี",
+    "วิธี.*การชำระ",
+    "payment.*วิธี",
+    "โอน.*เงิน",
+    "ช่องทาง.*ชำระ",
+  ],
   weight: 1.0,
   execute: async (event) => {
     const { source } = event;
@@ -271,9 +290,9 @@ intentMatcher.register("GREETING", {
   execute: async (event) => {
     const responses = [
       "สวัสดีครับ/ค่ะ! ยินดีที่ได้รู้จักคุณ 😊",
-      "สวัสดี! มีอะไรให้ PANNAM ช่วยเหลือไหมครับ/ค่ะ?",
-      "หวัดดีครับ/ค่ะ! วันนี้เป็นยังไงบ้าง?",
-      "สวัสดีครับ/ค่ะ! มีอะไรให้ช่วยเหลือไหมครับ/ค่ะ?",
+      "สวัสดี! มีอะไรให้ปันน้ำช่วยเหลือไหมครับ/ค่ะ? 🫡",
+      "หวัดดีครับ/ค่ะ! วันนี้เป็นยังไงบ้าง? 😙",
+      "สวัสดีครับ/ค่ะ! มีอะไรให้ช่วยไหมครับ/ค่ะ? 🧐",
     ];
     const randomResponse =
       responses[Math.floor(Math.random() * responses.length)];
@@ -309,13 +328,30 @@ intentMatcher.register("HELP", {
   patterns: ["ช่วย.*ด้วย", "สอน.*หน่อย", "ใช้งาน.*ยังไง", "ทำ.*อะไร"],
   weight: 1.0,
   execute: async (event) => {
-    await lineProvider.replyOrPush(event, {
-      type: "text",
-      text: `คุณสามารถใช้งาน PANNAM ได้ดังนี้:
+    const { source } = event;
+    try {
+      const { member } = await lineProvider.isMember(source?.userId);
+      const userRole = member?.userVillages?.[0]?.role;
+      if (userRole !== "METER_READER" && userRole !== "VILLAGE_ADMIN") {
+        await lineProvider.replyOrPush(event, {
+          type: "text",
+          text: `คุณสามารถใช้งาน PANNAM ได้ดังนี้:\n
 1. พิมพ์ "เช็คค่าน้ำ" เพื่อตรวจสอบค่าน้ำ
 2. พิมพ์ "ประวัติ" เพื่อดูประวัติการใช้น้ำ
-3. พิมพ์ "แจ้งปัญหา" เพื่อติดต่อเจ้าหน้าที่`,
-    });
+3. พิมพ์ "วิธีการชำระเงิน" เพื่อดูวิธีการชำระเงิน
+4. พิมพ์ "แจ้งปัญหา" เพื่อติดต่อเจ้าหน้าที่`,
+        });
+      } else {
+        await lineProvider.replyOrPush(event, {
+          type: "text",
+          text: `คุณสามารถใช้งาน PANNAM ได้ดังนี้:\n
+1. พิมพ์ "เช็คค่าน้ำ" เพื่อตรวจสอบค่าน้ำ
+2. พิมพ์ "ประวัติ" เพื่อดูประวัติการใช้น้ำ
+3. พิมพ์ "ความคืบหน้า" เพื่อดูความคืบหน้าการจดน้ำ
+4. พิมพ์ "ค้างชำระ" เพื่อดูบ้านที่ค้างชำระเงิน`,
+        });
+      }
+    } catch (error) {}
   },
 });
 
@@ -324,11 +360,12 @@ intentMatcher.register("THANKS", {
   description: "ขอบคุณ",
   keywords: ["ขอบคุณ", "thank", "thanks", "ขอบใจ", "เก่งมาก", "ดีมาก"],
   optionalKeywords: ["มาก", "นะ", "ครับ", "ค่ะ", "จ้า"],
+  patterns: ["ขอบคุณ.*", "ขอบใจ.*มาก", "ขอบคุณ.*ครับ"],
   weight: 0.8,
   execute: async (event) => {
     await lineProvider.replyOrPush(event, {
       type: "text",
-      text: "ยินดีที่ได้ช่วยเหลือครับ/ค่ะ! หากมีข้อสงสัยเพิ่มเติมสามารถสอบถามได้ตลอดเวลานะคะ 🙏",
+      text: "ยินดีที่ได้ช่วยเหลือครับ/ค่ะ!\n\nหากมีข้อสงสัยเพิ่มเติมสามารถสอบถามได้ตลอดเวลานะคะ 🙏",
     });
   },
 });
@@ -352,11 +389,6 @@ intentMatcher.register("REGISTER_SUCCESS", {
   description: "ต้อนรับสมาชิกใหม่เมื่อลงทะเบียนสำเร็จ",
   keywords: [
     "ลงทะเบียนสมาชิกสำเร็จ",
-    "ยืนยันข้อมูลถูกต้อง",
-    "ยืนยันข้อมูล",
-    "ยืนยันการลงทะเบียน",
-    "ยืนยันการสมัคร",
-    "ข้อมูลถูกต้อง",
     "ลงทะเบียนเรียบร้อย",
     "สมัครสมาชิกสำเร็จ",
     "ลงทะเบียนสำเร็จ",
@@ -373,60 +405,61 @@ intentMatcher.register("REGISTER_SUCCESS", {
     const { source } = event;
     let members = null;
 
-    if (source?.userId) {
-      try {
+    try {
+      if (source?.userId) {
         // อัปเดต Rich Menu ตาม Role ทันที (เช่น RESIDENT -> สำหรับลูกบ้าน)
-        const { isMember, member } = await lineProvider.isMember(
-          source?.userId,
-        );
+        const { isMember, member } = await lineProvider.isMember(source?.userId);
         if (isMember) {
           members = member;
         }
-      } catch (err) {
-        console.warn(
-          "Could not fetch user name or sync rich menu for welcome flex:",
-          err.message,
-        );
       }
+  
+      // Quick Reply ปุ่มลัดสำหรับเลือกทำรายการ
+      const quickReply = {
+        items: [
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "เช็คค่าน้ำ 💧",
+              text: "เช็คค่าน้ำ",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "ประวัติการใช้น้ำ 📊",
+              text: "ประวัติการใช้น้ำ",
+            },
+          },
+          {
+            type: "action",
+            action: {
+              type: "message",
+              label: "แจ้งปัญหา 🛠️",
+              text: "แจ้งปัญหา",
+            },
+          },
+        ],
+      };
+  
+      const flexMessage = welcomeFlex({ name: members?.fullName || "สมาชิก" });
+      const replyPayload = {
+        ...flexMessage,
+        quickReply,
+      };
+  
+      await lineProvider.replyOrPush(event, replyPayload);
+    } catch (error) {
+      console.error(error);
+      await lineProvider.replyOrPush(event, {
+        type: "text",
+        text: `🎉 สมัครสมาชิกสำเร็จ\n
+ยินดีต้อนรับสู่ปันน้ำ 💧\n\n
+บัญชีของคุณพร้อมใช้งานแล้ว สามารถตรวจสอบค่าน้ำและบริการอื่นๆ ได้ทันทีครับ/ค่ะ 🙏`,
+      });
     }
-
-    // Quick Reply ปุ่มลัดสำหรับเลือกทำรายการ
-    const quickReply = {
-      items: [
-        {
-          type: "action",
-          action: {
-            type: "message",
-            label: "เช็คค่าน้ำ 💧",
-            text: "เช็คค่าน้ำ",
-          },
-        },
-        {
-          type: "action",
-          action: {
-            type: "message",
-            label: "ประวัติการใช้น้ำ 📊",
-            text: "ประวัติการใช้น้ำ",
-          },
-        },
-        {
-          type: "action",
-          action: {
-            type: "message",
-            label: "แจ้งปัญหา 🛠️",
-            text: "แจ้งปัญหา",
-          },
-        },
-      ],
-    };
-
-    const flexMessage = welcomeFlex({ name: members?.fullName || "สมาชิก" });
-    const replyPayload = {
-      ...flexMessage,
-      quickReply,
-    };
-
-    await lineProvider.replyOrPush(event, replyPayload);
   },
 });
 
@@ -440,7 +473,7 @@ intentMatcher.register("UNKNOWN_FALLBACK", {
     const text = event.message.text;
     await lineProvider.replyOrPush(event, {
       type: "text",
-      text: `"${text}" ขออภัยครับ/ค่ะ ฉันไม่แน่ใจว่าคุณหมายถึงอะไร\n\nลองพิมพ์ "ช่วยเหลือ" เพื่อดูคำสั่งที่ใช้งานได้ หรือถามได้โดยตรงเลยค่ะ🙏`,
+      text: `😭 "${text}" ขออภัยครับ/ค่ะ ฉันไม่แน่ใจว่าคุณหมายถึงอะไร 🤔\n\nลองพิมพ์ "ช่วยเหลือ" เพื่อดูคำสั่งที่ใช้งานได้หรือถามได้โดยตรงเลยค่ะ 🙏`,
     });
   },
 });
