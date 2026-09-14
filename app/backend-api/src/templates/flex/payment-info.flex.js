@@ -13,6 +13,18 @@ import {
   LINE_LIFF_ID_PAYMENT,
 } from "../../config/line.config.js";
 
+// Mock Data สำหรับทดสอบช่องทางการชำระเงิน
+const mockVillage = {
+  address: "บ้านคลองไคร หมู่ที่ 10",
+  bankProvider: "ธนาคารกรุงไทย",
+  bankNumber: "1234567890",
+  bankPayeeName: "นาย สมชาย แสง",
+  promptpayNo: "0812345678",
+  promptpayName: "สมชาย แสง",
+  promptpayImage: "https://storage3.me-qr.com/qr/399754654.png?v=1789373728",
+  enablePromptpay: true,
+};
+
 /**
  * สร้าง Flex Bubble แสดงช่องทางชำระเงิน
  *
@@ -25,6 +37,9 @@ import {
  * @returns {Object} Flex message object
  */
 export default function paymentInfoFlex(village) {
+  // สำหรับทดสอบ
+  village = mockVillage;
+  
   if (!village) {
     return flex(
       "ช่องทางชำระเงิน 💳",
@@ -44,7 +59,7 @@ export default function paymentInfoFlex(village) {
             }),
             text({
               text: "ไม่พบข้อมูลหมู่บ้านของคุณ กรุณาติดต่อเจ้าหน้าที่ค่ะ",
-              size: "xs",
+              size: "sm",
               color: "#64748b",
               align: "center",
               wrap: true,
@@ -62,7 +77,7 @@ export default function paymentInfoFlex(village) {
     const bankRows = [
       text({
         text: "🏦 โอนผ่านธนาคาร",
-        size: "sm",
+        size: "md",
         weight: "bold",
         color: "#1e293b",
       }),
@@ -70,17 +85,17 @@ export default function paymentInfoFlex(village) {
       box({
         layout: "horizontal",
         spacing: "sm",
-        margin: "sm",
+        margin: "lg",
         contents: [
           text({
             text: "ธนาคาร",
-            size: "xs",
+            size: "sm",
             color: "#64748b",
             flex: 3,
           }),
           text({
             text: village.bankProvider,
-            size: "xs",
+            size: "sm",
             color: "#1e293b",
             weight: "bold",
             align: "end",
@@ -96,13 +111,13 @@ export default function paymentInfoFlex(village) {
         contents: [
           text({
             text: "เลขบัญชี",
-            size: "xs",
+            size: "sm",
             color: "#64748b",
             flex: 3,
           }),
           text({
             text: village.bankNumber,
-            size: "xs",
+            size: "sm",
             color: "#1e293b",
             weight: "bold",
             align: "end",
@@ -121,13 +136,13 @@ export default function paymentInfoFlex(village) {
           contents: [
             text({
               text: "ชื่อบัญชี",
-              size: "xs",
+              size: "sm",
               color: "#64748b",
               flex: 3,
             }),
             text({
               text: village.bankPayeeName,
-              size: "xs",
+              size: "sm",
               color: "#1e293b",
               weight: "bold",
               align: "end",
@@ -145,7 +160,8 @@ export default function paymentInfoFlex(village) {
         backgroundColor: "#f8fafc",
         cornerRadius: "md",
         paddingAll: "md",
-        spacing: "xs",
+        spacing: "sm",
+        margin: "lg",
         contents: bankRows,
       }),
     );
@@ -155,8 +171,8 @@ export default function paymentInfoFlex(village) {
   if (village.enablePromptpay && village.promptpayNo) {
     const promptpayRows = [
       text({
-        text: "📱 พร้อมเพย์ (PromptPay)",
-        size: "sm",
+        text: "📱 พร้อมเพย์",
+        size: "md",
         weight: "bold",
         color: "#1e293b",
       }),
@@ -164,17 +180,17 @@ export default function paymentInfoFlex(village) {
       box({
         layout: "horizontal",
         spacing: "sm",
-        margin: "sm",
+        margin: "lg",
         contents: [
           text({
             text: "หมายเลข",
-            size: "xs",
+            size: "sm",
             color: "#64748b",
             flex: 3,
           }),
           text({
             text: village.promptpayNo,
-            size: "xs",
+            size: "sm",
             color: "#1e293b",
             weight: "bold",
             align: "end",
@@ -193,13 +209,13 @@ export default function paymentInfoFlex(village) {
           contents: [
             text({
               text: "ชื่อบัญชี",
-              size: "xs",
+              size: "sm",
               color: "#64748b",
               flex: 3,
             }),
             text({
               text: village.promptpayName,
-              size: "xs",
+              size: "sm",
               color: "#1e293b",
               weight: "bold",
               align: "end",
@@ -214,10 +230,10 @@ export default function paymentInfoFlex(village) {
     const promptpaySection = [
       box({
         layout: "vertical",
-        backgroundColor: "#f0fdf4",
+        backgroundColor: "#f8fafc",
         cornerRadius: "md",
         paddingAll: "md",
-        spacing: "xs",
+        spacing: "sm",
         contents: promptpayRows,
       }),
     ];
@@ -228,7 +244,7 @@ export default function paymentInfoFlex(village) {
         box({
           layout: "vertical",
           alignItems: "center",
-          margin: "sm",
+          margin: "lg",
           contents: [
             image({
               url: village.promptpayImage,
@@ -238,7 +254,7 @@ export default function paymentInfoFlex(village) {
             }),
             text({
               text: "สแกน QR Code เพื่อชำระเงิน",
-              size: "xxs",
+              size: "xs",
               color: "#94a3b8",
               align: "center",
               margin: "xs",
@@ -254,17 +270,14 @@ export default function paymentInfoFlex(village) {
   // หมายเหตุ
   contentSections.push(
     text({
-      text: "หรือชำระเงินสดกับเจ้าหน้าที่จดน้ำโดยตรง",
-      size: "xxs",
+      text: "***หรือชำระเงินสดกับเจ้าหน้าโดยตรง",
+      size: "sm",
       color: "#94a3b8",
       align: "center",
       wrap: true,
-      margin: "md",
+      margin: "lg",
     }),
   );
-
-  // LIFF URL สำหรับแจ้งชำระ/อัปสลิป
-  const liffUrl = `${LINE_DEFAULT_LIFF_URL}${LINE_LIFF_ID_PAYMENT}`;
 
   return flex(
     "ช่องทางชำระเงิน 💳",
@@ -281,7 +294,7 @@ export default function paymentInfoFlex(village) {
             contents: [
               text({
                 text: "💳 ช่องทางชำระเงิน",
-                size: "xxs",
+                size: "xs",
                 color: "#2563eb",
               }),
             ],
@@ -295,28 +308,28 @@ export default function paymentInfoFlex(village) {
 
           // ชื่อหมู่บ้าน
           text({
-            text: village.address || "หมู่บ้าน",
+            text: `🏡 ${village.address || "หมู่บ้าน"}`,
             size: "md",
             weight: "bold",
             color: "#1e293b",
-            wrap: true,
+            wrap: false,
           }),
 
           // ข้อมูลช่องทางชำระ
           ...contentSections,
 
           // ปุ่มแจ้งชำระเงิน
-          button({
-            action: {
-              type: "uri",
-              label: "💳 แจ้งชำระเงิน",
-              uri: liffUrl,
-            },
-            style: "primary",
-            color: "#2563eb",
-            height: "sm",
-            margin: "sm",
-          }),
+          // button({
+          //   action: {
+          //     type: "uri",
+          //     label: "แจ้งชำระเงิน",
+          //     uri: `${LINE_DEFAULT_LIFF_URL}${LINE_LIFF_ID_PAYMENT}`,
+          //   },
+          //   style: "primary",
+          //   color: "#2563eb",
+          //   height: "sm",
+          //   margin: "lg",
+          // }),
         ],
       }),
     }),

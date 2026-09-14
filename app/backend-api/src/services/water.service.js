@@ -191,27 +191,6 @@ export async function getVillagePaymentInfo(villageId) {
 }
 
 /**
- * ดึง villageId ของผู้ใช้จาก lineUserId (ใช้ village แรกที่ ACTIVE)
- *
- * @param {string} lineUserId — LINE User ID
- * @returns {Promise<number|null>} villageId หรือ null
- */
-export async function getUserVillageId(lineUserId) {
-  const user = await prisma.user.findUnique({
-    where: { lineUserId },
-    select: {
-      userVillages: {
-        where: { status: "ACTIVE" },
-        take: 1,
-        select: { villageId: true },
-      },
-    },
-  });
-
-  return user?.userVillages[0]?.villageId || null;
-}
-
-/**
  * ============================================================
  * ฟังก์ชันสำหรับผู้จดน้ำ (Meter Reader) & ระบบจัดการค่าน้ำ
  * ============================================================

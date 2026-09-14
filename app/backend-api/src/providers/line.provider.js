@@ -102,7 +102,8 @@ class LineProvider {
           // 1. ดึงข้อมูลหมู่บ้านเฉพาะที่ ACTIVE
           userVillages: {
             where: { status: "ACTIVE" }, // กรองสถานะระดับความสัมพันธ์ลูกบ้าน-หมู่บ้าน
-            select: {
+            select: { 
+              villageId: true,
               role: true,
               village: {
                 select: {

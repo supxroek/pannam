@@ -7,6 +7,15 @@ import {
   LINE_LIFF_ID_RECORD_PAYMENT,
 } from "../../config/line.config.js";
 
+// Mock Data สำหรับทดสอบข้อมูลโซน
+const mockZones = [
+  { zone: "1", read: 17, total: 20 },
+  { zone: "2", read: 5, total: 10 },
+  { zone: "3", read: 1, total: 5 },
+  { zone: "4", read: 2, total: 3 },
+  { zone: "5", read: 4, total: 4 },
+];
+
 /**
  * Flex Message: สรุปความคืบหน้าการจดน้ำ (สำหรับผู้จดน้ำ)
  *
@@ -24,49 +33,80 @@ export function readerProgressFlex(data = {}) {
   const read = data.readProperties || 0;
   const unread = data.unreadProperties || 0;
   const percent = data.percent !== undefined ? data.percent : (total > 0 ? Math.round((read / total) * 100) : 0);
+  const clampedPercent = Math.min(100, Math.max(0, percent));
+
+  // Progress Bar Color: ถ้าเสร็จครบ 100% ให้เป็นสีเขียว ถ้ายังไม่เสร็จให้เป็นสีน้ำเงินพรีเมียม
+  const barColor = clampedPercent === 100 ? "#16a34a" : "#2563eb";
+
+  let zonesData = data?.zones;
+  // สำหรับทดสอบโซน
+  zonesData = mockZones;
 
   // สรุปรายโซน (ถ้ามี)
   const zoneRows = [];
-  if (Array.isArray(data.zones) && data.zones.length > 0) {
-    zoneRows.push(separator("sm"));
+  if (Array.isArray(zonesData) && zonesData.length > 0) {
     zoneRows.push(
       text({
         text: "📍 ความคืบหน้าแยกตามโซน",
-        size: "xxs",
-        color: "#64748b",
+        size: "sm",
+        color: "#475569",
         weight: "bold",
-        margin: "xs",
-      })
+      }),
     );
 
-    for (const z of data.zones) {
+    for (const z of zonesData) {
       const zPercent = z.total > 0 ? Math.round((z.read / z.total) * 100) : 0;
+      const zClamped = Math.min(100, Math.max(0, zPercent));
+      const zBarColor = z.read === z.total ? "#16a34a" : "#3b82f6";
+
       zoneRows.push(
         box({
-          layout: "horizontal",
+          layout: "vertical",
           spacing: "sm",
+          margin: "lg",
           contents: [
-            text({
-              text: z.zone ? `โซน ${z.zone}` : "ทั่วไป",
-              size: "xs",
-              color: "#334155",
-              flex: 4,
+            box({
+              layout: "horizontal",
+              contents: [
+                text({
+                  text: z.zone ? `โซน ${z.zone}` : "ทั่วไป",
+                  size: "sm",
+                  color: "#64748b",
+                  weight: "bold",
+                  flex: 4,
+                }),
+                text({
+                  text: `${z.read}/${z.total} หลัง`,
+                  size: "sm",
+                  color: z.read === z.total ? "#16a34a" : "#2563eb",
+                  weight: "bold",
+                  align: "end",
+                  flex: 5,
+                }),
+              ],
             }),
-            text({
-              text: `${z.read}/${z.total} หลัง (${zPercent}%)`,
-              size: "xs",
-              color: z.read === z.total ? "#16a34a" : "#2563eb",
-              weight: "bold",
-              align: "end",
-              flex: 5,
+            // Mini progress bar สำหรับแต่ละโซน
+            box({
+              layout: "vertical",
+              backgroundColor: "#f1f5f9",
+              height: "4px",
+              cornerRadius: "xxl",
+              contents: zClamped > 0 ? [
+                box({
+                  layout: "vertical",
+                  width: `${zClamped}%`,
+                  height: "4px",
+                  backgroundColor: zBarColor,
+                  cornerRadius: "xxl",
+                  contents: [],
+                })
+              ] : [],
             }),
           ],
         })
       );
     }
   }
-
-  const liffUrl = `${LINE_DEFAULT_LIFF_URL}${LINE_LIFF_ID_RECORD_WATER}`;
 
   return flex(
     "สรุปความคืบหน้าการจดน้ำ 📝",
@@ -75,104 +115,230 @@ export function readerProgressFlex(data = {}) {
       body: box({
         layout: "vertical",
         paddingAll: "xl",
-        spacing: "md",
+        spacing: "lg",
         contents: [
-          // Badge
-          box({
-            layout: "horizontal",
-            contents: [
-              text({
-                text: "📊 สรุปความคืบหน้าการจดน้ำ",
-                size: "xxs",
-                color: "#2563eb",
-                weight: "bold",
-              }),
-            ],
-            backgroundColor: "#eff6ff",
-            cornerRadius: "xxl",
-            paddingTop: "xs",
-            paddingBottom: "xs",
-            paddingStart: "md",
-            paddingEnd: "md",
-          }),
-
-          // Header
+          // 1. Badge & Header
           box({
             layout: "vertical",
             spacing: "xs",
             contents: [
-              text({
-                text: "รอบบันทึกข้อมูล",
-                size: "xs",
-                color: "#64748b",
+              box({
+                layout: "horizontal",
+                contents: [
+                  text({
+                    text: "📊 สรุปความคืบหน้าการจดน้ำ",
+                    size: "xs",
+                    color: "#2563eb",
+                    // weight: "bold",
+                  }),
+                ],
+                backgroundColor: "#eff6ff",
+                cornerRadius: "xxl",
+                paddingTop: "xs",
+                paddingBottom: "xs",
+                paddingStart: "md",
+                paddingEnd: "md",
+                alignItems: "center",
               }),
-              text({
-                text: monthName,
-                size: "md",
-                weight: "bold",
-                color: "#1e293b",
+              box({
+                layout: "vertical",
+                spacing: "xs",
+                margin: "md",
+                contents: [
+                  text({
+                    text: "รอบเดือน",
+                    size: "sm",
+                    color: "#64748b",
+                  }),
+                  text({
+                    text: monthName,
+                    size: "xl",
+                    weight: "bold",
+                    color: "#0f172a",
+                  }),
+                ],
               }),
             ],
           }),
 
-          // Card ภาพรวม
+          // 2. Linear Progress Bar Section
           box({
             layout: "vertical",
+            spacing: "xs",
             backgroundColor: "#f8fafc",
-            cornerRadius: "md",
+            cornerRadius: "lg",
             paddingAll: "md",
-            spacing: "sm",
             contents: [
               box({
                 layout: "horizontal",
                 contents: [
-                  text({ text: "ความคืบหน้าทั้งหมด", size: "xs", color: "#64748b", flex: 5 }),
                   text({
-                    text: `${percent}%`,
+                    text: "ความคืบหน้ารวม",
                     size: "sm",
-                    color: percent === 100 ? "#16a34a" : "#2563eb",
+                    color: "#64748b",
+                    flex: 5,
+                    gravity: "center",
+                  }),
+                  text({
+                    text: `${clampedPercent}%`,
+                    size: "md",
                     weight: "bold",
+                    color: barColor,
                     align: "end",
                     flex: 4,
                   }),
                 ],
               }),
+              // แถบเส้นความคืบหน้า (Linear Progress Bar)
               box({
-                layout: "horizontal",
-                contents: [
-                  text({ text: "จดแล้ว", size: "xs", color: "#64748b", flex: 5 }),
-                  text({ text: `✅ ${read} หลัง`, size: "xs", color: "#16a34a", weight: "bold", align: "end", flex: 4 }),
-                ],
+                layout: "vertical",
+                backgroundColor: "#e2e8f0",
+                height: "8px",
+                cornerRadius: "xxl",
+                margin: "xs",
+                contents: clampedPercent > 0 ? [
+                  box({
+                    layout: "vertical",
+                    width: `${clampedPercent}%`,
+                    height: "8px",
+                    backgroundColor: barColor,
+                    cornerRadius: "xxl",
+                    contents: [],
+                  })
+                ] : [],
               }),
-              box({
-                layout: "horizontal",
-                contents: [
-                  text({ text: "คงเหลือยังไม่จด", size: "xs", color: "#64748b", flex: 5 }),
-                  text({ text: `⏳ ${unread} หลัง`, size: "xs", color: unread > 0 ? "#ea580c" : "#64748b", weight: "bold", align: "end", flex: 4 }),
-                ],
-              }),
-              box({
-                layout: "horizontal",
-                contents: [
-                  text({ text: "บ้านทั้งหมด", size: "xs", color: "#64748b", flex: 5 }),
-                  text({ text: `${total} หลัง`, size: "xs", color: "#1e293b", align: "end", flex: 4 }),
-                ],
-              }),
-              ...zoneRows,
             ],
           }),
 
-          // ปุ่ม Action
+          // 3. จัดกลุ่มสถิติ (KPI Blocks)
+          box({
+            layout: "horizontal",
+            spacing: "sm",
+            contents: [
+              // บล็อก: จดแล้ว
+              box({
+                layout: "vertical",
+                flex: 1,
+                backgroundColor: "#f0fdf4",
+                cornerRadius: "md",
+                paddingAll: "sm",
+                alignItems: "center",
+                spacing: "xs",
+                contents: [
+                  text({
+                    text: "จดแล้ว",
+                    size: "sm",
+                    color: "#166534",
+                    weight: "bold",
+                    align: "center",
+                  }),
+                  text({
+                    text: `${read}`,
+                    size: "xl",
+                    weight: "bold",
+                    color: "#16a34a",
+                    align: "center",
+                  }),
+                  text({
+                    text: "หลัง",
+                    size: "xs",
+                    color: "#166534",
+                    align: "center",
+                  }),
+                ],
+              }),
+
+              // บล็อก: คงเหลือ
+              box({
+                layout: "vertical",
+                flex: 1,
+                backgroundColor: unread > 0 ? "#fff7ed" : "#f8fafc",
+                cornerRadius: "md",
+                paddingAll: "sm",
+                alignItems: "center",
+                spacing: "xs",
+                contents: [
+                  text({
+                    text: "คงเหลือ",
+                    size: "sm",
+                    color: unread > 0 ? "#9a3412" : "#64748b",
+                    weight: "bold",
+                    align: "center",
+                  }),
+                  text({
+                    text: `${unread}`,
+                    size: "xl",
+                    weight: "bold",
+                    color: unread > 0 ? "#ea580c" : "#94a3b8",
+                    align: "center",
+                  }),
+                  text({
+                    text: "หลัง",
+                    size: "xs",
+                    color: unread > 0 ? "#9a3412" : "#94a3b8",
+                    align: "center",
+                  }),
+                ],
+              }),
+
+              // บล็อก: ทั้งหมด
+              box({
+                layout: "vertical",
+                flex: 1,
+                backgroundColor: "#f8fafc",
+                cornerRadius: "md",
+                paddingAll: "sm",
+                alignItems: "center",
+                spacing: "xs",
+                contents: [
+                  text({
+                    text: "ทั้งหมด",
+                    size: "sm",
+                    color: "#475569",
+                    weight: "bold",
+                    align: "center",
+                  }),
+                  text({
+                    text: `${total}`,
+                    size: "xl",
+                    weight: "bold",
+                    color: "#1e293b",
+                    align: "center",
+                  }),
+                  text({
+                    text: "หลัง",
+                    size: "xs",
+                    color: "#94a3b8",
+                    align: "center",
+                  }),
+                ],
+              }),
+            ],
+          }),
+
+          // 4. สรุปรายโซน (ถ้ามี)
+          ...(zoneRows.length > 0 ? [
+            box({
+              layout: "vertical",
+              spacing: "xs",
+              backgroundColor: "#f8fafc",
+              cornerRadius: "lg",
+              paddingAll: "md",
+              contents: zoneRows,
+            })
+          ] : []),
+
+          // 5. ปุ่ม Action
           button({
             action: {
               type: "uri",
-              label: "📝 เปิดหน้าบันทึกจดน้ำ",
-              uri: liffUrl,
+              label: "📝 เปิดหน้าจดมิเตอร์",
+              uri: `${LINE_DEFAULT_LIFF_URL}${LINE_LIFF_ID_RECORD_WATER}`,
             },
             style: "primary",
             color: "#2563eb",
             height: "sm",
-            margin: "xs",
+            margin: "xl",
           }),
         ],
       }),

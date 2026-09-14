@@ -1,6 +1,6 @@
 // src/templates/flex/water-history.flex.js
 
-import { flex, bubble, box, text, button, separator } from "./common.flex.js";
+import { flex, bubble, box, text, button } from "./common.flex.js";
 import {
   LINE_DEFAULT_LIFF_URL,
   LINE_LIFF_ID_WATER_HISTORY,
@@ -9,12 +9,12 @@ import {
 /**
  * สถานะการชำระ → สี dot
  */
-const STATUS_DOT = {
-  PENDING: "🟡",
-  VERIFYING: "🟡",
-  PAID_CASH: "🟢",
-  PAID_ONLINE: "🟢",
-  OVERDUE: "🔴",
+const STATUS = {
+  PENDING: { color: "#FFA500" },
+  VERIFYING: { color: "#FFA500" },
+  PAID_CASH: { color: "#4CAF50" },
+  PAID_ONLINE: { color: "#4CAF50" },
+  OVERDUE: { color: "#FF0000" },
 };
 
 /**
@@ -43,22 +43,22 @@ function waterHistoryBubble(data) {
         contents: [
           text({
             text: "เดือน",
-            size: "xxs",
+            size: "sm",
             color: "#94a3b8",
             weight: "bold",
-            flex: 3,
+            flex: 2,
           }),
           text({
             text: "หน่วย",
-            size: "xxs",
+            size: "sm",
             color: "#94a3b8",
             weight: "bold",
-            align: "end",
+            align: "center",
             flex: 2,
           }),
           text({
             text: "ยอดเงิน",
-            size: "xxs",
+            size: "sm",
             color: "#94a3b8",
             weight: "bold",
             align: "end",
@@ -70,25 +70,25 @@ function waterHistoryBubble(data) {
 
     // Data rows
     for (const record of data.history) {
-      const dot = STATUS_DOT[record.paymentStatus] || "⚪";
+      const status = STATUS[record.paymentStatus];
 
       historyRows.push(
         box({
           layout: "horizontal",
-          spacing: "sm",
-          margin: "sm",
+          spacing: "xxl",
+          margin: "lg",
           contents: [
             text({
-              text: `${dot} ${record.month}`,
-              size: "xs",
-              color: "#1e293b",
-              flex: 3,
+              text: `${record.month}`,
+              size: "sm",
+              color: "#1b263b",
+              flex: 2,
             }),
             text({
               text: `${record.consumption}`,
-              size: "xs",
-              color: "#1e293b",
-              align: "end",
+              size: "sm",
+              color: "#1b263b",
+              align: "center",
               flex: 2,
             }),
             text({
@@ -96,8 +96,9 @@ function waterHistoryBubble(data) {
                 record.totalAmount !== null
                   ? `฿${record.totalAmount.toLocaleString("th-TH", { minimumFractionDigits: 2 })}`
                   : "-",
-              size: "xs",
-              color: "#1e293b",
+              size: "sm",
+              color: status.color,
+              weight: "bold",
               align: "end",
               flex: 3,
             }),
@@ -109,7 +110,7 @@ function waterHistoryBubble(data) {
     historyRows.push(
       text({
         text: "ยังไม่มีประวัติการใช้น้ำ",
-        size: "xs",
+        size: "sm",
         color: "#94a3b8",
         align: "center",
       }),
@@ -132,7 +133,7 @@ function waterHistoryBubble(data) {
           contents: [
             text({
               text: "📊 ประวัติการใช้น้ำ",
-              size: "xxs",
+              size: "xs",
               color: "#2563eb",
             }),
           ],
@@ -158,9 +159,9 @@ function waterHistoryBubble(data) {
             }),
             text({
               text: hasHistory
-                ? `${data.history.length} เดือนย้อนหลัง`
+                ? `ย้อนหลัง ${data.history.length} เดือน`
                 : "ยังไม่มีข้อมูล",
-              size: "xs",
+              size: "sm",
               color: "#64748b",
             }),
           ],
@@ -181,7 +182,7 @@ function waterHistoryBubble(data) {
           ? [
               text({
                 text: "🟢 ชำระแล้ว  🟡 รอชำระ  🔴 ค้างชำระ",
-                size: "xxs",
+                size: "xs",
                 color: "#94a3b8",
                 align: "center",
               }),
@@ -192,13 +193,13 @@ function waterHistoryBubble(data) {
         button({
           action: {
             type: "uri",
-            label: "📋 ดูประวัติทั้งหมด / กราฟ",
+            label: "ดูประวัติทั้งหมด",
             uri: liffUrl,
           },
           style: "primary",
           color: "#2563eb",
           height: "sm",
-          margin: "sm",
+          margin: "xl",
         }),
       ],
     }),

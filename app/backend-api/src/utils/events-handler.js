@@ -136,7 +136,8 @@ intentMatcher.register("PAYMENT_INFO", {
   execute: async (event) => {
     const { source } = event;
     try {
-      const villageId = await waterService.getUserVillageId(source?.userId);
+      const { member } = await lineProvider.isMember(source?.userId);
+      const villageId = member?.userVillages?.[0]?.villageId;
 
       if (!villageId) {
         await lineProvider.replyOrPush(event, paymentInfoFlex(null));
@@ -199,16 +200,10 @@ intentMatcher.register("SUMMARY", {
         return;
       }
 
-      const villageId = await waterService.getUserVillageId(source?.userId);
-      if (!villageId) {
-        await lineProvider.replyOrPush(event, {
-          type: "text",
-          text: "ไม่พบข้อมูลหมู่บ้านที่คุณสังกัด กรุณาติดต่อผู้ดูแลระบบค่ะ",
-        });
-        return;
-      }
-
+      // ดึงข้อมูลความคืบหน้า
+      const villageId = member?.userVillages?.[0]?.villageId;
       const progressData = await waterService.getReadingProgress(villageId);
+      
       await lineProvider.replyOrPush(event, readerProgressFlex(progressData));
     } catch (error) {
       console.error("[SUMMARY] Error:", error.message);
@@ -240,7 +235,7 @@ intentMatcher.register("UNPAID", {
         return;
       }
 
-      const villageId = await waterService.getUserVillageId(source?.userId);
+      const villageId = member?.userVillages?.[0]?.villageId;
       if (!villageId) {
         await lineProvider.replyOrPush(event, {
           type: "text",
